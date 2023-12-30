@@ -3,6 +3,7 @@ import styles from "./SignUp.module.css";
 import { useState } from "react";
 import Alerta from "../../components/Alerta";
 import { register } from "../../services/myfinances-api/usuario";
+import { textsReGex } from "../../constants/myfinances-constants";
 
 
 
@@ -23,6 +24,7 @@ const SignUp = () => {
         setLoading(true);
         /* Validación de campos */
         if ([nombre, apellido, email, contraseña, repetirPassword].includes("")) {
+            setLoading(false);
             setAlerta({
                 msg: "Todos los campos son obligatorios",
                 error: true
@@ -31,6 +33,7 @@ const SignUp = () => {
         }
 
         if (contraseña !== repetirPassword) {
+            setLoading(false);
             setAlerta({
                 msg: "No coinciden los password",
                 error: true
@@ -61,18 +64,11 @@ const SignUp = () => {
             setRepetirPassword("");
 
         } catch (error) {
-            if (contraseña.length < 6) {
-                setAlerta({
-                    msg: error.response.data.errors.Contraseña[0],
-                    error: true
-                });
-            }
-            else {
-                setAlerta({
-                    msg: error.response.data,
-                    error: true
-                });
-            }
+            setLoading(false);
+            setAlerta({
+                msg: error.response.data,
+                error: true
+            });
             setTimeout(() => {
                 setAlerta({});
             }, 5000);
@@ -85,9 +81,8 @@ const SignUp = () => {
         <>
             <div className={styles.container} >
                 <h1 className={styles.title}> Bienvenido a
-                    <span className={styles.span}> MyFinance</span>
+                    <span className={styles.span}> MyFinances</span>
                 </h1>
-
 
                 <form
                     className={styles.form}
@@ -95,29 +90,39 @@ const SignUp = () => {
                 >
                     <div>
                         <label className={styles.label}
-                            htmlFor='nombre'
+                            htmlFor="nombre"
                         >Nombre</label>
                         <input
-                            id='nombre'
-                            type='nombre'
-                            placeholder='Nombre'
+                            id="nombre"
+                            type="nombre"
+                            placeholder="Nombre"
+                            maxLength={30}
                             className={styles.input}
                             value={nombre}
-                            onChange={e => setNombre(e.target.value)}
+                            onChange={e => {
+                                if (textsReGex.test(e.target.value) || e.target.value === "") {
+                                    setNombre(e.target.value);
+                                }
+                            }}
                         />
 
                     </div>
                     <div>
                         <label className={styles.label}
-                            htmlFor='apellido'
+                            htmlFor="apellido"
                         >Apellido</label>
                         <input
-                            id='apellido'
-                            type='apellido'
-                            placeholder='Apellido'
+                            id="apellido"
+                            type="text"
+                            placeholder="Apellido"
+                            maxLength={30}
                             className={styles.input}
                             value={apellido}
-                            onChange={e => setApellido(e.target.value)}
+                            onChange={e => {
+                                if (textsReGex.test(e.target.value) || e.target.value === "") {
+                                    setApellido(e.target.value);
+                                }
+                            }}
                         />
 
                     </div>
@@ -130,12 +135,11 @@ const SignUp = () => {
                             type='email'
                             placeholder='Correo Electrónico'
                             className={styles.input}
+                            maxLength={30}
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />
-
                     </div>
-
 
                     <div>
                         <label className={styles.label}
@@ -164,7 +168,6 @@ const SignUp = () => {
                             value={repetirPassword}
                             onChange={e => setRepetirPassword(e.target.value)}
                         />
-
                     </div>
 
                     <div
@@ -180,16 +183,12 @@ const SignUp = () => {
                 </form>
                 <div className={styles.nav}>
                     <nav>
+                        <p>
+                            ¿Ya tienes tu cuenta?
+                        </p>
                         <Link className={styles.link} to="/">
                             Iniciar sesión
                         </Link>
-
-                        <Link className={styles.link}
-                            to="/forgotpassword"
-                        >
-                            Recuperar contraseña
-                        </Link>
-
                     </nav>
                 </div>
 

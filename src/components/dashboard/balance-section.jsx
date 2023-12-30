@@ -6,18 +6,18 @@ import { useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import { getDollarExchangeRate } from "../../services/dolar/cotizacion-api";
 import { texts } from "../../constants/myfinances-constants";
+import useDark from "../../context/useDark";
 
-export const BalanceSection = ({ auth, userId, setTransacciones }) => {
+export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) => {
     const [cargando, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [balance, setBalance] = useState(null);
-    const [balanceId, setBalanceId] = useState(null);
     const [categorias, setCategorias] = useState([]);
     const [modal, setModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [dolarValue, setDolarValue] = useState(null);
     const [dolarDate, setDolarDate] = useState(null);
     const [divisa, setDivisa] = useState("ARS");
+    const { dark } = useDark();
 
     const handleModalTransaccion = () => {
         setModal(true);
@@ -33,19 +33,6 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
     };
 
     useEffect(() => {
-        const fetchBalance = async () => {
-            try {
-                const res = await getBalanceByUserId(userId, config);
-                if (res) {
-                    setBalance(res);
-                    setBalanceId(res.data.id);
-                    setLoading(false);
-                }
-            } catch (error) {
-                setError(error);
-                setLoading(false);
-            }
-        };
         const fetchCategorias = async () => {
             try {
                 const { data: response } = await getCategories(config);
@@ -61,12 +48,14 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
             setDolarValue(data.blue.value_sell);
             setDolarDate(data.last_update);
         };
-        fetchBalance();
         fetchCategorias();
         fetchDollars();
     }, []);
     return (
-        <div className="bg-gray-200 pt-4 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around">
+        <div className={(dark === "light" ?
+            "bg-gray-200 pt-4 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
+            : "bg-gray-600 pt-4 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
+        )}>
             {
                 cargando ?
                     <div className="flex justify-center">
@@ -80,8 +69,8 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
                                     <div>
                                         <select
                                             className={`${divisa === "ARS" ?
-                                                "font-semibold bg-blue-200 shadow-md hover:shadow-blue-400" :
-                                                "font-semibold bg-green-200 shadow-md hover:shadow-green-400"}`}
+                                                "font-semibold text-black bg-blue-200 shadow-md hover:shadow-blue-400" :
+                                                "font-semibold text-black bg-green-200 shadow-md hover:shadow-green-400"}`}
                                             name="divisa"
                                             id="divisa"
                                             value={divisa}
@@ -92,65 +81,67 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
                                         </select>
                                     </div>
                                 </div>
-                                <h3 className='text-xl font-semibold text-violet-600 antialiased'>
+                                <h3 className={(dark === "light" ?
+                                    "text-xl font-semibold text-violet-600 antialiased"
+                                    : "text-xl font-semibold text-violet-400 antialiased"
+                                )}
+                                >
                                     Saldo
                                 </h3>
                                 {
-                                    divisa === "ARS"
-                                        ?
-                                        balance.data ?
-                                            balance.data.saldo_Total < 0 ?
+                                    !balance?.saldo_Total ?
+                                        <h1 className={(dark === "light" ?
+                                            "text-gray-600 font-bold text-5xl font-mono"
+                                            : "text-gray-200 font-bold text-5xl font-mono"
+                                        )}
+                                        >
+                                            <span className="mr-1">$</span>
+                                            {parseFloat(0).toFixed(2)}
+                                        </h1> :
+                                        divisa === "ARS"
+                                            ?
+                                            balance?.saldo_Total < 0 ?
                                                 <h1 className='text-red-500 font-bold text-5xl font-mono'>
                                                     <span className="mr-1">$</span>
-                                                    {parseFloat(balance.data.saldo_Total).toFixed(2)}
+                                                    {parseFloat(balance?.saldo_Total).toFixed(2)}
                                                 </h1> :
-                                                <h1 className='text-gray-600 font-bold text-5xl font-mono'>
+                                                <h1 className={(dark === "light" ?
+                                                    "text-gray-600 font-bold text-5xl font-mono"
+                                                    : "text-gray-200 font-bold text-5xl font-mono"
+                                                )}
+                                                >
                                                     <span className="mr-1">$</span>
-                                                    {parseFloat(balance.data.saldo_Total).toFixed(2)}
+                                                    {parseFloat(balance?.saldo_Total).toFixed(2)}
                                                 </h1> :
-                                            balance.saldo_Total < 0 ?
-                                                <h1 className='text-red-600 font-bold text-5xl font-mono'>
-                                                    <span className="mr-1">$</span>
-                                                    {parseFloat(balance.saldo_Total).toFixed(2)}
-                                                </h1> :
-                                                <h1 className='text-gray-600 font-bold text-5xl font-mono'>
-                                                    <span className="mr-1">$</span>
-                                                    {parseFloat(balance.saldo_Total).toFixed(2)}
-                                                </h1>
-                                        :
-                                        divisa === "USD"
-                                            ?
-                                            balance.data ?
-                                                balance.data.saldo_Total < 0 ?
+                                            divisa === "USD"
+                                                ?
+                                                balance?.saldo_Total < 0 ?
                                                     <h1 className='text-red-500 font-bold text-5xl font-mono'>
                                                         <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance.data.saldo_Total / dolarValue).toFixed(2)}
+                                                        {parseFloat(balance?.saldo_Total / dolarValue).toFixed(2)}
                                                     </h1> :
-                                                    <h1 className='text-gray-600 font-bold text-5xl font-mono'>
+                                                    <h1 className={(dark === "light" ?
+                                                        "text-gray-600 font-bold text-5xl font-mono"
+                                                        : "text-gray-200 font-bold text-5xl font-mono"
+                                                    )}>
                                                         <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance.data.saldo_Total / dolarValue).toFixed(2)}
-                                                    </h1> :
-                                                balance.saldo_Total < 0 ?
-                                                    <h1 className='text-red-600 font-bold text-5xl font-mono'>
-                                                        <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance.saldo_Total / dolarValue).toFixed(2)}
-                                                    </h1> :
-                                                    <h1 className='text-gray-600 font-bold text-5xl font-mono'>
-                                                        <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance.saldo_Total / dolarValue).toFixed(2)}
+                                                        {parseFloat(balance?.saldo_Total / dolarValue).toFixed(2)}
                                                     </h1>
-                                            :
-                                            <div className="flex justify-center">
-                                                <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
-                                            </div>
+                                                :
+                                                <div className="flex justify-center">
+                                                    <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                                                </div>
                                 }
                                 <br />
                                 {
                                     dolarValue && dolarDate ?
-                                        <div className="text-center rounded-2xl p-3 m-3 bg-green-100 shadow-md hover:shadow-green-400">
+                                        <div className={(dark === "light" ?
+                                            "text-center rounded-2xl p-3 m-3 bg-green-100 shadow-md hover:shadow-green-400"
+                                            : "text-center rounded-2xl p-3 m-3 bg-green-200 shadow-md hover:shadow-green-400"
+                                        )}>
                                             <div className="flex flex-col items-center font-semibold mb-4 text-violet-600">
                                                 <h3 className="w-24 text-white shadow-md font-semibold text-center rounded-3xl bg-green-400 font-mono">
-                                                    <span className="mr-1">USD</span>
+                                                    <span className="mr-1">ARS</span>
                                                     {dolarValue}
                                                 </h3>
                                             </div>
@@ -164,7 +155,9 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
                             </div>
                         </div> :
                         <div className='pt-14 flex flex-col p-5 items-center text-center' >
-                            <h3 className="mb-10 text-lg">
+                            <h3 className={(dark === "light" ?
+                                "mb-10 text-lg text-center mt-20 text-black" :
+                                "mb-10 text-lg text-center mt-20 text-white")}>
                                 {texts.WITH_NO_TRANSACTIONS}
                             </h3>
                         </div>
@@ -187,10 +180,9 @@ export const BalanceSection = ({ auth, userId, setTransacciones }) => {
                                 animarModal={animarModal}
                                 setAnimarModal={setAnimarModal}
                                 categorias={categorias}
-                                idBalance={balanceId}
                                 setTransacciones={setTransacciones}
                                 setBalance={setBalance}
-                                setBalanceId={setBalanceId}
+                                balance={balance}
                             />
                         }
                     </div>

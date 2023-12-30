@@ -1,27 +1,34 @@
 import { useState } from "react";
+import { modifyTransaction } from "../../services/myfinances-api/transacciones";
+import { amountReGex, errors, textsReGex } from "../../constants/myfinances-constants";
 import Alerta from "../Alerta";
-import useAuth from "../../context/useAuth";
-import { getUserToken } from "../../services/token/tokenService";
-import { newTransaction } from "../../services/myfinances-api/transacciones";
-import { amountReGex, errors, textsReGex, type } from "../../constants/myfinances-constants";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
-import useDark from "../../context/useDark";
+import { getUserToken } from "../../services/token/tokenService";
+import useAuth from "../../context/useAuth";
 
-const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransacciones, setBalance, balance, categorias }) => {
-
-    const [alerta, setAlerta] = useState({});
+export const ModificarTransaccion = ({
+    animarModal,
+    setAnimarModal,
+    setModal,
+    transaccionId,
+    transaccion,
+    setTransaccion,
+    setTransacciones,
+    balance,
+    categorias
+}) => {
     const { auth } = useAuth();
+    const [alerta, setAlerta] = useState({});
     const [error, setError] = useState(null);
     const [cargando, setLoading] = useState(false);
-    const [fecha, setFecha] = useState("");
-    const [detalle, setDetalle] = useState("");
-    const [monto, setMonto] = useState("");
-    const [tipoTransaccion, setTipoTransaccion] = useState("Ingreso");
-    const [categoriaId, setCategoria] = useState(categorias[0].id);
+    const [fecha, setFecha] = useState(new Date(transaccion.fecha).toISOString().substring(0,10));
+    const [detalle, setDetalle] = useState(transaccion.detalle);
+    const [monto, setMonto] = useState(transaccion.monto);
+    const [tipoTransaccion, setTipoTransaccion] = useState(transaccion.tipoTransaccion);
+    const [categoriaId, setCategoria] = useState(transaccion.categoria.id);
     const user = getUserToken();
-
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -52,6 +59,7 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
         }, 3000);
 
         const payload = {
+            id: transaccionId,
             fecha: fecha,
             detalle: detalle,
             monto: parseFloat(monto),
@@ -63,41 +71,19 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
         };
 
         try {
-            const { data, status } = await newTransaction(payload, config);
-            if (status === 201) {
+            const { data, status } = await modifyTransaction(transaccionId, payload, config);
+            if (status === 200) {
                 setLoading(false);
                 setAlerta({
-                    msg: "Transaccion Creada!",
+                    msg: "Transaccion Modificada!",
                     error: false
                 });
                 setTimeout(() => {
                     setAlerta({});
-                    setTransacciones(transacciones => [data, ...transacciones]);
-                    if (setBalance) {
-                        if (data.tipoTransaccion === type.EGRESO) {
-                            !balance.saldo_Total ?
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: parseFloat(monto)
-                                })
-                                :
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: balance.saldo_Total - parseFloat(monto)
-                                });
-                        } else {
-                            !balance.saldo_Total ?
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: parseFloat(monto)
-                                })
-                                :
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: balance.saldo_Total + parseFloat(monto)
-                                });
-                        }
-                    }
+                    setTransaccion(data);
+                    setTransacciones(transacciones => transacciones.map((transaccion) =>
+                        transaccion.id === transaccionId ? data : transaccion
+                    ));
                     ocultarModal();
                 }, 1500);
             }
@@ -130,7 +116,6 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
     };
 
     const { msg } = alerta;
-
     return (
         <div className="modal">
             <div className='modalContainer'>
@@ -147,6 +132,7 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
                         <label htmlFor="Fecha">Fecha</label>
                         <ReactDatePicker
                             locale={es}
+                            className="bg-[#E5E7EB] rounded-md p-1"
                             value={fecha}
                             placeholderText="Fecha"
                             onChange={(date) => setFecha(date.toISOString().split("T")[0])}
@@ -158,10 +144,14 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
                         <input
                             id="detalle"
                             type="text"
-                            maxLength={80}
                             placeholder="Detalle"
+                            maxLength={80}
                             value={detalle}
-                            onChange={e => setDetalle(e.target.value)}
+                            onChange={e => {
+                                if (textsReGex.test(e.target.value) || e.target.value === "") {
+                                    setDetalle(e.target.value);
+                                }
+                            }}
                         />
                     </div>
                     <div className='campo'>
@@ -170,7 +160,7 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
                             id="monto"
                             type="text"
                             placeholder="Ingresar monto"
-                            value={monto.replace(",", ".")}
+                            value={monto.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
                                     setMonto(e.target.value);
@@ -222,5 +212,3 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
         </div>
     );
 };
-
-export default ModalTransaccion;

@@ -1,12 +1,27 @@
 import { useState } from "react";
 import Alerta from "../Alerta";
 import { agregarMonto } from "../../services/myfinances-api/metaFinanciera";
-import { errors, texts } from "../../constants/myfinances-constants";
+import { amountReGex, errors, texts, type } from "../../constants/myfinances-constants";
+import { getAll } from "../../services/myfinances-api/transacciones";
+import { getUserToken } from "../../services/token/tokenService";
 
-export const GoalAmount = ({ animarModal, setAnimarModal, setModal, goalId, auth, setActiveGoals, setCompletedGoals, activeGoals }) => {
+export const GoalAmount = ({
+    animarModal,
+    setAnimarModal,
+    setModal,
+    goalId,
+    auth,
+    setActiveGoals,
+    setCompletedGoals,
+    setTableGoals,
+    setBalance,
+    balance,
+    setTransacciones
+}) => {
     const [alerta, setAlerta] = useState({});
     const [amount, setAmount] = useState("");
     const [cargando, setLoading] = useState(false);
+    const user = getUserToken();
 
     const ocultarModal = () => {
         setAnimarModal(false);
@@ -18,13 +33,28 @@ export const GoalAmount = ({ animarModal, setAnimarModal, setModal, goalId, auth
     const handleAdding = async e => {
         e.preventDefault();
         setLoading(true);
-        if (amount.length === 0) {
+        if (amount === "" || amount.length === 0) {
             setAlerta({
                 msg: "El campo es obligatorio!",
                 error: true
             });
+            setTimeout(() => {
+                setLoading(false);
+                setAlerta({});
+            }, 2000);
+            return;
         }
-
+        if (amount <= 0) {
+            setAlerta({
+                msg: "El monto debe ser positivo!",
+                error: true
+            });
+            setTimeout(() => {
+                setLoading(false);
+                setAlerta({});
+            }, 2000);
+            return;
+        }
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -47,20 +77,56 @@ export const GoalAmount = ({ animarModal, setAnimarModal, setModal, goalId, auth
                 });
                 setTimeout(() => {
                     setAlerta({});
-                    setActiveGoals(activeGoals.map((goal) => {
+                    setActiveGoals(activeGoals => activeGoals.map((goal) => {
                         return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
                     }));
+                    if (setTableGoals) {
+                        setTableGoals(setTableGoals => setTableGoals.map((goal) => {
+                            return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
+                        }));
+                    }
+                    if (setBalance) {
+                        if (!balance.saldo_Total) {
+                            setBalance({
+                                ...balance,
+                                saldo_Total: parseFloat(amount) * -1
+                            });
+                        }
+                        else {
+                            setBalance({
+                                ...balance,
+                                saldo_Total: balance.saldo_Total - parseFloat(amount)
+                            });
+                        }
+                    }
+                    if (setTransacciones) {
+                        const goalTransaction = {
+                            detalle: `Reserva - Meta: ${data.titulo}`,
+                            monto: parseFloat(amount),
+                            fecha: new Date(),
+                            tipoTransaccion: type.RESERVA
+                        }
+                        setTransacciones(transacciones => [
+                            goalTransaction,
+                            ...transacciones
+                        ]);
+                    }
                     if (data.completada) {
                         setTimeout(() => {
                             setAlerta({
                                 msg: texts.ON_COMPLETED_GOAL,
                                 error: false
                             });
-                            setActiveGoals(activeGoals.map((goal) => {
+                            setActiveGoals(activeGoals => activeGoals.map((goal) => {
                                 return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
                             }));
+                            if (setTableGoals) {
+                                setTableGoals(setTableGoals => setTableGoals.map((goal) => {
+                                    return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
+                                }));
+                            }
                             if (setCompletedGoals) {
-                                setCompletedGoals(completedGoals => [...completedGoals, data]);
+                                setCompletedGoals(completedGoals => [data, ...completedGoals]);
                             }
                         }, 500);
                     }
@@ -80,7 +146,6 @@ export const GoalAmount = ({ animarModal, setAnimarModal, setModal, goalId, auth
             }
             console.log(error);
         }
-
     };
     const { msg } = alerta;
 
@@ -103,7 +168,11 @@ export const GoalAmount = ({ animarModal, setAnimarModal, setModal, goalId, auth
                             type="text"
                             placeholder="Ingresar Monto"
                             value={amount.replace(",", ".")}
-                            onChange={e => setAmount(e.target.value)}
+                            onChange={e => {
+                                if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
+                                    setAmount(e.target.value);
+                                }
+                            }}
                         />
                     </div>
 
