@@ -101,6 +101,7 @@ export const ActiveGoals = ({
                                             data-tooltip-content="Agregar monto"
                                             onClick={() => handleAddingModal(goal.id)}>
                                         </i>
+                                        {/* here */}
                                         {modal &&
                                             <GoalAmount
                                                 setModal={setModal}
