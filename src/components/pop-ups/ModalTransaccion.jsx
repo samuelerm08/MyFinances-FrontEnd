@@ -3,13 +3,14 @@ import Alerta from "../Alerta";
 import useAuth from "../../context/useAuth";
 import { getUserToken } from "../../services/token/tokenService";
 import { newTransaction } from "../../services/myfinances-api/transacciones";
-import { amountReGex, errors, textsReGex, type } from "../../constants/myfinances-constants";
+import { amountReGex, errors, type } from "../../constants/myfinances-constants";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
-import useDark from "../../context/useDark";
+import { getBalanceByUserId } from "../../services/myfinances-api/balance";
+import { HttpStatusCode } from "axios";
 
-const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransacciones, setBalance, balance, categorias }) => {
+const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransacciones, setBalance, balance, categorias, setMetadata, metadata }) => {
 
     const [alerta, setAlerta] = useState({});
     const { auth } = useAuth();
@@ -21,6 +22,7 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
     const [tipoTransaccion, setTipoTransaccion] = useState("Ingreso");
     const [categoriaId, setCategoria] = useState(categorias[0].id);
     const user = getUserToken();
+    const isNavigationEnabled = !!setMetadata && metadata.totalCount <= 10;
 
     const config = {
         headers: {
@@ -51,7 +53,7 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
             setAlerta({});
         }, 3000);
 
-        const payload = {
+        let payload = {
             fecha: fecha,
             detalle: detalle,
             monto: parseFloat(monto),
@@ -61,6 +63,15 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
             usuarioId: parseInt(user.id),
             estaActiva: true
         };
+
+        if (!balance?.id) {
+            try {
+                const { data, status } = await getBalanceByUserId(user.id, config);
+                if (status === HttpStatusCode.Ok) payload = { ...payload, balance_Id: data.id };
+            } catch (error) {
+                setError(error);
+            }
+        }
 
         try {
             const { data, status } = await newTransaction(payload, config);
@@ -74,30 +85,26 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
                     setAlerta({});
                     setTransacciones(transacciones => [data, ...transacciones]);
                     if (setBalance) {
-                        if (data.tipoTransaccion === type.EGRESO) {
-                            !balance.saldo_Total ?
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: parseFloat(monto)
-                                })
-                                :
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: balance.saldo_Total - parseFloat(monto)
-                                });
-                        } else {
-                            !balance.saldo_Total ?
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: parseFloat(monto)
-                                })
-                                :
-                                setBalance({
-                                    ...balance,
-                                    saldo_Total: balance.saldo_Total + parseFloat(monto)
-                                });
-                        }
+                        const isExpense = data.tipoTransaccion === type.EGRESO;
+                        !balance?.saldo_Total
+                            ?
+                            setBalance({
+                                ...balance,
+                                id: parseInt(data.balance_Id),
+                                saldo_Total: parseFloat(data.balance?.saldo_Total)
+                            })
+                            :
+                            setBalance({
+                                ...balance,
+                                id: parseInt(data.balance_Id),
+                                saldo_Total:
+                                    !isExpense ?
+                                        balance.saldo_Total + parseFloat(monto) :
+                                        balance.saldo_Total - parseFloat(monto)
+                            });
                     }
+
+                    if (isNavigationEnabled) setMetadata({ ...metadata, totalCount: metadata.totalCount + 1 });
                     ocultarModal();
                 }, 1500);
             }

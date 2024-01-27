@@ -6,7 +6,7 @@ import { getAll } from "../../services/myfinances-api/transacciones";
 import { getCategories } from "../../services/myfinances-api/categorias";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { TransactionsTable } from "../../components/transactions/transactions-table";
-import { texts } from "../../constants/myfinances-constants";
+import { texts, type } from "../../constants/myfinances-constants";
 import Alerta from "../../components/Alerta";
 import { DateFilter } from "../../components/transactions/filters/date-filter";
 import { TransactionsPagination } from "../../components/dashboard/transactions/transactions-pagination";
@@ -30,7 +30,7 @@ const Transacciones = () => {
     const [tipo, setTipo] = useState("");
     const [fecha, setFecha] = useState("");
     const [monto, setMonto] = useState("");
-    const [state, setState] = useState(null);
+    const [state, setState] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const { dark } = useDark();
 
@@ -103,7 +103,8 @@ const Transacciones = () => {
         const fetchCategorias = async () => {
             try {
                 const { data: response } = await getCategories(config);
-                setCategorias(response);
+                const validCategories = response?.filter(({ titulo }) => !titulo.includes(type.RESERVA));
+                setCategorias(validCategories);
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -159,6 +160,8 @@ const Transacciones = () => {
                             balance={balance}
                             setTransacciones={setTransacciones}
                             transacciones={transacciones}
+                            setMetadata={setMetadata}
+                            metadata={metadata}
                         />
                     }
                 </div>

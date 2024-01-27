@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
-import useAuth from "../../context/useAuth";
-import { getAll } from "../../services/myfinances-api/metaFinanciera";
-import { getUserToken } from "../../services/token/tokenService";
 import useDark from "../../context/useDark";
 import { PulseLoader } from "react-spinners";
+import { GoalsPagination } from "./goals-pagination";
 
-export const GoalsTable = ({ loading, goals }) => {
+export const GoalsTable = ({
+    loading,
+    setLoading,
+    tableGoals,
+    tableGoalsMetadata,
+    setTableGoals,
+    setTableGoalsMetadata
+}) => {
     const { dark } = useDark();
     return (
         <div className="t-table">
@@ -15,7 +19,7 @@ export const GoalsTable = ({ loading, goals }) => {
                         <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :
-                    <div className="flex justify-center">
+                    <div className="flex flex-col justify-center">
                         <table className={(dark === "light" ?
                             "w-full"
                             :
@@ -57,7 +61,7 @@ export const GoalsTable = ({ loading, goals }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {goals?.map((goal, index) => {
+                                {tableGoals?.slice(0, 10).map((goal, index) => {
                                     return (
                                         <tr className={(dark === "light" ?
                                             "border-b border-gray-200 "
@@ -143,6 +147,18 @@ export const GoalsTable = ({ loading, goals }) => {
                             </tbody>
                         </table>
                     </div>
+            }
+            {
+                tableGoalsMetadata.totalCount > 10 ?
+                    <div className="w-full">
+                        <GoalsPagination
+                            metadata={tableGoalsMetadata}
+                            setTableGoals={setTableGoals}
+                            setTableGoalsMetadata={setTableGoalsMetadata}
+                            comesFromTable={true}
+                            setLoading={setLoading}
+                        />
+                    </div> : <div></div>
             }
         </div >
     );
