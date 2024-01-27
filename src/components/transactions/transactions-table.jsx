@@ -44,7 +44,8 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
         const fetchCategorias = async () => {
             try {
                 const { data: response } = await getCategories(config);
-                setCategorias(response);
+                const validCategories = response?.filter(({ titulo }) => !titulo.includes(type.RESERVA));
+                setCategorias(validCategories);
             } catch (error) {
                 setError(error);
             }
