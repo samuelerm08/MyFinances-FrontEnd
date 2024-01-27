@@ -9,7 +9,6 @@ import { login } from "../../services/myfinances-api/usuario";
 import { HttpStatusCode } from "axios";
 
 const Login = () => {
-
     const [email, setEmail] = useState("");
     const [contraseña, setContraseña] = useState("");
     const [alerta, setAlerta] = useState({});
@@ -58,7 +57,6 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-
             <div className="flex justify-center">
                 <div className="text-center p-5 m-5 w-20 rounded-3xl bg-violet-400">
                     <i className="fa-solid fa-dragon"></i>
@@ -83,10 +81,7 @@ const Login = () => {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
-
                 </div>
-
-
                 <div>
                     <label className={styles.label}
                         htmlFor='contraseña'
@@ -109,20 +104,14 @@ const Login = () => {
                         className={styles.button}
                         type="submit"
                         value={!cargando ? "Ingresando..." : "Ingresar"}
+                        disabled={!cargando}
                     />
-
                 </div>
-
-
-                {/* Pasamos el estado de alerta por props */}
                 {msg && <Alerta alerta={alerta} />}
-
             </form>
-
 
             <div className={styles.nav}>
                 <nav>
-
                     <p>
                         ¿Aún no tienes tu cuenta?
                     </p>
@@ -130,20 +119,9 @@ const Login = () => {
                         className={styles.link} to="/signup">
                         Regístrate
                     </Link>
-                    {/* <Link
-                        className={styles.link} to="/forgotpassword"
-                    >
-                        Recuperar contraseña
-                    </Link> */}
-
-                    {/* <Link
-                className={styles.link} to="/dashboard">
-                dasboard
-              </Link> */}
                 </nav>
             </div>
         </div>
     );
 };
-
 export default Login;
