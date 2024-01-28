@@ -1,50 +1,52 @@
-import { PulseLoader } from "react-spinners";
-import { texts, type } from "../../constants/myfinances-constants";
-import { useEffect, useState } from "react";
-import { filterByType } from "../../services/myfinances-api/transacciones";
-import Alerta from "../Alerta";
-import { BalancePagination } from "./balance-pagination";
-import useAuth from "../../context/useAuth";
-import useDark from "../../context/useDark";
 import { HttpStatusCode } from "axios";
+import { texts, type } from "../../constants/myfinances-constants";
+import { filterByType } from "../../services/myfinances-api/transacciones";
+import useAuth from "../../context/useAuth";
+import { useEffect, useState } from "react";
+import Alerta from "../Alerta";
+import { PulseLoader } from "react-spinners";
+import { BalancePagination } from "./balance-pagination";
+import useDark from "../../context/useDark";
 
-export const BalanceExpenses = ({ user, config }) => {
+export const BalanceReserves = ({ user, config }) => {
     const { auth } = useAuth();
-    const [expenses, setExpenses] = useState([]);
-    const [cargando, setLoading] = useState(true);
+    const [reserves, setReserves] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [expensesAlert, setExpensesAlert] = useState({});
+    const [reservesAlert, setReservesAlert] = useState({});
     const [metadata, setMetadata] = useState({});
     const { dark } = useDark();
+
     useEffect(() => {
-        const fetchExpenses = async () => {
-            const payload = {
-                userId: user.id,
-                tipo: type.EGRESO
-            };
+        const payload = {
+            userId: user.id,
+            tipo: type.RESERVA
+        };
+        const fetchReserves = async () => {
             try {
                 const { data, status } = await filterByType(payload, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
                     setLoading(false);
-                    const validExpenses = data?.data.filter(({ estaActiva }) => estaActiva);
-                    setExpenses(validExpenses);
+                    setReserves(data.data);
                     setMetadata(data.meta);
                 }
             } catch (error) {
                 setError(error);
                 setLoading(false);
-                setExpensesAlert({
-                    msg: texts.WITH_NO_EXPENSES,
+                setReservesAlert({
+                    msg: texts.WITH_NO_RESERVES,
                     error: true
                 });
                 setTimeout(() => {
-                    setExpensesAlert({});
+                    setReservesAlert({});
                 }, 3000);
             }
+
         };
-        fetchExpenses();
+        fetchReserves();
     }, []);
-    const { msg } = expensesAlert;
+
+    const { msg } = reservesAlert;
     return (
         <div className={(dark === "light" ?
             "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-2"
@@ -56,21 +58,21 @@ export const BalanceExpenses = ({ user, config }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Gastos</h2>
+                >Reservas</h2>
                 {
-                    expensesAlert ?
+                    reservesAlert ?
                         <div className="flex justify-center">
                             <div className="absolute">
-                                {msg && <Alerta alerta={expensesAlert} />}
+                                {msg && <Alerta alerta={reservesAlert} />}
                             </div>
                         </div> : <div></div>
                 }
                 <div className="bg-inherit rounded-lg">
-                    {cargando ?
+                    {loading ?
                         <div className="flex justify-center">
-                            <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                            <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        expenses?.length
+                        reserves?.length
                             ?
                             <div className="flex justify-center mb-5">
                                 <table>
@@ -89,18 +91,25 @@ export const BalanceExpenses = ({ user, config }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {expenses?.map((transaccion, index) => {
+                                        {reserves?.map((transaccion, index) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-10 text-gray-800"
                                                         : "text-gray-100 font-semibold py-2 px-10"
                                                     )}>{transaccion.detalle}</td>
-                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
-                                                        <div className="w-28 flex justify-center">
-                                                            -${parseFloat(transaccion.monto).toFixed(2)}
-                                                        </div>
-                                                    </td>
+
+                                                    {
+                                                        transaccion.detalle?.includes("Retiro") ?
+                                                            <td className="py-2 px-20 text-green-500 font-semibold font-mono">
+                                                                <div className="w-28 flex justify-center rounded-md bg-green-200">
+                                                                    +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                </div>
+                                                            </td> :
+                                                            <td className="py-2 px-20 text-red-500 font-semibold font-mono">
+                                                                -${parseFloat(transaccion.monto).toFixed(2)}
+                                                            </td>
+                                                    }
                                                 </tr>
                                             );
                                         })}
@@ -112,7 +121,7 @@ export const BalanceExpenses = ({ user, config }) => {
                                 <h3 className={(dark === "light" ?
                                     "text-lg text-center text-black" :
                                     "text-lg text-center text-white")}>
-                                    {texts.WITH_NO_EXPENSES}
+                                    {texts.WITH_NO_RESERVES}
                                 </h3>
                             </div>
                     }
@@ -120,9 +129,9 @@ export const BalanceExpenses = ({ user, config }) => {
                         metadata.totalCount > 10 ?
                             <div className="w-full">
                                 <BalancePagination
-                                    setTransactions={setExpenses}
+                                    setTransactions={setReserves}
                                     auth={auth}
-                                    type={type.EGRESO}
+                                    type={type.RESERVA}
                                     setLoading={setLoading}
                                     metadata={metadata}
                                     setMetadata={setMetadata}

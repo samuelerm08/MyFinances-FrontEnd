@@ -1,19 +1,16 @@
 import {
     BarElement,
-    CategoryScale, // x
-    LinearScale, // y
+    CategoryScale,
+    LinearScale,
     Tooltip,
     Legend,
     Chart as ChartJS,
     Title
-
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 import { type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
-
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 
 export const GananciaChart = ({ transacciones }) => {
     const { dark } = useDark();
@@ -27,16 +24,19 @@ export const GananciaChart = ({ transacciones }) => {
             const fecha = new Date(transaccion.fecha);
             const mesAnio = fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
             const monto = transaccion.monto;
+            const isReserve = transaccion.tipoTransaccion === type.RESERVA;
+            const isWithdraw = isReserve && transaccion?.detalle?.includes("Retiro");
+            const isIncome = transaccion.tipoTransaccion === type.INGRESO || isWithdraw;
+            const isExpense = transaccion.tipoTransaccion === type.EGRESO || !isWithdraw;
 
             if (!montosPorMes[mesAnio]) {
                 montosPorMes[mesAnio] = { mes: mesAnio, ingresos: 0, egresos: 0 };
             }
 
-            if (transaccion.tipoTransaccion === type.INGRESO) {
+            if (isIncome)
                 montosPorMes[mesAnio].ingresos += monto;
-            } else if (transaccion.tipoTransaccion === type.EGRESO) {
+            else if (isExpense)
                 montosPorMes[mesAnio].egresos += monto;
-            }
         });
 
         const montosArray = Object.values(montosPorMes);
@@ -69,7 +69,7 @@ export const GananciaChart = ({ transacciones }) => {
                 "text-xl text-center font-semibold text-violet-600 antialiased"
                 : "text-xl text-center font-semibold text-violet-400 antialiased"
             )}>
-                Resumen últimas 10 transacciones
+                
             </h3>
             <div className="chart-container">
                 <Bar

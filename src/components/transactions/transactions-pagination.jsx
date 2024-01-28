@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { filterTransactions, getAll } from "../../../services/myfinances-api/transacciones";
-import { getUserToken } from "../../../services/token/tokenService";
-import useAuth from "../../../context/useAuth";
+import { filterTransactions, getAll } from "../../services/myfinances-api/transacciones";
+import { getUserToken } from "../../services/token/tokenService";
+import useAuth from "../../context/useAuth";
 
 export const TransactionsPagination = ({
     setTransacciones,
@@ -58,12 +58,14 @@ export const TransactionsPagination = ({
             };
             try {
                 const { data: response } =
-                payloadProps.tipo || payloadProps.fecha || payloadProps.montoHasta || payloadProps.estaActiva
-                    ? await filterTransactions(payload, page, 10, config)
-                    : await getAll({userId: user.id}, page, 10, config);
+                    payloadProps.tipo || payloadProps.fecha || payloadProps.montoHasta || payloadProps.estaActiva
+                        ? await filterTransactions(payload, page, 10, config)
+                        : await getAll({ userId: user.id }, page, 10, config);
                 setLoading(false);
                 setTransacciones(response.data);
-                !response.meta.hasNextPage ? setHasNextPage(false) : setHasNextPage(true);
+                response.meta?.hasNextPage
+                    ? setHasNextPage(response.meta?.hasNextPage)
+                    : setHasNextPage(response.meta?.hasNextPage);
             } catch (error) {
                 setError(error);
             }

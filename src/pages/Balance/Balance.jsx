@@ -8,6 +8,7 @@ import { GananciaChart } from "../../components/balance/chart/ganancia-chart";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { getAll } from "../../services/myfinances-api/transacciones";
 import { HttpStatusCode } from "axios";
+import { BalanceReserves } from "../../components/balance/reserve-component";
 
 const Balance = () => {
     const { auth } = useAuth();
@@ -24,7 +25,6 @@ const Balance = () => {
         }
     };
 
-
     useEffect(() => {
         const fetchBalance = async () => {
             try {
@@ -38,12 +38,12 @@ const Balance = () => {
                 setLoading(false);
             }
         };
-
         const fetchTransacciones = async () => {
             try {
                 const { data: response, status } = await getAll({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    setTransacciones(response.data);
+                    const filteredTransactions = response.data.filter(({ estaActiva }) => estaActiva);
+                    setTransacciones(filteredTransactions);
                     setLoading(false);
                 }
             } catch (error) {
@@ -51,12 +51,8 @@ const Balance = () => {
                 setLoading(false);
             }
         };
-
         fetchTransacciones();
         fetchBalance();
-
-
-
     }, []);
 
 
@@ -68,6 +64,7 @@ const Balance = () => {
             <div className="bg-inherit rounded p-2 m-1 mb-0 flex justify-around">
                 <BalanceIncomes user={user} config={config} />
                 <BalanceExpenses user={user} config={config} />
+                <BalanceReserves user={user} config={config} />
             </div>
             <GananciaChart transacciones={transacciones} />
         </div>

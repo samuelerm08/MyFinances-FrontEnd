@@ -100,9 +100,9 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                 {
                                                     transaccion.fecha ?
                                                         <td className={(dark === "light" ?
-                                                            "py-2 px-20 text-gray-600"
+                                                            "py-2 px-20 text-gray-600 font-semibold font-mono"
                                                             :
-                                                            "py-2 px-20 text-gray-300"
+                                                            "py-2 px-20 text-gray-300 font-semibold font-mono"
                                                         )}
                                                         >{new Date(transaccion.fecha).toLocaleDateString()}</td> :
                                                         <td></td>

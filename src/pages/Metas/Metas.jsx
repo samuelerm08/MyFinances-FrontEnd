@@ -176,8 +176,8 @@ const Metas = () => {
                     :
                     "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400"
                 )}>
-                    <GoalsTable 
-                        tableGoals={tableGoals} 
+                    <GoalsTable
+                        tableGoals={tableGoals}
                         loading={loadingTableGoals}
                         setLoading={setLoadingTableGoals}
                         setTableGoals={setTableGoals}

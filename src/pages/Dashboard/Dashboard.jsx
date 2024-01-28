@@ -14,6 +14,7 @@ import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { HttpStatusCode } from "axios";
+import { ReservesSection } from "../../components/dashboard/transactions/reserves-section";
 
 
 const Dashboard = () => {
@@ -145,6 +146,7 @@ const Dashboard = () => {
             <div className=" bg-inherit rounded flex justify-center">
                 <IncomesSection cargando={cargando} transacciones={transacciones} />
                 <ExpensesSection cargando={cargando} transacciones={transacciones} />
+                <ReservesSection cargando={cargando} transacciones={transacciones} />
             </div>
         </div>
     );

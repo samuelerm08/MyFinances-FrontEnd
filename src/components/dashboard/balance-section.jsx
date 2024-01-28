@@ -134,7 +134,7 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                 }
                                 <br />
                                 {
-                                    dolarValue && dolarDate ?
+                                    !!dolarValue && !!dolarDate ?
                                         <div className={(dark === "light" ?
                                             "text-center rounded-2xl p-3 m-3 bg-green-100 shadow-md hover:shadow-green-400"
                                             : "text-center rounded-2xl p-3 m-3 bg-green-200 shadow-md hover:shadow-green-400"

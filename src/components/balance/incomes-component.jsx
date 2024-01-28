@@ -15,17 +15,7 @@ export const BalanceIncomes = ({ user, config }) => {
     const [error, setError] = useState(null);
     const [incomesAlert, setIncomesAlert] = useState({});
     const [metadata, setMetadata] = useState({});
-    const [hasNextPage, setHasNextPage] = useState(true);
-    const pageNumber = Math.ceil(metadata.totalCount / metadata.pageSize);
     const { dark } = useDark();
-
-
-    const generatePageNumbers = (pageNumber) => {
-        let navigationNumbers = [];
-        for (let i = 1; i <= pageNumber; i++) navigationNumbers.push(i);
-        return navigationNumbers;
-    };
-    const navigationNumbers = generatePageNumbers(pageNumber);
 
     useEffect(() => {
         const fetchIncomes = async () => {
@@ -34,17 +24,12 @@ export const BalanceIncomes = ({ user, config }) => {
                 tipo: type.INGRESO
             };
             try {
-                const { data, status } = await filterByType(payload, 1, 5, config);
+                const { data, status } = await filterByType(payload, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    setIncomes(data.data);
-                    setMetadata(data.meta);
-                    if (!data.meta.hasNextPage) {
-                        setHasNextPage(false);
-                    }
-                    else {
-                        setHasNextPage(true);
-                    }
                     setLoading(false);
+                    const validIncomes = data?.data.filter(({ estaActiva }) => estaActiva);
+                    setIncomes(validIncomes);
+                    setMetadata(data.meta);
                 }
             } catch (error) {
                 setError(error);
@@ -86,7 +71,7 @@ export const BalanceIncomes = ({ user, config }) => {
                         <div className="flex justify-center">
                             <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        incomes.length
+                        incomes?.length
                             ?
                             <div className="flex justify-center mb-5">
                                 <table>
@@ -102,11 +87,6 @@ export const BalanceIncomes = ({ user, config }) => {
                                                 : "text-center py-2 px-10 font-semibold text-violet-400"
                                             )}
                                             >Monto</th>
-                                            <th className={(dark === "light" ?
-                                                "text-center py-2 px-10 font-semibold text-violet-600"
-                                                : "text-center py-2 px-10 font-semibold text-violet-400"
-                                            )}
-                                            >Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,19 +102,6 @@ export const BalanceIncomes = ({ user, config }) => {
                                                             +${parseFloat(transaccion.monto).toFixed(2)}
                                                         </div>
                                                     </td>
-                                                    {
-                                                        !transaccion.estaActiva ?
-                                                            <td className="py-2 px-10 text-orange-400 font-semibold">
-                                                                <div className="w-24 text-center rounded-md bg-orange-200">
-                                                                    Anulada
-                                                                </div>
-                                                            </td> :
-                                                            <td className="py-2 px-10 text-green-500 font-semibold">
-                                                                <div className="w-24 text-center rounded-md bg-green-200">
-                                                                    Activa
-                                                                </div>
-                                                            </td>
-                                                    }
                                                 </tr>
                                             );
                                         })}
@@ -156,11 +123,10 @@ export const BalanceIncomes = ({ user, config }) => {
                                 <BalancePagination
                                     setTransactions={setIncomes}
                                     auth={auth}
-                                    navigationNumbers={navigationNumbers}
                                     type={type.INGRESO}
-                                    hasNextPage={hasNextPage}
-                                    setHasNextPage={setHasNextPage}
                                     setLoading={setLoading}
+                                    metadata={metadata}
+                                    setMetadata={setMetadata}
                                 />
                             </div> : <div></div>
                     }

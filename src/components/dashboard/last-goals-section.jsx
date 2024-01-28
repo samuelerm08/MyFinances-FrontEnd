@@ -44,7 +44,7 @@ export const LastGoal = ({
                     <div className="flex justify-center">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div> :
-                    almostCompletedGoal.length ?
+                    almostCompletedGoal?.length ?
                         <div className="flex flex-col items-center justify-center">
                             <div className="flex justify-between items-center">
                                 <h3 className={(dark === "light" ?
@@ -67,7 +67,7 @@ export const LastGoal = ({
                                     <span className="font-semibold text-gray-500">{almostCompletedGoal[0].titulo}</span>
                                     <span className="font-semibold text-xs text-violet-500 font-mono">
                                         {
-                                            !almostCompletedGoal[0].montoActual ?
+                                            !almostCompletedGoal[0]?.montoActual ?
                                                 "$0" :
                                                 `$${parseFloat(almostCompletedGoal[0].montoActual.toFixed(2))}`
                                         }
@@ -84,7 +84,7 @@ export const LastGoal = ({
                                         </span>
                                         <div className="w-full rounded-lg bg-gray-400">
                                             {
-                                                !almostCompletedGoal[0].montoActual ?
+                                                !almostCompletedGoal[0]?.montoActual ?
                                                     <div
                                                         className="bg-violet-500 p-0.5 text-center text-xs font-semibold font-mono text-white rounded-lg"
                                                         style={{ width: `${(0 / almostCompletedGoal[0].montoFinal) * 100}%` }}

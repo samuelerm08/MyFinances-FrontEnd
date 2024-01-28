@@ -2,14 +2,26 @@ import { useState } from "react";
 import { getUserToken } from "../../services/token/tokenService";
 import { filterByType } from "../../services/myfinances-api/transacciones";
 
-export const BalancePagination = ({ setTransactions, auth, navigationNumbers, type, hasNextPage, setHasNextPage, setLoading }) => {
+export const BalancePagination = ({
+    setTransactions,
+    auth,
+    type,
+    setLoading,
+    metadata,
+    setMetadata
+}) => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const changePage = (page) => {
-        setCurrentPage(page);
-        handleChangePage(page);
-    };
+    // const generatePageNumbers = (pageNumber) => {
+    //     let navigationNumbers = [];
+    //     pageNumber = pageNumber > 5 ? 5 : pageNumber;
+    //     for (let i = 1; i <= pageNumber; i++) navigationNumbers.push(i);
+    //     return navigationNumbers;
+    // };
+    // const pageNumber = Math.ceil(metadata.totalCount / metadata.pageSize);
+    // const navigationNumbers = generatePageNumbers(pageNumber);
+    let hasNextPage = metadata?.hasNextPage ?? true;
 
     const nextPage = (page) => {
         if (hasNextPage) {
@@ -39,15 +51,13 @@ export const BalancePagination = ({ setTransactions, auth, navigationNumbers, ty
                 tipo: type
             };
             try {
-                const { data: response } = await filterByType(payload, page, 5, config);
+                const { data: response } = await filterByType(payload, page, 10, config);
                 setLoading(false);
                 setTransactions(response.data);
-                if (!response.meta.hasNextPage) {
-                    setHasNextPage(false);
-                }
-                else {
-                    setHasNextPage(true);
-                }
+                if (setMetadata)
+                    setMetadata(response.meta);
+                if (response.meta?.hasNextPage)
+                    hasNextPage = response.meta?.hasNextPage;
             } catch (error) {
                 setError(error);
                 setLoading(false);
@@ -68,25 +78,15 @@ export const BalancePagination = ({ setTransactions, auth, navigationNumbers, ty
                         >
                             <i className="fa-solid fa-arrow-left text-sm"
                                 style={currentPage === 1 ? { cursor: "not-allowed" } : { cursor: "pointer" }}></i>
+                            <span className="m-1">Anterior</span>
                         </button>
-                        {
-                            navigationNumbers?.map((page, i) => (
-                                <button
-                                    key={i}
-                                    disabled={currentPage === page}
-                                    style={currentPage === page ? { cursor: "not-allowed" } : { cursor: "pointer" }}
-                                    className={`${currentPage === page ? "active" : ""}ring-1 ring-inset ring-gray-300 px-2 py-2 text-gray-400 hover:bg-violet-200`}
-                                    onClick={() => changePage(page)}>
-                                    <p className="font-mono font-bold">{page}</p>
-                                </button>
-                            ))
-                        }
                         <button
                             disabled={!hasNextPage || (currentPage === 1 && !hasNextPage)}
                             style={!hasNextPage || (currentPage === 1 && !hasNextPage) ? { cursor: "not-allowed" } : { cursor: "pointer" }}
                             className="inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             onClick={() => nextPage(currentPage)}
                         >
+                            <span className="m-1">Siguiente</span>
                             <i className="fa-solid fa-arrow-right text-sm"
                                 style={!hasNextPage || (currentPage === 1 && !hasNextPage) ? { cursor: "not-allowed" } : { cursor: "pointer" }}></i>
                         </button>

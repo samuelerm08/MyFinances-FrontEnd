@@ -85,12 +85,12 @@ export const GoalAmount = ({
                     setActiveGoals(activeGoals => activeGoals.map((goal) => {
                         return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
                     }));
-                    if (!!setTableGoals) {
+                    if (setTableGoals) {
                         setTableGoals(setTableGoals => setTableGoals.map((goal) => {
                             return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
                         }));
                     }
-                    if (!!setBalance) {
+                    if (setBalance) {
                         if (!balance.saldo_Total) {
                             setBalance({
                                 ...balance,
@@ -104,7 +104,7 @@ export const GoalAmount = ({
                             });
                         }
                     }
-                    if (!!setTransacciones) {
+                    if (setTransacciones) {
                         const goalTransaction = {
                             detalle: `Reserva - Meta: ${data.titulo}`,
                             monto: parseFloat(amount),
@@ -121,12 +121,12 @@ export const GoalAmount = ({
                             setActiveGoals(activeGoals => activeGoals.map((goal) => {
                                 return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
                             }));
-                            if (!!setTableGoals) {
+                            if (setTableGoals) {
                                 setTableGoals(setTableGoals => setTableGoals.map((goal) => {
                                     return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
                                 }));
                             }
-                            if (!!setCompletedGoals) {
+                            if (setCompletedGoals) {
                                 setCompletedGoals(completedGoals => [data, ...completedGoals]);
                                 const payload = {
                                     userId: user.id,
@@ -147,7 +147,7 @@ export const GoalAmount = ({
                                     setCompletedGoalsMetadata(response.meta);
                                 }
                             }
-                            if (!!setActiveGoalsMetadata) {
+                            if (setActiveGoalsMetadata) {
                                 const payload = {
                                     userId: user.id,
                                     completada: false

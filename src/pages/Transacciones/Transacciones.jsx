@@ -9,10 +9,10 @@ import { TransactionsTable } from "../../components/transactions/transactions-ta
 import { texts, type } from "../../constants/myfinances-constants";
 import Alerta from "../../components/Alerta";
 import { DateFilter } from "../../components/transactions/filters/date-filter";
-import { TransactionsPagination } from "../../components/dashboard/transactions/transactions-pagination";
 import { TypeFilter } from "../../components/transactions/filters/type-filter";
 import { StateFilter } from "../../components/transactions/filters/state-filter";
 import { AmountFilter } from "../../components/transactions/filters/amount-filter";
+import { TransactionsPagination } from "../../components/transactions/transactions-pagination";
 import useDark from "../../context/useDark";
 
 const Transacciones = () => {

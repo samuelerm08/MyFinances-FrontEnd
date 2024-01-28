@@ -153,8 +153,8 @@ export const GoalsTable = ({
                     <div className="w-full">
                         <GoalsPagination
                             metadata={tableGoalsMetadata}
+                            setMetadata={setTableGoalsMetadata}
                             setTableGoals={setTableGoals}
-                            setTableGoalsMetadata={setTableGoalsMetadata}
                             comesFromTable={true}
                             setLoading={setLoading}
                         />

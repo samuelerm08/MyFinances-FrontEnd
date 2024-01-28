@@ -46,11 +46,11 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
-                                                        "text-gray-600 py-2 px-20 font-bold"
+                                                        "text-gray-600 py-2 px-10 font-bold"
                                                         :
-                                                        "text-gray-300 py-2 px-20 font-bold"
+                                                        "text-gray-300 py-2 px-10 font-bold"
                                                     )}>{transaccion.detalle}</td>
-                                                    <td className="py-2 px-20 text-red-500 font-semibold font-mono">
+                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
                                                         <div className="w-28 flex justify-center">
                                                             -${parseFloat(transaccion.monto).toFixed(2)}
                                                         </div>

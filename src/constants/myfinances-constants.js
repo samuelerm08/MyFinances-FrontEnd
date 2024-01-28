@@ -35,6 +35,7 @@ export const texts = {
     WITH_NO_TRANSACTIONS: "Informacion de saldos no disponible. Comience a crear transacciones...",
     WITH_NO_EXPENSES: "Informacion de gastos no disponible. Comience a crear gastos...",
     WITH_NO_INCOMES: "Informacion de ingresos no disponible. Comience a crear ingresos...",
+    WITH_NO_RESERVES: "Informacion de reservas no disponible. Comience a reservar...",
     WITH_NO_GOALS: "No hay metas activas. Comience a crear metas...",
     NO_CHART: "Gráfico no disponible. No se registran gastos...",
     ON_COMPLETED_GOAL: "Meta completada!",

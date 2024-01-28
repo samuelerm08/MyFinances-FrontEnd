@@ -23,7 +23,7 @@ export const ActiveGoals = ({
     const [animarModal, setAnimarModal] = useState(false);
     const [goalId, setGoalId] = useState(0);
     const { dark } = useDark();
-    
+
     const handleAddingModal = (goalId) => {
         setModal(true);
         setGoalId(goalId);
@@ -129,7 +129,7 @@ export const ActiveGoals = ({
                     <div className="w-full">
                         <GoalsPagination
                             metadata={activeGoalsMetadata}
-                            setActiveGoalsMetadata={setActiveGoalsMetadata}
+                            setMetadata={setActiveGoalsMetadata}
                             setActiveGoals={setActiveGoals}
                             isCompleted={false}
                             setLoading={setLoading}

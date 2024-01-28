@@ -9,11 +9,9 @@ export const GoalsPagination = ({
     setCompletedGoals,
     setTableGoals,
     metadata,
+    setMetadata,
     isCompleted,
     setLoading,
-    setActiveGoalsMetadata,
-    setCompletedGoalsMetadata,
-    setTableGoalsMetadata,
     comesFromTable = false
 }) => {
     const { auth } = useAuth();
@@ -69,18 +67,14 @@ export const GoalsPagination = ({
                         if (!payload.completada) {
                             setLoading(false);
                             setActiveGoals(data.data);
-                            if (!!setActiveGoalsMetadata) setActiveGoalsMetadata(data.meta);
                         } else {
                             setLoading(false);
                             setCompletedGoals(data.data);
-                            if (!!setCompletedGoalsMetadata) setCompletedGoalsMetadata(data.meta);
                         }
-                        if (!data.meta.hasNextPage) {
-                            hasNextPage = false;
-                        }
-                        else {
-                            hasNextPage = true;
-                        }
+                        if (setMetadata)
+                            setMetadata(data.meta);
+                        if (data.meta?.hasNextPage)
+                            hasNextPage = data.meta?.hasNextPage;
                     }
                 } else {
                     const payload = { userId: user.id };
@@ -88,13 +82,10 @@ export const GoalsPagination = ({
                     if (status === HttpStatusCode.Ok) {
                         setLoading(false);
                         setTableGoals(data.data);
-                        if (!!setTableGoalsMetadata) setTableGoalsMetadata(data.meta);
-                        if (!data.meta.hasNextPage) {
-                            hasNextPage = false;
-                        }
-                        else {
-                            hasNextPage = true;
-                        }
+                        if (setMetadata)
+                            setMetadata(data.meta);
+                        if (data.meta?.hasNextPage)
+                            hasNextPage = data.meta?.hasNextPage;
                     }
                 }
             } catch (error) {

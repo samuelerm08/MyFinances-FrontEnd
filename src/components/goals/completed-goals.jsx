@@ -50,14 +50,14 @@ export const CompletedGoals = ({
                 });
                 setTimeout(() => {
                     setAlerta({});
-                }, 1500)
+                }, 1500);
                 setTimeout( async () => {
                     setCompletedGoals(completedGoals => completedGoals.map((goal) => {
                         return goalId === goal.id ? { ...goal, retirada: data.retirada } : goal;
                     }));
                     setTableGoals(tableGoals => tableGoals.map((goal) => {
                         return goalId === goal.id ? { ...goal, retirada: data.retirada } : goal;
-                    }));                    
+                    }));
                     const payload = {
                         userId: user.id,
                         completada: true
@@ -171,8 +171,8 @@ export const CompletedGoals = ({
                     <div className="w-full">
                         <GoalsPagination
                             metadata={completedGoalsMetadata}
+                            setMetadata={setCompletedGoalsMetadata}
                             setCompletedGoals={setCompletedGoals}
-                            setCompletedGoalsMetadata={setCompletedGoalsMetadata}
                             isCompleted={true}
                             setLoading={setCargando} />
                     </div> : <div></div>

@@ -89,7 +89,7 @@ const ModalMetas = ({
                         !tableGoals.length ? setTableGoals([data]) : setTableGoals([data, ...tableGoals]);
                     }
 
-                    if (!!setActiveGoalsMetadata) {
+                    if (setActiveGoalsMetadata) {
                         const payload = {
                             userId: user.id,
                             completada: false
