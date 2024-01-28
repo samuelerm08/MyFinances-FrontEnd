@@ -31,15 +31,15 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                                     <thead>
                                         <tr>
                                             <th className={(dark === "light" ?
-                                                "text-center py-2 px-10 font-semibold text-violet-600"
-                                                : "text-center py-2 px-10 font-semibold text-violet-400"
-                                            )}
-                                            >Transacción</th>
+                                                "font-bold text-center py-2 px-10 text-violet-600"
+                                                :
+                                                "font-bold text-center py-2 px-10 text-violet-400"
+                                            )}>Transacción</th>
                                             <th className={(dark === "light" ?
-                                                "text-center py-2 px-10 font-semibold text-violet-600"
-                                                : "text-center py-2 px-10 font-semibold text-violet-400"
-                                            )}
-                                            >Monto</th>
+                                                "font-bold text-center py-2 px-10 text-violet-600"
+                                                :
+                                                "font-bold text-center py-2 px-10 text-violet-400"
+                                            )}>Monto</th>
                                         </tr>
                                     </thead>
                                     <tbody>

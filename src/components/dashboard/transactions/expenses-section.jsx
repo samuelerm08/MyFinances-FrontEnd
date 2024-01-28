@@ -30,14 +30,14 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                                     <thead>
                                         <tr>
                                             <th className={(dark === "light" ?
-                                                "font-bold text-center p-1 text-violet-600"
+                                                "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
-                                                "font-bold text-center p-1 text-violet-400"
+                                                "font-bold text-center py-2 px-10 text-violet-400"
                                             )}>Transacción</th>
                                             <th className={(dark === "light" ?
-                                                "font-bold text-center p-1 text-violet-600"
+                                                "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
-                                                "font-bold text-center p-1 text-violet-400"
+                                                "font-bold text-center py-2 px-10 text-violet-400"
                                             )}>Monto</th>
                                         </tr>
                                     </thead>
