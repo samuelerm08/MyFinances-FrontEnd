@@ -9,8 +9,8 @@ export const ReservesSection = ({ cargando, transacciones }) => {
 
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-2"
-            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-2"
+            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
+            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
         )}
         >
             <div>
@@ -26,7 +26,7 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                         </div> :
                         reserves
                             ?
-                            <div className="flex justify-center mb-5">
+                            <div className="flex justify-center">
                                 <table>
                                     <thead>
                                         <tr>
