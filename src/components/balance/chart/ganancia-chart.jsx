@@ -49,7 +49,7 @@ export const GananciaChart = ({ transacciones }) => {
         return fechaA - fechaB;
     });
 
-    const totalDates = sortedAmounts.slice(0, 5).map(({ month }) => month);
+    const totalDates = sortedAmounts.map(({ month }) => month);
     const totalIncomes = totalAmounts.map(({ incomes }) => incomes);
     const totalExpenses = totalAmounts.map(({ expenses }) => expenses);
     const totalSaved = totalIncomes - totalExpenses;

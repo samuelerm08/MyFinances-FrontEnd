@@ -62,8 +62,10 @@ export const IncomesSection = ({ cargando, transacciones }) => {
                                 </table>
                             </div>
                             :
-                            <div className='pt-14 flex flex-col p-5 items-center text-center' >
-                                <h3 className="mb-10 text-lg">
+                            <div className='pt-14 flex flex-col p-5 items-center text-center'>
+                                <h3 className={(dark === "light" ?
+                                    "text-lg text-center text-black" :
+                                    "text-lg text-center text-white")}>
                                     {texts.WITH_NO_INCOMES}
                                 </h3>
                             </div>

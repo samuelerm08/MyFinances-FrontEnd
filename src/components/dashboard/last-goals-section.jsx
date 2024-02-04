@@ -44,7 +44,7 @@ export const LastGoal = ({
                     <div className="flex justify-center">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div> :
-                    almostCompletedGoal?.length ?
+                    !!almostCompletedGoal?.length ?
                         <div className="flex flex-col items-center justify-center">
                             <div className="flex justify-between items-center">
                                 <h3 className={(dark === "light" ?
@@ -60,8 +60,8 @@ export const LastGoal = ({
                             </div>
                             <div
                                 className={(dark === "light" ?
-                                    "w-64 h-64 m-3 rounded-lg bg-gray-100 p-8 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
-                                    : "w-64 h-64 m-3 rounded-lg bg-gray-300 p-8 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                    "w-52 h-52 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                    : "w-52 h-52 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
                                 )}>
                                 <div className="flex justify-between items-center">
                                     <span className="font-semibold text-gray-500">{almostCompletedGoal[0].titulo}</span>

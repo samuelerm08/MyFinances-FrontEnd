@@ -6,41 +6,23 @@ import useAuth from "../context/useAuth";
 
 const ProtectedPath = () => {
 
-    const { auth, cargando } = useAuth();
+    const { auth, cargando } = useAuth();
+    if (cargando) return "Cargando...";
 
-    // TODO: usar un spinners
-    if(cargando) return "Cargando...";
-    /*   const autid = true
- */
     return (
-
-    // Si existe auth.id Ingresa a dashboard por medio de ProtectedPath (ver el navegate to Dashboard en App.jsx)
         <>
             {
                 auth ?
-                    (
-                        <div className={styles.container}>
-
-                            <div className={styles.headerContainer}>
-                                <Header />
-                            </div>
-
-                            <main className={styles.mainSinHeader}>
-                                <Outlet />
-                            </main>
-
-
-
+                    <div className={styles.container}>
+                        <div className={styles.headerContainer}>
+                            <Header />
                         </div>
-
-                    )
-                    :
-                    (
-                        <Navigate to="/" />
-                    )
+                        <main className={styles.mainSinHeader}>
+                            <Outlet />
+                        </main>
+                    </div>
+                    : <Navigate to="/" />
             }
-
-
         </>
     );
 };

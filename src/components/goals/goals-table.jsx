@@ -1,14 +1,9 @@
 import useDark from "../../context/useDark";
 import { PulseLoader } from "react-spinners";
-import { GoalsPagination } from "./goals-pagination";
 
 export const GoalsTable = ({
     loading,
-    setLoading,
-    tableGoals,
-    tableGoalsMetadata,
-    setTableGoals,
-    setTableGoalsMetadata
+    tableGoals
 }) => {
     const { dark } = useDark();
     return (
@@ -147,18 +142,6 @@ export const GoalsTable = ({
                             </tbody>
                         </table>
                     </div>
-            }
-            {
-                tableGoalsMetadata.totalCount > 10 ?
-                    <div className="w-full">
-                        <GoalsPagination
-                            metadata={tableGoalsMetadata}
-                            setMetadata={setTableGoalsMetadata}
-                            setTableGoals={setTableGoals}
-                            comesFromTable={true}
-                            setLoading={setLoading}
-                        />
-                    </div> : <div></div>
             }
         </div >
     );

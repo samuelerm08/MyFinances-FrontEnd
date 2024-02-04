@@ -1,8 +1,8 @@
-.container{
+.container {
     width: 40%;
     display: flex;
     flex-direction: column;
-    align-items: stretch;    
+    align-items: stretch;
     text-align: center;
 }
 
@@ -18,74 +18,56 @@
     font-size: 1.9rem;
     text-transform: capitalize;
     color: rgb(167 139 250);
-    
-
 }
 
-.form{
-    background-color: var(--blanco-gris);    
-    
+.form {
+    background-color: var(--blanco-gris);
     margin: 1.5rem 0;
-    
     padding: 1.25rem 2.5rem;
-    
     border-radius: 0.5rem;
-
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.label{
+.label {
     text-transform: capitalize;
     display: block;
     margin-top: 0.5rem;
-
-    font-size: 1.25rem;     
+    font-size: 1.25rem;
     font-weight: bold;
-
     color: rgb(167 139 250);
 }
 
-.input{
+.input {
     width: 100%;
     margin-top: 0.75rem;
     padding: 0.75rem;
-
     border: 1px solid #e2e8f0;
     border-radius: 1.5rem;
-
     color: var(--gris);
-
     background-color: #f7f4ffee;
-       
 }
 
-.submit{
+.submit {
     margin-top: 2rem;
     margin: 2rem auto 0;
-
-    background-color: var(--violetlight) ;
+    background-color: var(--violetlight);
     padding: 0;
     border-radius: 0.25rem;
-    width: 40%;  
-  
-        
+    width: 40%;
 }
 
-.button{
-    width: 100%;   
-    
+.button {
+    width: 100%;
     padding: 0.75rem 0;
     color: white;
-
     text-transform: uppercase;
     font-weight: bold;
-    
 }
 
-.button:hover{
+.button:hover {
     cursor: pointer;
-    background-color: var(--violetdark) ;
-    border-radius: 0.25rem;   
+    background-color: var(--violetdark);
+    border-radius: 0.25rem;
 }
 
 .nav {
@@ -94,31 +76,30 @@
     padding-top: 0.30rem;
     padding-bottom: 0.30rem;
     color: rgb(167 139 250);
-    background-color: var(--blanco-gris); 
+    background-color: var(--blanco-gris);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-weight: bold;  
+    font-weight: bold;
     text-align: center;
-    align-items: center;  
+    align-items: center;
     border-radius: 0.5rem;
 }
+
 nav p {
     font-weight: 400;
-    
 }
+
 .nav .link {
     font-weight: 600;
-
 }
 
 .nav .link:hover {
-  color: var(--violetdark) ;
-  display: flex;
-  background-color: var(--violethover);
-  border-radius: 0.25rem;
-  align-items: center;
-  justify-content: center;
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 0.35s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
+    color: var(--violetdark);
+    display: flex;
+    background-color: var(--violethover);
+    border-radius: 0.25rem;
+    align-items: center;
+    justify-content: center;
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 0.35s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

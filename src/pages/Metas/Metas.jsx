@@ -11,6 +11,7 @@ import { texts } from "../../constants/myfinances-constants";
 import { GoalsTable } from "../../components/goals/goals-table";
 import useDark from "../../context/useDark";
 import { HttpStatusCode } from "axios";
+import { GoalsPagination } from "../../components/goals/goals-pagination";
 
 const Metas = () => {
     const { auth } = useAuth();
@@ -117,7 +118,7 @@ const Metas = () => {
 
     return (
         <div>
-            <div className='pt-8 flex justify-between items-center'>
+            <div className='pt-8 flex justify-center items-center'>
                 <button
                     type="button"
                     className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold shadow-md hover:shadow-violet-500'
@@ -170,11 +171,11 @@ const Metas = () => {
                     setAlerta={setAlerta}
                 />
             </div>
-            <div>
+            <div className="flex flex-col items-center">
                 <div className={(dark === "light" ?
-                    "bg-inherit p-4 rounded-lg shadow-md hover:shadow-violet-400"
+                    "bg-inherit p-4 rounded-lg shadow-md hover:shadow-violet-400 w-4/5"
                     :
-                    "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400"
+                    "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 w-4/5"
                 )}>
                     <GoalsTable
                         tableGoals={tableGoals}
@@ -183,6 +184,18 @@ const Metas = () => {
                         setTableGoals={setTableGoals}
                         setTableGoalsMetadata={setTableGoalsMetadata}
                         tableGoalsMetadata={tableGoalsMetadata} />
+                    {
+                        tableGoalsMetadata.totalCount > 10 ?
+                            <div className="w-full">
+                                <GoalsPagination
+                                    metadata={tableGoalsMetadata}
+                                    setMetadata={setTableGoalsMetadata}
+                                    setTableGoals={setTableGoals}
+                                    comesFromTable={true}
+                                    setLoading={setLoadingTableGoals}
+                                />
+                            </div> : <div></div>
+                    }
                 </div>
             </div>
         </div>

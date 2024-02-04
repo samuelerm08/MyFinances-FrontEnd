@@ -91,8 +91,8 @@ export const CompletedGoals = ({
     };
     return (
         <div className={(dark === "light" ?
-            "w-2/5 bg-gray-200 p-10 rounded-lg shadow-md hover:shadow-violet-400 m-10 text-center flex flex-col items-center"
-            : "w-2/5 bg-gray-600 p-10 rounded-lg shadow-md hover:shadow-violet-400 m-10 text-center"
+            "w-2/5 bg-gray-200 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
+            : "w-2/5 bg-gray-600 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
         )}
         >
             <h3 className={(dark === "light" ?
@@ -110,12 +110,12 @@ export const CompletedGoals = ({
                                 return (
                                     <div
                                         className={(dark === "light" ?
-                                            "w-64 h-64 m-3 rounded-lg bg-gray-100 p-8 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
-                                            : "w-64 h-64 m-3 rounded-lg bg-gray-200 p-8 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            "w-52 h-52 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            : "w-52 h-52 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
                                         )}
                                         key={index}>
                                         <div className="flex justify-between items-center">
-                                            <span className="font-semibold text-gray-500">{goal.titulo}</span>
+                                            <span className="font-semibold text-gray-500 text-sm text-left">{goal.titulo}</span>
                                             <span className="font-semibold text-xs text-violet-500 font-mono">
                                                 {`$${parseFloat(goal.montoActual.toFixed(2))}`}
                                                 <span className="font-semibold text-gray-500">
@@ -124,7 +124,7 @@ export const CompletedGoals = ({
                                             </span>
                                         </div>
                                         <hr />
-                                        <div className="mb-10 mt-10" style={{ width: "100%", display: "flex" }}>
+                                        <div className="mb-8 mt-8" style={{ width: "100%", display: "flex" }}>
                                             <div className="w-full">
                                                 <span className="font-semibold text-xs text-gray-500">
                                                     Progreso
@@ -147,7 +147,7 @@ export const CompletedGoals = ({
                                                 <div className="flex justify-around">
                                                     <div className="w-32 text-center rounded-md bg-green-200">
                                                         <h5
-                                                            className="text-xl font-semibold text-center text-green-500 font-mono"
+                                                            className="text-lg font-semibold text-center text-green-500 font-mono"
                                                         >
                                                             Completada
                                                         </h5>
