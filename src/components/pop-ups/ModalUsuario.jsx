@@ -118,8 +118,7 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
                             id="email"
                             type="text"
                             defaultValue={user.email}
-                            disabled="true"
-                            className="text-white"
+                            disabled={true}
                         />
 
                     </div>

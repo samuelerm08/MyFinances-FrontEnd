@@ -22,7 +22,7 @@ export const IncomesSection = ({ cargando, transacciones }) => {
                         <div className="flex justify-center">
                             <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        ingresos
+                        !!ingresos?.length
                             ?
                             <div className="w-full flex justify-center">
                                 <table>

@@ -24,7 +24,7 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                         <div className="flex justify-center">
                             <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        reserves
+                        !!reserves?.length
                             ?
                             <div className="flex justify-center">
                                 <table>

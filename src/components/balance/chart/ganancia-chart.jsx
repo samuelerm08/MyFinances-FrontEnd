@@ -17,41 +17,42 @@ export const GananciaChart = ({ transacciones }) => {
     const transaccionesActivas = transacciones?.filter(({ estaActiva }) => estaActiva);
 
     const sumarMontos = (transaccionesActivas) => {
-        const montosPorMes = {};
+        const amountsByMonth = {};
 
         transaccionesActivas?.forEach((transaccion) => {
 
             const fecha = new Date(transaccion.fecha);
-            const mesAnio = fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
-            const monto = transaccion.monto;
+            const month = fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
+            const amont = transaccion.monto;
             const isReserve = transaccion.tipoTransaccion === type.RESERVA;
             const isWithdraw = isReserve && transaccion?.detalle?.includes("Retiro");
             const isIncome = transaccion.tipoTransaccion === type.INGRESO || isWithdraw;
             const isExpense = transaccion.tipoTransaccion === type.EGRESO || !isWithdraw;
 
-            if (!montosPorMes[mesAnio]) {
-                montosPorMes[mesAnio] = { mes: mesAnio, ingresos: 0, egresos: 0 };
+            if (!amountsByMonth[month]) {
+                amountsByMonth[month] = { month: month, incomes: 0, expenses: 0 };
             }
 
             if (isIncome)
-                montosPorMes[mesAnio].ingresos += monto;
+                amountsByMonth[month].incomes += amont;
             else if (isExpense)
-                montosPorMes[mesAnio].egresos += monto;
+                amountsByMonth[month].expenses += amont;
         });
 
-        const montosArray = Object.values(montosPorMes);
-        return montosArray;
+        const amountsArray = Object.values(amountsByMonth);
+        return amountsArray;
     };
-    const montosTotales = sumarMontos(transaccionesActivas);
-    const datosOrdenados = montosTotales.sort((a, b) => {
+    const totalAmounts = sumarMontos(transaccionesActivas);
+    const sortedAmounts = totalAmounts.sort((a, b) => {
         const fechaA = new Date(a.mes);
         const fechaB = new Date(b.mes);
         return fechaA - fechaB;
     });
 
-    const fechasAcumuladas = datosOrdenados.slice(0, 5).map(({ mes }) => mes);
-    const ingresosTotales = montosTotales.map(({ ingresos }) => ingresos);
-    const egresosTotales = montosTotales.map(({ egresos }) => egresos);
+    const totalDates = sortedAmounts.slice(0, 5).map(({ month }) => month);
+    const totalIncomes = totalAmounts.map(({ incomes }) => incomes);
+    const totalExpenses = totalAmounts.map(({ expenses }) => expenses);
+    const totalSaved = totalIncomes - totalExpenses;
 
     const colores = [
         "#22C55E",
@@ -69,18 +70,30 @@ export const GananciaChart = ({ transacciones }) => {
                 "text-xl text-center font-semibold text-violet-600 antialiased"
                 : "text-xl text-center font-semibold text-violet-400 antialiased"
             )}>
-                
+                Total Ahorrado
+                <i className="fa-solid fa-circle-question ml-2 text-gray-400"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="Ahorrado en las últimas 10 transacciones">
+                </i>
             </h3>
+
+            <h3 className={(dark === "light" ?
+                "text-xl text-center font-semibold text-violet-600 antialiased"
+                : "text-xl text-center font-semibold text-violet-400 antialiased"
+            )}>
+                ${totalSaved.toFixed(2)}
+            </h3>
+
             <div className="chart-container">
                 <Bar
                     width={500} height={250}
                     color={dark === "light" ? "white" : "black"}
                     data={{
-                        labels: fechasAcumuladas,
+                        labels: totalDates,
                         datasets: [
                             {
                                 label: "Ingresos",
-                                data: ingresosTotales,
+                                data: totalIncomes,
                                 backgroundColor: colores[0], // Color para ingresos
                                 borderWidth: 0,
                                 hoverOffset: 15,
@@ -88,7 +101,7 @@ export const GananciaChart = ({ transacciones }) => {
                             },
                             {
                                 label: "Egresos",
-                                data: egresosTotales,
+                                data: totalExpenses,
                                 backgroundColor: colores[1], // Color para egresos
                                 borderWidth: 0,
                                 hoverOffset: 15,
