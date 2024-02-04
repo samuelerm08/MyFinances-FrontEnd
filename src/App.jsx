@@ -11,7 +11,7 @@ import Ayuda from "./pages/Ayuda/Ayuda";
 import SignUp from "./pages/SignUp/SignUp";
 import Metas from "./pages/Metas/Metas";
 import Usuario from "./pages/Usuario/Usuario";
-//
+
 function App() {
     return (
         <BrowserRouter>
