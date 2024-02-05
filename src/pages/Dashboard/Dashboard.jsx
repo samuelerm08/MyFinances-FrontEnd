@@ -110,7 +110,7 @@ const Dashboard = () => {
                 "mx-5 text-gray-200 font-bold uppercase "
             )}
             >Hola, {user.nombre}</h2>
-            <div className="p-2 m-6 mb-0 bg-inherit rounded flex justify-between">
+            <div className="py-10 m-6 mb-0 bg-inherit rounded flex justify-between t-table">
                 <BalanceSection
                     auth={auth}
                     userId={user.id}

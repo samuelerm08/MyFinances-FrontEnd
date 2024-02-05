@@ -23,7 +23,7 @@ export const BalanceExpenses = ({ user, config }) => {
                 tipo: type.EGRESO
             };
             try {
-                const { data, status } = await filterByType(payload, 1, 10, config);
+                const { data, status } = await filterByType(payload, 1, 5, config);
                 if (status === HttpStatusCode.Ok) {
                     setLoading(false);
                     const validExpenses = data?.data.filter(({ estaActiva }) => estaActiva);
@@ -47,43 +47,43 @@ export const BalanceExpenses = ({ user, config }) => {
     const { msg } = expensesAlert;
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-2"
-            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-2"
+            "w-1/4 bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5"
+            : "w-1/4 bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5"
         )}
         >
-            <div>
+            <div className="t-table">
                 <h2 className={(dark === "light" ?
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
                 >Gastos</h2>
                 {
-                    expensesAlert ?
+                    !!expensesAlert ?
                         <div className="flex justify-center">
                             <div className="absolute">
                                 {msg && <Alerta alerta={expensesAlert} />}
                             </div>
                         </div> : <div></div>
                 }
-                <div className="bg-inherit rounded-lg">
-                    {cargando ?
+                {
+                    !!cargando ?
                         <div className="flex justify-center">
                             <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        expenses?.length
+                        !!expenses?.length
                             ?
                             <div className="flex justify-center mb-5">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th className={(dark === "light" ?
-                                                "text-center py-2 px-10 font-semibold text-violet-600"
-                                                : "text-center py-2 px-10 font-semibold text-violet-400"
+                                                "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
+                                                : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
                                             >Transacción</th>
                                             <th className={(dark === "light" ?
-                                                "text-center py-2 px-10 font-semibold text-violet-600"
-                                                : "text-center py-2 px-10 font-semibold text-violet-400"
+                                                "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
+                                                : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
                                             >Monto</th>
                                         </tr>
@@ -93,10 +93,10 @@ export const BalanceExpenses = ({ user, config }) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
-                                                        "py-2 px-10 text-gray-800"
-                                                        : "text-gray-100 font-semibold py-2 px-10"
+                                                        "py-2 px-10 text-gray-800 font-semibold text-sm"
+                                                        : "text-gray-100 font-semibold py-2 px-10 text-sm"
                                                     )}>{transaccion.detalle}</td>
-                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
+                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono text-sm">
                                                         <div className="w-28 flex justify-center">
                                                             -${parseFloat(transaccion.monto).toFixed(2)}
                                                         </div>
@@ -115,22 +115,21 @@ export const BalanceExpenses = ({ user, config }) => {
                                     {texts.WITH_NO_EXPENSES}
                                 </h3>
                             </div>
-                    }
-                    {
-                        metadata.totalCount > 10 ?
-                            <div className="w-full">
-                                <BalancePagination
-                                    setTransactions={setExpenses}
-                                    auth={auth}
-                                    type={type.EGRESO}
-                                    setLoading={setLoading}
-                                    metadata={metadata}
-                                    setMetadata={setMetadata}
-                                />
-                            </div> : <div></div>
-                    }
-                </div>
+                }
             </div>
+            {
+                metadata?.totalCount > 10 ?
+                    <div className="w-full">
+                        <BalancePagination
+                            setTransactions={setExpenses}
+                            auth={auth}
+                            type={type.EGRESO}
+                            setLoading={setLoading}
+                            metadata={metadata}
+                            setMetadata={setMetadata}
+                        />
+                    </div> : <div></div>
+            }
         </div>
     );
 };

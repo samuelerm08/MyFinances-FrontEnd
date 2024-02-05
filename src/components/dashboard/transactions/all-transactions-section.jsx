@@ -22,7 +22,7 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                 >Ultimas Transacciones</h3>
             </div>
             {
-                cargando ?
+                !!cargando ?
                     <div className="flex justify-center">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div>
@@ -32,27 +32,27 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                             <thead>
                                 <tr>
                                     <th className={(dark === "light" ?
-                                        "text-left py-2 px-20 font-semibold text-violet-600"
+                                        "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
-                                        "bg-gray-600 text-left py-2 px-20 font-semibold text-violet-400"
+                                        "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
                                     >Detalle</th>
                                     <th className={(dark === "light" ?
-                                        "text-left py-2 px-20 font-semibold text-violet-600"
+                                        "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
-                                        "bg-gray-600 text-left py-2 px-20 font-semibold text-violet-400"
+                                        "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
                                     >Monto</th>
                                     <th className={(dark === "light" ?
-                                        "text-left py-2 px-20 font-semibold text-violet-600"
+                                        "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
-                                        "bg-gray-600 text-left py-2 px-20 font-semibold text-violet-400"
+                                        "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
                                     >Fecha</th>
                                     <th className={(dark === "light" ?
-                                        "text-left py-2 px-20 font-semibold text-violet-600"
+                                        "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
-                                        "bg-gray-600 text-left py-2 px-20 font-semibold text-violet-400"
+                                        "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
                                     >Tipo</th>
                                 </tr>
@@ -69,30 +69,30 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                 key={index}
                                             >
                                                 <td className={(dark === "light" ?
-                                                    "text-gray-600 py-2 px-20 font-semibold"
+                                                    "text-gray-600 py-2 px-10 font-semibold"
                                                     :
-                                                    "text-gray-300 py-2 px-20 font-semibold"
+                                                    "text-gray-300 py-2 px-10 font-semibold"
                                                 )}
                                                 >{transaccion.detalle}</td>
                                                 {
                                                     transaccion.tipoTransaccion === type.EGRESO ?
-                                                        <td className="py-2 px-20 text-red-500 font-semibold font-mono">
+                                                        <td className="py-2 px-10 text-red-500 font-semibold font-mono">
                                                             -${parseFloat(transaccion.monto).toFixed(2)}
                                                         </td> :
                                                         transaccion.tipoTransaccion === type.INGRESO ?
-                                                            <td className="py-2 px-20 text-green-500 font-semibold font-mono">
+                                                            <td className="py-2 px-10 text-green-500 font-semibold font-mono">
                                                                 <div className="w-28 flex justify-center rounded-md bg-green-200">
                                                                     +${parseFloat(transaccion.monto).toFixed(2)}
                                                                 </div>
                                                             </td> :
                                                             transaccion.tipoTransaccion === type.RESERVA ?
                                                                 transaccion.detalle?.includes("Retiro") ?
-                                                                    <td className="py-2 px-20 text-green-500 font-semibold font-mono">
+                                                                    <td className="py-2 px-10 text-green-500 font-semibold font-mono">
                                                                         <div className="w-28 flex justify-center rounded-md bg-green-200">
                                                                             +${parseFloat(transaccion.monto).toFixed(2)}
                                                                         </div>
                                                                     </td> :
-                                                                    <td className="py-2 px-20 text-red-500 font-semibold font-mono">
+                                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
                                                                         -${parseFloat(transaccion.monto).toFixed(2)}
                                                                     </td>
                                                                 : <td></td>
@@ -100,16 +100,16 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                 {
                                                     transaccion.fecha ?
                                                         <td className={(dark === "light" ?
-                                                            "py-2 px-20 text-gray-600 font-semibold font-mono"
+                                                            "py-2 px-10 text-gray-600 font-semibold font-mono"
                                                             :
-                                                            "py-2 px-20 text-gray-300 font-semibold font-mono"
+                                                            "py-2 px-10 text-gray-300 font-semibold font-mono"
                                                         )}
                                                         >{new Date(transaccion.fecha).toLocaleDateString()}</td> :
                                                         <td></td>
                                                 }
                                                 {
                                                     transaccion && transaccion.tipoTransaccion === type.EGRESO ?
-                                                        <td className="py-2 px-20 text-gray-400">
+                                                        <td className="py-2 px-10 text-gray-400">
                                                             {transaccion.tipoTransaccion}
                                                             <span className="text-red-500 font-bold ml-1 pointer-events-none">
                                                                 <i className="fa-solid fa-arrow-trend-down"></i>
@@ -117,14 +117,14 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                         </td>
                                                         :
                                                         transaccion && transaccion.tipoTransaccion === type.INGRESO ?
-                                                            <td className="py-2 px-20 text-gray-400">
+                                                            <td className="py-2 px-10 text-gray-400">
                                                                 {transaccion.tipoTransaccion}
                                                                 <span className="text-green-500 font-bold ml-1 pointer-events-none">
                                                                     <i className="fa-solid fa-arrow-trend-up"></i>
                                                                 </span>
                                                             </td> :
                                                             transaccion.tipoTransaccion === type.RESERVA ?
-                                                                <td className="py-2 px-20 text-gray-400">
+                                                                <td className="py-2 px-10 text-gray-400">
                                                                     {transaccion.tipoTransaccion}
                                                                     <i className="fa-solid fa-piggy-bank ml-1 pointer-events-none"></i>
                                                                 </td>

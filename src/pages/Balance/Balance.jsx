@@ -58,10 +58,10 @@ const Balance = () => {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="bg-inherit rounded p-2 m-1 mb-0">
+            <div className="bg-inherit p-2">
                 <BalanceComponent cargando={cargando} balance={balance} />
             </div>
-            <div className="bg-inherit rounded p-2 m-1 mb-0 flex justify-around">
+            <div className="bg-inherit p-2 flex justify-center">
                 <BalanceIncomes user={user} config={config} />
                 <BalanceExpenses user={user} config={config} />
                 <BalanceReserves user={user} config={config} />

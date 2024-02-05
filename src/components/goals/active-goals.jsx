@@ -2,14 +2,12 @@ import { useState } from "react";
 import { GoalAmount } from "../pop-ups/ModalMontoMeta";
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
-import { GoalsPagination } from "./goals-pagination";
 
 export const ActiveGoals = ({
     goals,
     auth,
     error,
     cargando,
-    setLoading,
     setActiveGoals,
     setCompletedGoals,
     setCompletedGoalsMetadata,
@@ -33,29 +31,25 @@ export const ActiveGoals = ({
     };
 
     return (
-        <div className={(dark === "light" ?
-            "w-2/5 bg-gray-200 p-5 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center"
-            : "w-2/5 bg-gray-600 p-5 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center"
-        )}
-        >
+        <div className="t-table">
             <h3 className={(dark === "light" ?
                 "text-xl font-semibold text-violet-600 antialiased"
                 : "text-xl font-semibold text-violet-400 antialiased"
             )}>Metas Activas</h3>
 
             {
-                cargando ?
-                    <div className="flex justify-around p-10 mx-20">
+                !!cargando ?
+                    <div className="flex justify-center items-center h-full">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div> :
-                    goals.length || (goals.length && !error) ?
-                        <div className="flex flex-wrap justify-center">
+                    !!goals?.length || (!!goals?.length && !error) ?
+                        <div className="flex flex-wrap justify-center mt-10">
                             {activeGoals?.splice(0, 4).map((goal, index) => {
                                 return (
                                     <div
                                         className={(dark === "light" ?
-                                            "w-52 h-52 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
-                                            : "w-52 h-52 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            "w-48 h-48 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            : "w-48 h-48 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
                                         )}
                                         key={index}>
                                         <div className="flex justify-between items-center">
@@ -72,7 +66,7 @@ export const ActiveGoals = ({
                                             </span>
                                         </div>
                                         <hr />
-                                        <div className="mb-10 mt-10" style={{ width: "100%", display: "flex" }}>
+                                        <div className="mb-6 mt-6" style={{ width: "100%", display: "flex" }}>
                                             <div className="w-full">
                                                 <span className="font-semibold text-xs text-gray-500">
                                                     Progreso
@@ -123,18 +117,6 @@ export const ActiveGoals = ({
                             })}
                         </div> :
                         <div></div>
-            }
-            {
-                activeGoalsMetadata.totalCount > 4 ?
-                    <div className="w-full">
-                        <GoalsPagination
-                            metadata={activeGoalsMetadata}
-                            setMetadata={setActiveGoalsMetadata}
-                            setActiveGoals={setActiveGoals}
-                            isCompleted={false}
-                            setLoading={setLoading}
-                        />
-                    </div> : <div></div>
             }
         </div>
     );

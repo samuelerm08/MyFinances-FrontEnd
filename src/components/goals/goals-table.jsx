@@ -9,8 +9,8 @@ export const GoalsTable = ({
     return (
         <div className="t-table">
             {
-                loading ?
-                    <div className="flex justify-center">
+                !!loading ?
+                    <div className="flex justify-center items-center h-full">
                         <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :

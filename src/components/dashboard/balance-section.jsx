@@ -53,12 +53,12 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
     }, []);
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 pt-4 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
-            : "bg-gray-600 pt-4 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
+            "bg-gray-200 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
+            : "bg-gray-600 rounded-lg shadow-md hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
         )}>
             {
                 cargando ?
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center h-full">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :

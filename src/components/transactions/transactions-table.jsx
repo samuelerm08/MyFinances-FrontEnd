@@ -56,7 +56,7 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
         <div className="t-table">
             {
                 cargando ?
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center h-full">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :

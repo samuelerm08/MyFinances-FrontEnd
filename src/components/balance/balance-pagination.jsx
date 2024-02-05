@@ -12,15 +12,6 @@ export const BalancePagination = ({
 }) => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-
-    // const generatePageNumbers = (pageNumber) => {
-    //     let navigationNumbers = [];
-    //     pageNumber = pageNumber > 5 ? 5 : pageNumber;
-    //     for (let i = 1; i <= pageNumber; i++) navigationNumbers.push(i);
-    //     return navigationNumbers;
-    // };
-    // const pageNumber = Math.ceil(metadata.totalCount / metadata.pageSize);
-    // const navigationNumbers = generatePageNumbers(pageNumber);
     let hasNextPage = metadata?.hasNextPage ?? true;
 
     const nextPage = (page) => {
@@ -51,7 +42,7 @@ export const BalancePagination = ({
                 tipo: type
             };
             try {
-                const { data: response } = await filterByType(payload, page, 10, config);
+                const { data: response } = await filterByType(payload, page, 5, config);
                 setLoading(false);
                 setTransactions(response.data);
                 if (setMetadata)

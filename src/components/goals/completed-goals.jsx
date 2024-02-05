@@ -1,6 +1,5 @@
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
-import { GoalsPagination } from "./goals-pagination";
 import useAuth from "../../context/useAuth";
 import { getByState, withdrawGoal } from "../../services/myfinances-api/metaFinanciera";
 import { texts } from "../../constants/myfinances-constants";
@@ -12,7 +11,6 @@ export const CompletedGoals = ({
     goals,
     error,
     cargando,
-    setCargando,
     completedGoalsMetadata,
     setCompletedGoalsMetadata,
     setCompletedGoals,
@@ -90,28 +88,24 @@ export const CompletedGoals = ({
         }
     };
     return (
-        <div className={(dark === "light" ?
-            "w-2/5 bg-gray-200 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
-            : "w-2/5 bg-gray-600 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
-        )}
-        >
+        <div className="t-table">
             <h3 className={(dark === "light" ?
                 "text-xl font-semibold text-violet-600 antialiased"
                 : "text-xl font-semibold text-violet-400 antialiased"
             )}>Metas Completadas</h3>
             {
-                cargando ?
-                    <div className="flex justify-around p-10 mx-20">
+                !!cargando ?
+                    <div className="flex justify-center items-center h-full">
                         <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
                     </div> :
-                    goals.length || (goals.length && !error) ?
-                        <div className="flex flex-wrap justify-center">
+                    !!goals?.length || (!!goals?.length && !error) ?
+                        <div className="flex flex-wrap justify-center items-center mt-10">
                             {completedGoals?.slice(0, 4).map((goal, index) => {
                                 return (
                                     <div
                                         className={(dark === "light" ?
-                                            "w-52 h-52 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
-                                            : "w-52 h-52 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            "w-48 h-48 m-3 rounded-lg bg-gray-100 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
+                                            : "w-48 h-48 m-3 rounded-lg bg-gray-200 p-3 w-50% shadow-md hover:shadow-violet-400 dark:bg-neutral-700 duration-100"
                                         )}
                                         key={index}>
                                         <div className="flex justify-between items-center">
@@ -124,7 +118,7 @@ export const CompletedGoals = ({
                                             </span>
                                         </div>
                                         <hr />
-                                        <div className="mb-8 mt-8" style={{ width: "100%", display: "flex" }}>
+                                        <div className="mb-6 mt-6" style={{ width: "100%", display: "flex" }}>
                                             <div className="w-full">
                                                 <span className="font-semibold text-xs text-gray-500">
                                                     Progreso
@@ -165,17 +159,6 @@ export const CompletedGoals = ({
                             })}
                         </div>
                         : <div></div>
-            }
-            {
-                completedGoalsMetadata.totalCount > 4 ?
-                    <div className="w-full">
-                        <GoalsPagination
-                            metadata={completedGoalsMetadata}
-                            setMetadata={setCompletedGoalsMetadata}
-                            setCompletedGoals={setCompletedGoals}
-                            isCompleted={true}
-                            setLoading={setCargando} />
-                    </div> : <div></div>
             }
         </div>
     );

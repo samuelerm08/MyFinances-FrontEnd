@@ -47,14 +47,14 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
-                                                        "text-gray-600 py-2 px-10 font-bold"
+                                                        "text-gray-600 text-sm py-2 px-10 font-bold"
                                                         :
-                                                        "text-gray-300 py-2 px-10 font-bold"
+                                                        "text-gray-300 text-sm py-2 px-10 font-bold"
                                                     )}>{transaccion.detalle}</td>
 
                                                     {
                                                         transaccion.detalle?.includes("Retiro") ?
-                                                            <td className="py-2 px-10 text-green-500 font-semibold font-mono">
+                                                            <td className="py-2 px-10 text-green-500 font-semibold font-mono text-sm">
                                                                 <div className="w-28 flex justify-center rounded-md bg-green-200">
                                                                     +${parseFloat(transaccion.monto).toFixed(2)}
                                                                 </div>

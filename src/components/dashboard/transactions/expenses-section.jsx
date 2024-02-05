@@ -12,7 +12,7 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
             : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
         )}>
 
-            <div>
+            <div className="t-table">
                 <h2 className={(dark === "light" ?
                     "font-bold text-center p-1 text-violet-600"
                     :
@@ -44,13 +44,13 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                                     <tbody>
                                         {egresos?.slice(0, 5).map((transaccion, index) => {
                                             return (
-                                                <tr className=" border-gray-200" key={index}>
+                                                <tr className="border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
-                                                        "text-gray-600 py-2 px-10 font-bold"
+                                                        "text-gray-600 text-sm py-2 px-10 font-bold"
                                                         :
-                                                        "text-gray-300 py-2 px-10 font-bold"
+                                                        "text-gray-300 text-sm py-2 px-10 font-bold"
                                                     )}>{transaccion.detalle}</td>
-                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
+                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono text-sm">
                                                         <div className="w-28 flex justify-center">
                                                             -${parseFloat(transaccion.monto).toFixed(2)}
                                                         </div>
@@ -63,7 +63,9 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                             </div>
                             :
                             <div className='pt-14 flex flex-col p-5 items-center text-center' >
-                                <h3 className="mb-10 text-lg">
+                                <h3 className={(dark === "light" ?
+                                    "text-lg text-center text-black" :
+                                    "text-lg text-center text-white")}>
                                     {texts.WITH_NO_EXPENSES}
                                 </h3>
                             </div>

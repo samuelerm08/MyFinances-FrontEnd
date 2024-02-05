@@ -118,7 +118,7 @@ const Metas = () => {
 
     return (
         <div>
-            <div className='pt-8 flex justify-center items-center'>
+            <div className='pt-8 flex justify-between items-center'>
                 <button
                     type="button"
                     className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold shadow-md hover:shadow-violet-500'
@@ -145,31 +145,65 @@ const Metas = () => {
                 </div>
             </div>
             <div className="flex justify-center">
-                <ActiveGoals
-                    goals={activeGoals}
-                    auth={auth}
-                    error={error}
-                    cargando={loadingActiveGoals}
-                    setLoading={setLoadingActiveGoals}
-                    setActiveGoals={setActiveGoals}
-                    setCompletedGoals={setCompletedGoals}
-                    activeGoalsMetadata={activeGoalsMetadata}
-                    completedGoalsMetadata={completedGoalsMetadata}
-                    setActiveGoalsMetadata={setActiveGoalsMetadata}
-                    setCompletedGoalsMetadata={setCompletedGoalsMetadata}
-                    setTableGoals={setTableGoals}
-                />
-                <CompletedGoals
-                    goals={completedGoals}
-                    error={error}
-                    cargando={loadingCompletedGoals}
-                    setCargando={setLoadingCompletedGoals}
-                    completedGoalsMetadata={completedGoalsMetadata}
-                    setCompletedGoalsMetadata={setCompletedGoalsMetadata}
-                    setCompletedGoals={setCompletedGoals}
-                    setTableGoals={setTableGoals}
-                    setAlerta={setAlerta}
-                />
+                <div className={(dark === "light" ?
+                    "w-2/5 h-1/4 bg-gray-200 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
+                    : "w-2/5 h-1/4 bg-gray-600 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
+                )}>
+                    <ActiveGoals
+                        goals={activeGoals}
+                        auth={auth}
+                        error={error}
+                        cargando={loadingActiveGoals}
+                        setLoading={setLoadingActiveGoals}
+                        setActiveGoals={setActiveGoals}
+                        setCompletedGoals={setCompletedGoals}
+                        activeGoalsMetadata={activeGoalsMetadata}
+                        completedGoalsMetadata={completedGoalsMetadata}
+                        setActiveGoalsMetadata={setActiveGoalsMetadata}
+                        setCompletedGoalsMetadata={setCompletedGoalsMetadata}
+                        setTableGoals={setTableGoals}
+                    />
+                    {
+                        activeGoalsMetadata.totalCount > 4 ?
+                            <div className="w-full">
+                                <GoalsPagination
+                                    metadata={activeGoalsMetadata}
+                                    setMetadata={setActiveGoalsMetadata}
+                                    setActiveGoals={setActiveGoals}
+                                    isCompleted={false}
+                                    setLoading={setLoadingActiveGoals}
+                                />
+                            </div> : <div></div>
+                    }
+                </div>
+
+                <div className={(dark === "light" ?
+                    "w-2/5 h-1/4 bg-gray-200 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
+                    : "w-2/5 h-1/4 bg-gray-600 p-2 rounded-lg shadow-md hover:shadow-violet-400 m-5 text-center flex flex-col items-center"
+                )}>
+                    <CompletedGoals
+                        goals={completedGoals}
+                        error={error}
+                        cargando={loadingCompletedGoals}
+                        setCargando={setLoadingCompletedGoals}
+                        completedGoalsMetadata={completedGoalsMetadata}
+                        setCompletedGoalsMetadata={setCompletedGoalsMetadata}
+                        setCompletedGoals={setCompletedGoals}
+                        setTableGoals={setTableGoals}
+                        setAlerta={setAlerta}
+                    />
+                    {
+                        completedGoalsMetadata.totalCount > 4 ?
+                            <div className="w-full">
+                                <GoalsPagination
+                                    metadata={completedGoalsMetadata}
+                                    setMetadata={setCompletedGoalsMetadata}
+                                    setCompletedGoals={setCompletedGoals}
+                                    isCompleted={true}
+                                    setLoading={setLoadingCompletedGoals} />
+                            </div> : <div></div>
+                    }
+                </div>
             </div>
             <div className="flex flex-col items-center">
                 <div className={(dark === "light" ?
