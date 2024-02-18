@@ -6,4 +6,4 @@ export const Footer = () => {
             </h3>
         </div>
     );
-}
+};

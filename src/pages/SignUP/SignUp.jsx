@@ -39,11 +39,9 @@ const SignUp = () => {
 
         setAlerta({});
 
-        // Enviar datos del usuario a la API para crear cuenta
         try {
-            /* hago este destructuring, para obtener solo los datos (data) y no toda la respuesta */
             const { status } = await register({ nombre, apellido, email, esAdmin: false, contraseña });
-            if (status === HttpStatusCode.Ok) {
+            if (status === HttpStatusCode.Created) {
                 setLoading(false);
                 setAlerta({
                     msg: "Usuario creado con éxito. Redirigiendo al inicio de sesión...",
@@ -52,13 +50,12 @@ const SignUp = () => {
                 setTimeout(() => {
                     navigate("/");
                 }, 3000);
+                setNombre("");
+                setApellido("");
+                setEmail("");
+                setPassword("");
+                setRepetirPassword("");
             }
-            setNombre("");
-            setApellido("");
-            setEmail("");
-            setPassword("");
-            setRepetirPassword("");
-
         } catch (error) {
             setLoading(false);
             setAlerta({
