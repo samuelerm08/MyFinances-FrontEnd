@@ -14,7 +14,11 @@ export const LastGoal = ({
     balance,
     setTransacciones
 }) => {
-    const orderedList = activeGoals?.sort((a, b) => ((b.montoActual / b.montoFinal) - (a.montoActual / a.montoFinal)));
+    const orderedList = activeGoals?.sort((a, b) => {
+        const percentageA = a.montoActual / a.montoFinal;
+        const percentageB = b.montoActual / b.montoFinal;
+        return percentageB - percentageA;
+    });
     const almostCompletedGoal = orderedList?.filter((g) => !g.completada);
     const [modal, setModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);

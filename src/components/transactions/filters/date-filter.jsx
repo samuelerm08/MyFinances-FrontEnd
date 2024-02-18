@@ -53,6 +53,7 @@ export const DateFilter = ({
             console.log(error);
             setLoading(false);
             setFecha("");
+            setMetadata({});
             setTransacciones([]);
             setPayloadProps({
                 ...payloadProps,

@@ -51,6 +51,7 @@ export const TypeFilter = ({
             setLoading(false);
             setTipo("");
             setTransacciones([]);
+            setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,

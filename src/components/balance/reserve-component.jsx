@@ -49,12 +49,11 @@ export const BalanceReserves = ({ user, config }) => {
     const { msg } = reservesAlert;
     return (
         <div className={(dark === "light" ?
-            "w-1/4 bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5"
-            : "w-1/4 bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5"
+            "w-1/3 bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5 mb-0 flex flex-col justify-between items-center"
+            : "w-1/3 bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5 mb-0 flex flex-col justify-between items-center"
         )}
         >
-            <div className="t-table h-full">
-                <div>
+            <div className="h-96">
                     <h2 className={(dark === "light" ?
                         "p-1 text-center font-semibold text-violet-600"
                         : "p-1 text-center font-semibold text-violet-400"
@@ -70,7 +69,7 @@ export const BalanceReserves = ({ user, config }) => {
                     }
                     {
                         !!loading ?
-                            <div className="flex justify-center items-center w-full">
+                            <div className="flex justify-center items-center h-full">
                                 <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                             </div> :
                             !!reserves?.length
@@ -126,11 +125,10 @@ export const BalanceReserves = ({ user, config }) => {
                                     </h3>
                                 </div>
                     }
-                </div>
             </div>
             {
                 metadata.totalCount > 10 ?
-                    <div className="w-full">
+                    <div className="w-full mt-5">
                         <BalancePagination
                             setTransactions={setReserves}
                             auth={auth}

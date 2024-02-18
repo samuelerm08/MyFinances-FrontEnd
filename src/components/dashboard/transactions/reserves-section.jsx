@@ -9,8 +9,8 @@ export const ReservesSection = ({ cargando, transacciones }) => {
 
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
-            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
+            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2 h-[400px]"
+            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2 h-[400px]"
         )}
         >
             <div>

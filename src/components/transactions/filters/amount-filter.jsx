@@ -51,6 +51,7 @@ export const AmountFilter = ({
             console.log(error);
             setLoading(false);
             setTransacciones([]);
+            setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,

@@ -8,8 +8,8 @@ export const IncomesSection = ({ cargando, transacciones }) => {
 
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
-            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2"
+            "bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2 h-[400px]"
+            : "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 m-2 h-[400px]"
         )}>
             <div>
                 <h2 className={(dark === "light" ?
@@ -17,7 +17,7 @@ export const IncomesSection = ({ cargando, transacciones }) => {
                     :
                     "font-bold text-center p-1 text-violet-400"
                 )}>Ultimos Ingresos</h2>
-                <div>
+                <div className="bg-inherit rounded-lg pb-5">
                     {cargando ?
                         <div className="flex justify-center">
                             <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />

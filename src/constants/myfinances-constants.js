@@ -39,7 +39,9 @@ export const texts = {
     WITH_NO_GOALS: "No hay metas activas. Comience a crear metas...",
     NO_CHART: "Gráfico no disponible. No se registran gastos...",
     ON_COMPLETED_GOAL: "Meta completada!",
-    ON_WITHDRAWN_GOAL: "Meta retirada con éxito!"
+    ON_WITHDRAWN_GOAL: "Meta retirada con éxito!",
+    INCOMES: "incomes",
+    EXPENSES: "expenses"
 };
 
 export const amountReGex = /^\d{1,8}?(\.\d{0,2})?$/;

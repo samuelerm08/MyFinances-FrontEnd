@@ -4,7 +4,7 @@ import useAuth from "../../context/useAuth";
 import { BalanceIncomes } from "../../components/balance/incomes-component";
 import { BalanceExpenses } from "../../components/balance/expenses-component";
 import { BalanceComponent } from "../../components/balance/balance-component";
-import { GananciaChart } from "../../components/balance/chart/ganancia-chart";
+import { RevenueChart } from "../../components/balance/chart/revenue-chart";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { getAll } from "../../services/myfinances-api/transacciones";
 import { HttpStatusCode } from "axios";
@@ -57,16 +57,18 @@ const Balance = () => {
 
 
     return (
-        <div className="flex flex-col items-center">
-            <div className="bg-inherit p-2">
-                <BalanceComponent cargando={cargando} balance={balance} />
-            </div>
+        <div>
             <div className="bg-inherit p-2 flex justify-center">
                 <BalanceIncomes user={user} config={config} />
                 <BalanceExpenses user={user} config={config} />
                 <BalanceReserves user={user} config={config} />
             </div>
-            <GananciaChart transacciones={transacciones} />
+            <div className="bg-inherit p-2 flex justify-center">
+                <BalanceComponent cargando={cargando} balance={balance} />
+            </div>
+            <div className="flex flex-col items-center">
+                <RevenueChart transacciones={transacciones} />
+            </div>
         </div>
     );
 };

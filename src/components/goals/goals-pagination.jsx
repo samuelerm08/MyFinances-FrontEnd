@@ -71,10 +71,12 @@ export const GoalsPagination = ({
                             setLoading(false);
                             setCompletedGoals(data.data);
                         }
-                        if (setMetadata)
+                        if (setMetadata) {
                             setMetadata(data.meta);
-                        if (data.meta?.hasNextPage)
+                        }
+                        if (data.meta?.hasNextPage) {
                             hasNextPage = data.meta?.hasNextPage;
+                        }
                     }
                 } else {
                     const payload = { userId: user.id };
@@ -82,10 +84,12 @@ export const GoalsPagination = ({
                     if (status === HttpStatusCode.Ok) {
                         setLoading(false);
                         setTableGoals(data.data);
-                        if (setMetadata)
+                        if (setMetadata) {
                             setMetadata(data.meta);
-                        if (data.meta?.hasNextPage)
+                        }
+                        if (data.meta?.hasNextPage) {
                             hasNextPage = data.meta?.hasNextPage;
+                        }
                     }
                 }
             } catch (error) {
