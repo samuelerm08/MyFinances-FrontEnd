@@ -31,39 +31,37 @@ const Usuario = () => {
 
     return (
 
-        <div className={styles.containers} >
-
+        <div className={styles.containers}>
             <div className={styles.container2} >
-
                 <div>
-                    <h1 className={(dark === "light" ?
+                    <h1 className={(dark === "dark" ?
                         "text-violet-400 font-semibold"
                         :
                         "text-violet-600 font-semibold"
                     )}>NOMBRE</h1>
-                    <p className={(dark === "light" ?
-                        "text-gray-700 font-semibold"
+                    <p className={(dark === "dark" ?
+                        "text-gray-200 font-semibold"
                         :
                         "text-gray-900 font-semibold"
                     )}>{user.nombre}</p>
-                    <h1 className={(dark === "light" ?
+                    <h1 className={(dark === "dark" ?
                         "text-violet-400 font-semibold"
                         :
                         "text-violet-600 font-semibold"
                     )}>APELLIDO</h1>
-                    <p className={(dark === "light" ?
-                        "text-gray-700 font-semibold"
+                    <p className={(dark === "dark" ?
+                        "text-gray-200 font-semibold"
                         :
                         "text-gray-900 font-semibold"
                     )}
                     >{user.apellido}</p>
-                    <h1 className={(dark === "light" ?
+                    <h1 className={(dark === "dark" ?
                         "text-violet-400 font-semibold"
                         :
                         "text-violet-600 font-semibold"
                     )}>CORREO ELECTRÓNICO</h1>
-                    <p className={(dark === "light" ?
-                        "text-gray-700 font-semibold"
+                    <p className={(dark === "dark" ?
+                        "text-gray-200 font-semibold"
                         :
                         "text-gray-900 font-semibold"
                     )}

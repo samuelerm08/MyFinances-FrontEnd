@@ -27,10 +27,7 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
         const payload = {
             Id: parseInt(user.id),
             Nombre: nombre,
-            Apellido: apellido,
-            email: user.email,
-            Contraseña: user.pwd,
-            EsAdmin: false
+            Apellido: apellido
         };
 
         const config = {
@@ -46,8 +43,7 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
             setUserToken("user",JSON.stringify({
                 ...user,
                 nombre: data.nombre,
-                apellido: data.apellido,
-                email: data.email
+                apellido: data.apellido
             }));
             setAlerta({
                 msg: "Usuario Modificado!",

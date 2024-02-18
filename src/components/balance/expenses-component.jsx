@@ -51,7 +51,7 @@ export const BalanceExpenses = ({ user, config }) => {
             : "w-1/3 bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 mx-5 mb-0 flex flex-col justify-between items-center"
         )}
         >
-            <div className="h-96">
+            <div className="h-[500px]">
                 <h2 className={(dark === "light" ?
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
