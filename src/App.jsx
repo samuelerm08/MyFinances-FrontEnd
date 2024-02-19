@@ -7,7 +7,6 @@ import { AuthProvider } from "./context/AuthProvider";
 import { DarkProvider } from "./context/DarkProvider";
 import Transacciones from "./pages/Transacciones/Transacciones";
 import Balance from "./pages/Balance/Balance";
-import Ayuda from "./pages/Ayuda/Ayuda";
 import SignUp from "./pages/SignUp/SignUp";
 import Metas from "./pages/Metas/Metas";
 import Usuario from "./pages/Usuario/Usuario";
@@ -27,7 +26,6 @@ function App() {
                             <Route path="metas" element={<Metas />} />
                             <Route path="transacciones" element={<Transacciones />} />
                             <Route path="balance" element={<Balance />} />
-                            <Route path="ayuda" element={<Ayuda />} />
                             <Route path="usuario" element={<Usuario />} />
                         </Route>
                     </Routes>
