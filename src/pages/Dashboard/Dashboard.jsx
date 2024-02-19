@@ -143,7 +143,7 @@ const Dashboard = () => {
                     )}
                     transacciones={transacciones} cargando={cargando} />
             </div>
-            <div className=" bg-inherit rounded flex justify-center">
+            <div className="bg-inherit rounded flex justify-center">
                 <IncomesSection cargando={cargando} transacciones={transacciones} />
                 <ExpensesSection cargando={cargando} transacciones={transacciones} />
                 <ReservesSection cargando={cargando} transacciones={transacciones} />
