@@ -8,9 +8,9 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
     const orderedTransactions = transacciones?.slice(0, 5);
     return (
         <div className={(dark === "light" ?
-            "bg-inherit p-4 rounded-lg shadow-md hover:shadow-violet-400 border"
+            "bg-inherit p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 border"
             :
-            "bg-gray-600 p-4 rounded-lg shadow-md hover:shadow-violet-400 "
+            "bg-gray-600 p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1"
         )}
         >
             <div className="flex justify-center mb-5">
@@ -86,7 +86,8 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                                 </div>
                                                             </td> :
                                                             transaccion.tipoTransaccion === type.RESERVA ?
-                                                                transaccion.detalle?.includes("Retiro") ?
+                                                                transaccion.detalle?.includes("Retiro") || 
+                                                                transaccion.detalle?.includes("Monto Menor") ?
                                                                     <td className="py-2 px-10 text-green-500 font-semibold font-mono">
                                                                         <div className="w-28 flex justify-center rounded-md bg-green-200">
                                                                             +${parseFloat(transaccion.monto).toFixed(2)}
