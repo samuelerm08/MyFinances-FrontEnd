@@ -4,6 +4,7 @@ import { GoalAmount } from "../pop-ups/ModalMontoMeta";
 import ModalMetas from "../pop-ups/ModalMetas";
 import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
+import { ModifyGoal } from "../pop-ups/ModalModificarMeta";
 
 export const LastGoal = ({
     activeGoals,
@@ -21,16 +22,21 @@ export const LastGoal = ({
     });
     const almostCompletedGoal = orderedList?.filter((g) => !g.completada);
     const [modal, setModal] = useState(false);
+    const [modifyModal, setModifyModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [goalId, setGoalId] = useState(0);
+    const [toModifyGoal, setGoal] = useState({});
     const { dark } = useDark();
-    const handleAddingModal = (goalId) => {
-        setModal(true);
+
+    const handleGoalModifying = (goalId, goal) => {
+        setModifyModal(true);
         setGoalId(goalId);
+        setGoal(goal)
         setTimeout(() => {
             setAnimarModal(true);
         }, 400);
     };
+
     const handleGoals = () => {
         setModal(true);
         setTimeout(() => {
@@ -39,8 +45,8 @@ export const LastGoal = ({
     };
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 w-full m-2 flex flex-col justify-around"
-            : "bg-gray-600 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 w-full m-2 flex flex-col justify-around"
+            "bg-gray-200 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 w-full m-2 flex flex-col justify-around"
+            : "bg-gray-600 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 w-full m-2 flex flex-col justify-around"
         )}
         >
             {
@@ -81,7 +87,7 @@ export const LastGoal = ({
                                     </span>
                                 </div>
                                 <hr />
-                                <div className="mb-10 mt-10 flex flex-col text-center" style={{ width: "100%", display: "flex" }}>
+                                <div className="mb-6 mt-6 flex flex-col text-center" style={{ width: "100%", display: "flex" }}>
                                     <div className="w-full">
                                         <span className="font-semibold text-xs text-gray-500">
                                             Progreso
@@ -104,20 +110,24 @@ export const LastGoal = ({
                                             }
                                         </div>
                                     </div>
-                                    <i className="fa-solid fa-plus mt-5"
-                                        data-tooltip-id="my-tooltip"
-                                        data-tooltip-content="Agregar monto"
-                                        onClick={() => handleAddingModal(almostCompletedGoal[0].id)}>
-                                    </i>
-                                    {modal &&
-                                        <GoalAmount
-                                            setModal={setModal}
+                                </div>
+                                <div className="flex justify-around">
+                                    <button>
+                                        <i className="fa-regular fa-pen-to-square"
+                                            data-tooltip-id="my-tooltip"
+                                            data-tooltip-content="Modificar Meta"
+                                            onClick={() => handleGoalModifying(almostCompletedGoal[0]?.id, almostCompletedGoal[0])}>
+                                        </i>
+                                    </button>
+                                    {modifyModal &&
+                                        <ModifyGoal
+                                            setModal={setModifyModal}
                                             animarModal={animarModal}
                                             setAnimarModal={setAnimarModal}
                                             goalId={goalId}
+                                            goal={toModifyGoal}
                                             auth={auth}
                                             setActiveGoals={setActiveGoals}
-                                            activeGoals={activeGoals}
                                             setBalance={setBalance}
                                             balance={balance}
                                             setTransacciones={setTransacciones}

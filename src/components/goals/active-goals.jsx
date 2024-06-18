@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { GoalAmount } from "../pop-ups/ModalMontoMeta";
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
-import { ModifyGoal } from "../pop-ups/ModalModificar";
+import { ModifyGoal } from "../pop-ups/ModalModificarMeta";
 
 export const ActiveGoals = ({
     goals,
@@ -18,20 +17,11 @@ export const ActiveGoals = ({
     setActiveGoalsMetadata
 }) => {
     const activeGoals = goals?.filter(({ completada }) => !completada);
-    const [modal, setModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [goalId, setGoalId] = useState(0);
     const [modifyModal, setModifyModal] = useState(false);
     const [toModifyGoal, setGoal] = useState({});
     const { dark } = useDark();
-
-    const handleAddingModal = (goalId) => {
-        setModal(true);
-        setGoalId(goalId);
-        setTimeout(() => {
-            setAnimarModal(true);
-        }, 400);
-    };
 
     const handleGoalModifying = (goalId, goal) => {
         setModifyModal(true);
@@ -103,31 +93,6 @@ export const ActiveGoals = ({
                                             </div>
                                         </div>
                                         <div className="flex justify-around">
-                                            <button>
-                                                <i className="fa-solid fa-plus text-center"
-                                                    data-tooltip-id="my-tooltip"
-                                                    data-tooltip-content="Agregar monto"
-                                                    onClick={() => handleAddingModal(goal.id)}>
-                                                </i>
-                                            </button>
-                                            {modal &&
-                                                <GoalAmount
-                                                    setModal={setModal}
-                                                    animarModal={animarModal}
-                                                    setAnimarModal={setAnimarModal}
-                                                    goalId={goalId}
-                                                    auth={auth}
-                                                    setActiveGoals={setActiveGoals}
-                                                    lastGoalIndex={index}
-                                                    activeGoalsMetadata={activeGoalsMetadata}
-                                                    setActiveGoalsMetadata={setActiveGoalsMetadata}
-                                                    setCompletedGoals={setCompletedGoals}
-                                                    completedGoalsMetadata={completedGoalsMetadata}
-                                                    setCompletedGoalsMetadata={setCompletedGoalsMetadata}
-                                                    setTableGoals={setTableGoals}
-                                                />
-                                            }
-
                                             <button>
                                                 <i className="fa-regular fa-pen-to-square"
                                                     data-tooltip-id="my-tooltip"

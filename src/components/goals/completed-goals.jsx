@@ -49,7 +49,7 @@ export const CompletedGoals = ({
                 setTimeout(() => {
                     setAlerta({});
                 }, 1500);
-                setTimeout( async () => {
+                setTimeout(async () => {
                     setCompletedGoals(completedGoals => completedGoals.map((goal) => {
                         return goalId === goal.id ? { ...goal, retirada: data.retirada } : goal;
                     }));
@@ -128,7 +128,10 @@ export const CompletedGoals = ({
                                                         className="bg-violet-500 p-0.5 text-center text-xs font-semibold font-mono text-white rounded-lg"
                                                         style={{ width: `${(goal.montoActual / goal.montoFinal) * 100}%` }}
                                                     >
-                                                        {`${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%`}
+                                                        {
+                                                            !!goal.montoActual && !!goal.montoFinal ?
+                                                            `${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%` : `${(0).toFixed(2)}%`
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

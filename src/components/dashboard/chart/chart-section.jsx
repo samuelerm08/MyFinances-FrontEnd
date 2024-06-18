@@ -10,8 +10,8 @@ export const ChartSection = ({ cargando, transacciones }) => {
 
     return (
         <div className={(dark === "light" ?
-            "bg-gray-200 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 w-full m-2 flex flex-col justify-around"
-            : "bg-gray-600 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 w-full m-2 flex flex-col justify-around"
+            "bg-gray-200 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 w-full m-2 flex flex-col justify-around"
+            : "bg-gray-600 pt-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 w-full m-2 flex flex-col justify-around"
         )}
         >
             {

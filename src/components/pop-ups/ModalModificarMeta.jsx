@@ -1,30 +1,33 @@
-import { useState } from "react";
-import Alerta from "../Alerta";
-import { agregarMonto, getByState } from "../../services/myfinances-api/metaFinanciera";
-import { amountReGex, errors, type } from "../../constants/myfinances-constants";
-import { getUserToken } from "../../services/token/tokenService";
 import { HttpStatusCode } from "axios";
+import { amountReGex, type } from "../../constants/myfinances-constants";
+import { getByState, modifyGoal } from "../../services/myfinances-api/metaFinanciera";
+import Alerta from "../Alerta";
+import { useState } from "react";
+import { getUserToken } from "../../services/token/tokenService";
 
-export const GoalAmount = ({
+export const ModifyGoal = ({
     animarModal,
     setAnimarModal,
     setModal,
     goalId,
+    goal,
     auth,
     setActiveGoals,
     lastGoalIndex,
     setCompletedGoals,
     setTableGoals,
-    setBalance,
-    balance,
-    setTransacciones,
     activeGoalsMetadata,
     completedGoalsMetadata,
     setActiveGoalsMetadata,
-    setCompletedGoalsMetadata
+    setCompletedGoalsMetadata,
+    setBalance,
+    balance,
+    setTransacciones
 }) => {
     const [alerta, setAlerta] = useState({});
-    const [amount, setAmount] = useState("");
+    const [title, setTitle] = useState(goal.titulo ?? "");
+    const [currentAmount, setCurrentAmount] = useState(goal.montoActual ?? "");
+    const [finalAmount, setFinalAmount] = useState(goal.montoFinal ?? "");
     const [cargando, setLoading] = useState(false);
     const user = getUserToken();
 
@@ -38,28 +41,6 @@ export const GoalAmount = ({
     const handleAdding = async e => {
         e.preventDefault();
         setLoading(true);
-        if (amount === "" || amount.length === 0) {
-            setAlerta({
-                msg: "El campo es obligatorio!",
-                error: true
-            });
-            setTimeout(() => {
-                setLoading(false);
-                setAlerta({});
-            }, 2000);
-            return;
-        }
-        if (amount <= 0) {
-            setAlerta({
-                msg: "El monto debe ser positivo!",
-                error: true
-            });
-            setTimeout(() => {
-                setLoading(false);
-                setAlerta({});
-            }, 2000);
-            return;
-        }
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -67,54 +48,81 @@ export const GoalAmount = ({
             }
         };
 
+        setTimeout(() => {
+            setAlerta({});
+        }, 3000);
+
         const payload = {
-            metaId: goalId,
-            monto: parseFloat(amount)
+            id: goalId,
+            titulo: title,
+            montoActual: !!currentAmount ? parseFloat(currentAmount) : 0,
+            montoFinal: !!finalAmount ? parseFloat(finalAmount) : 0
         };
 
         try {
-            const { data, status } = await agregarMonto(payload, config);
+            const { data, status } = await modifyGoal(goalId, payload, config);
             if (status === HttpStatusCode.Ok) {
+                const isLower = goal.montoActual > parseFloat(currentAmount);
+                const amountDiff = goal.montoActual - parseFloat(currentAmount);
+                const amountToDiscount = amountDiff > 0 ? amountDiff : -amountDiff;
                 setLoading(false);
                 setAlerta({
-                    msg: "Monto agregado!",
+                    msg: "Meta Modificada!",
                     error: false
                 });
                 setTimeout(() => {
                     setAlerta({});
                     setActiveGoals(activeGoals => activeGoals.map((goal) => {
-                        return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
+                        return goal.id === goalId ? {
+                            ...goal,
+                            titulo: data.titulo,
+                            montoActual: data.montoActual,
+                            montoFinal: data.montoFinal
+                        } : goal;
                     }));
                     if (setTableGoals) {
-                        setTableGoals(setTableGoals => setTableGoals.map((goal) => {
-                            return goal.id === goalId ? { ...goal, montoActual: data.montoActual } : goal;
-                        }));
+                        setTableGoals(tableGoals => tableGoals.map((goal) => {
+                            return goal.id === goalId ? {
+                                ...goal,
+                                titulo: data.titulo,
+                                montoActual: data.montoActual,
+                                montoFinal: data.montoFinal
+                            } : goal;
+                        }))
                     }
                     if (setBalance) {
                         if (!balance.saldo_Total) {
                             setBalance({
                                 ...balance,
-                                saldo_Total: parseFloat(amount) * -1
+                                saldo_Total: parseFloat(amountToDiscount) * -1
                             });
                         }
                         else {
-                            setBalance({
-                                ...balance,
-                                saldo_Total: balance.saldo_Total - parseFloat(amount)
-                            });
+                            if (!!amountToDiscount) {
+                                setBalance({
+                                    ...balance,
+                                    saldo_Total: !isLower ?
+                                        balance.saldo_Total - parseFloat(amountToDiscount) :
+                                        balance.saldo_Total + parseFloat(amountToDiscount)
+                                });
+                            }
                         }
                     }
                     if (setTransacciones) {
-                        const goalTransaction = {
-                            detalle: `Reserva - Meta: ${data.titulo}`,
-                            monto: parseFloat(amount),
-                            fecha: new Date(),
-                            tipoTransaccion: type.RESERVA
-                        };
-                        setTransacciones(transacciones => [
-                            goalTransaction,
-                            ...transacciones
-                        ]);
+                        if (!!amountToDiscount) {
+                            const goalTransaction = {
+                                detalle: !isLower ?
+                                    `Modificacion/Monto Mayor - Meta: ${data.titulo}` :
+                                    `Modificacion/Monto Menor - Meta: ${data.titulo}`,
+                                monto: parseFloat(amountToDiscount),
+                                fecha: new Date(),
+                                tipoTransaccion: type.RESERVA
+                            };
+                            setTransacciones(transacciones => [
+                                goalTransaction,
+                                ...transacciones
+                            ]);
+                        }
                     }
                     if (data.completada) {
                         setTimeout(async () => {
@@ -172,18 +180,14 @@ export const GoalAmount = ({
                     }
                     ocultarModal();
                 }, 1500);
-
             }
         } catch (error) {
-            if (error.message === errors.serverErrors.NETWORK_ERROR) {
+            setLoading(false);
+            if (currentAmount > finalAmount) {
                 setAlerta({
-                    msg: errors.serverErrors.HIGHER_THAN_FINAL_AMOUNT_MSG,
+                    msg: "El monto actual no puede ser mayor al monto final",
                     error: true
                 });
-                setTimeout(() => {
-                    setAlerta({});
-                    setLoading(false);
-                }, 3000);
             }
             console.log(error);
         }
@@ -203,15 +207,46 @@ export const GoalAmount = ({
                     </div>
 
                     <div className='campo'>
-                        <label htmlFor="Monto">Monto</label>
+                        <label htmlFor="Titulo">Titulo</label>
                         <input
-                            id="Monto"
+                            id="Titulo"
                             type="text"
-                            placeholder="Ingresar Monto"
-                            value={amount.replace(",", ".")}
+                            maxLength={30}
+                            placeholder="Titulo de la meta"
+                            value={title}
+                            onChange={e => {
+                                if (textsReGex.test(e.target.value) || e.target.value === "") {
+                                    setTitle(e.target.value);
+                                }
+                            }}
+                        />
+                    </div>
+
+                    <div className='campo'>
+                        <label htmlFor="Monto Actual">Monto Actual</label>
+                        <input
+                            id="MontoActual"
+                            type="text"
+                            placeholder="Monto Actual"
+                            value={currentAmount.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
-                                    setAmount(e.target.value);
+                                    setCurrentAmount(e.target.value);
+                                }
+                            }}
+                        />
+                    </div>
+
+                    <div className='campo'>
+                        <label htmlFor="Monto Final">Monto Final</label>
+                        <input
+                            id="MontoFinal"
+                            type="text"
+                            placeholder="Monto Final"
+                            value={finalAmount.toString().replace(",", ".")}
+                            onChange={e => {
+                                if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
+                                    setFinalAmount(e.target.value);
                                 }
                             }}
                         />
@@ -219,7 +254,7 @@ export const GoalAmount = ({
 
                     <input
                         type="submit"
-                        value={!cargando ? "Enviar" : "Enviando..."}
+                        value={!cargando ? "Modificar" : "Modificando..."}
                         disabled={cargando}
                     />
                     {msg && <Alerta alerta={alerta} />}

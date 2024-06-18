@@ -8,9 +8,9 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
     const orderedTransactions = transacciones?.slice(0, 5);
     return (
         <div className={(dark === "light" ?
-            "bg-inherit p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1 border"
+            "bg-inherit p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 border"
             :
-            "bg-gray-600 p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 hover:-translate-y-1"
+            "bg-gray-600 p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400"
         )}
         >
             <div className="flex justify-center mb-5">
