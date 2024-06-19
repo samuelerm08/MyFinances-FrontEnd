@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { amountReGex, type } from "../../constants/myfinances-constants";
+import { amountReGex, textsReGex, type } from "../../constants/myfinances-constants";
 import { getByState, modifyGoal } from "../../services/myfinances-api/metaFinanciera";
 import Alerta from "../Alerta";
 import { useState } from "react";
