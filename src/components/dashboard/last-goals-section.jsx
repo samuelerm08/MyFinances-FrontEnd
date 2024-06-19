@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { GoalAmount } from "../pop-ups/ModalMontoMeta";
 import ModalMetas from "../pop-ups/ModalMetas";
 import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
