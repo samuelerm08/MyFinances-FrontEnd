@@ -157,7 +157,10 @@ export const LastGoal = ({
                                             setAnimarModal={setAnimarModal}
                                             goalId={goalId}
                                             auth={auth}
+                                            activeGoals={orderedList}
                                             setActiveGoals={setActiveGoals}
+                                            balance={balance}
+                                            setBalance={setBalance}
                                         />
                                     }
                                 </div>

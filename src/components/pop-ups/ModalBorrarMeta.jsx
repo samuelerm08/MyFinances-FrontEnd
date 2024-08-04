@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Alerta from "../Alerta";
-import { deleteGoal, getByState } from "../../services/myfinances-api/metaFinanciera";
+import { deleteGoal } from "../../services/myfinances-api/metaFinanciera";
 import { HttpStatusCode } from "axios";
 import { texts } from "../../constants/myfinances-constants";
-import { getUserToken } from "../../services/token/tokenService";
 
 export const DeleteGoal = ({
     animarModal,
@@ -13,7 +12,9 @@ export const DeleteGoal = ({
     auth,
     activeGoals,
     setActiveGoals,
-    setTableGoals
+    setTableGoals,
+    balance,
+    setBalance
 }) => {
     const [alerta, setAlerta] = useState({});
     const [loading, setLoading] = useState(false);
@@ -51,6 +52,12 @@ export const DeleteGoal = ({
                     const updatedGoals = activeGoals.filter((goal) => goal.id !== data.id);
                     setActiveGoals(updatedGoals);
                     if (setTableGoals) setTableGoals(updatedGoals);
+                    if (setBalance) {
+                        setBalance({
+                            ...balance,
+                            saldo_Total: balance.saldo_Total + data.montoActual
+                        });
+                    }
                     ocultarModal();
                 }, 2000);
             }
