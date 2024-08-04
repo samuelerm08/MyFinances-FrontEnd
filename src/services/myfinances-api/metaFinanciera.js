@@ -28,3 +28,8 @@ export async function modifyGoal(goalId, payload, config) {
     const data = await clienteAxios.put(`/MetaFinanciera/ModificarMetaFinanciera/${goalId}`, payload, config);
     return data;
 }
+
+export async function deleteGoal(goalId, config) {
+    const data = await clienteAxios.delete(`/MetaFinanciera/Eliminar/${goalId}`, config);
+    return data;
+}

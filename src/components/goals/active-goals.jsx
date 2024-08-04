@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
 import { ModifyGoal } from "../pop-ups/ModalModificarMeta";
+import { DeleteGoal } from "../pop-ups/ModalBorrarMeta";
 
 export const ActiveGoals = ({
     goals,
@@ -20,6 +21,7 @@ export const ActiveGoals = ({
     const [animarModal, setAnimarModal] = useState(false);
     const [goalId, setGoalId] = useState(0);
     const [modifyModal, setModifyModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
     const [toModifyGoal, setGoal] = useState({});
     const { dark } = useDark();
 
@@ -27,6 +29,14 @@ export const ActiveGoals = ({
         setModifyModal(true);
         setGoalId(goalId);
         setGoal(goal)
+        setTimeout(() => {
+            setAnimarModal(true);
+        }, 400);
+    };
+
+    const handleGoalDeleting = goalId => {
+        setDeleteModal(true);
+        setGoalId(goalId);
         setTimeout(() => {
             setAnimarModal(true);
         }, 400);
@@ -116,6 +126,25 @@ export const ActiveGoals = ({
                                                     completedGoalsMetadata={completedGoalsMetadata}
                                                     setCompletedGoalsMetadata={setCompletedGoalsMetadata}
                                                     setTableGoals={setTableGoals}
+                                                />
+                                            }
+                                            <button>
+                                                <i className="fa-solid fa-trash"
+                                                    data-tooltip-id="my-tooltip"
+                                                    data-tooltip-content="Eliminar"
+                                                    onClick={() => handleGoalDeleting(goal.id)}>
+                                                </i>
+                                            </button>
+                                            {deleteModal &&
+                                                <DeleteGoal
+                                                    setModal={setDeleteModal}
+                                                    animarModal={animarModal}
+                                                    setAnimarModal={setAnimarModal}
+                                                    goalId={goalId}
+                                                    auth={auth}
+                                                    setActiveGoals={setActiveGoals}
+                                                    setTableGoals={setTableGoals}
+                                                    setActiveGoalsMetadata={setActiveGoalsMetadata}
                                                 />
                                             }
                                         </div>

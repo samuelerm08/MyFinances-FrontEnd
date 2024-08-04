@@ -130,7 +130,7 @@ export const CompletedGoals = ({
                                                     >
                                                         {
                                                             !!goal.montoActual && !!goal.montoFinal ?
-                                                            `${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%` : `${(0).toFixed(2)}%`
+                                                            `${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%` : `${(100).toFixed(2)}%`
                                                         }
                                                     </div>
                                                 </div>

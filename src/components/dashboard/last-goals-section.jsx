@@ -4,6 +4,7 @@ import ModalMetas from "../pop-ups/ModalMetas";
 import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
 import { ModifyGoal } from "../pop-ups/ModalModificarMeta";
+import { DeleteGoal } from "../pop-ups/ModalBorrarMeta";
 
 export const LastGoal = ({
     activeGoals,
@@ -22,6 +23,7 @@ export const LastGoal = ({
     const almostCompletedGoal = orderedList?.filter((g) => !g.completada);
     const [modal, setModal] = useState(false);
     const [modifyModal, setModifyModal] = useState(false);
+    const [deleteModal, setDeletingModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [goalId, setGoalId] = useState(0);
     const [toModifyGoal, setGoal] = useState({});
@@ -31,6 +33,14 @@ export const LastGoal = ({
         setModifyModal(true);
         setGoalId(goalId);
         setGoal(goal)
+        setTimeout(() => {
+            setAnimarModal(true);
+        }, 400);
+    };
+
+    const handleGoalDeleting = (goalId) => {
+        setDeletingModal(true);
+        setGoalId(goalId);
         setTimeout(() => {
             setAnimarModal(true);
         }, 400);
@@ -130,6 +140,24 @@ export const LastGoal = ({
                                             setBalance={setBalance}
                                             balance={balance}
                                             setTransacciones={setTransacciones}
+                                        />
+                                    }
+
+<button>
+                                        <i className="fa-solid fa-trash"
+                                            data-tooltip-id="my-tooltip"
+                                            data-tooltip-content="Eliminar Meta"
+                                            onClick={() => handleGoalDeleting(almostCompletedGoal[0]?.id)}>
+                                        </i>
+                                    </button>
+                                    {deleteModal &&
+                                        <DeleteGoal
+                                            setModal={setDeletingModal}
+                                            animarModal={animarModal}
+                                            setAnimarModal={setAnimarModal}
+                                            goalId={goalId}
+                                            auth={auth}
+                                            setActiveGoals={setActiveGoals}
                                         />
                                     }
                                 </div>
