@@ -153,6 +153,12 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                                             </div>
                                                         </td>
                                                     :
+                                                    transaccion.detalle?.includes("Eliminada") ?
+                                                        <td className="py-2 px-4 text-gray-400 font-semibold font-mono">
+                                                            <div className="w-28 flex justify-center rounded-md bg-gray-200">
+                                                                ${parseFloat(transaccion.monto).toFixed(2)}
+                                                            </div>
+                                                        </td> :
                                                     transaccion.detalle?.includes("Retiro") || 
                                                     transaccion.detalle?.includes("Monto Menor") ?
                                                         <td className="py-2 px-4 text-green-500 font-semibold font-mono">

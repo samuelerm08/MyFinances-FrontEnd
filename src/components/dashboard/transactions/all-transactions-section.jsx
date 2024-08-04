@@ -86,6 +86,12 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                                 </div>
                                                             </td> :
                                                             transaccion.tipoTransaccion === type.RESERVA ?
+                                                                transaccion.detalle?.includes("Eliminada") ?
+                                                                    <td className="py-2 px-10 text-gray-400 font-semibold font-mono">
+                                                                        <div className="w-28 flex justify-center rounded-md bg-gray-200">
+                                                                            ${parseFloat(transaccion.monto).toFixed(2)}
+                                                                        </div>
+                                                                    </td> :
                                                                 transaccion.detalle?.includes("Retiro") || 
                                                                 transaccion.detalle?.includes("Monto Menor") ?
                                                                     <td className="py-2 px-10 text-green-500 font-semibold font-mono">
