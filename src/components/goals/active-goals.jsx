@@ -142,6 +142,7 @@ export const ActiveGoals = ({
                                                     setAnimarModal={setAnimarModal}
                                                     goalId={goalId}
                                                     auth={auth}
+                                                    activeGoals={activeGoals}
                                                     setActiveGoals={setActiveGoals}
                                                     setTableGoals={setTableGoals}
                                                     setActiveGoalsMetadata={setActiveGoalsMetadata}

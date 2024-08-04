@@ -11,6 +11,7 @@ export const DeleteGoal = ({
     setModal,
     goalId,
     auth,
+    activeGoals,
     setActiveGoals,
     setTableGoals
 }) => {
@@ -47,10 +48,9 @@ export const DeleteGoal = ({
                 });
                 setTimeout(() => {
                     setAlerta({});
-                    setActiveGoals(goals => goals.filter((goal) => goal.id !== data.id));
-                    if (setTableGoals) {
-                        setTableGoals(goals => goals.filter((goal) => goal.id !== data.id));
-                    }
+                    const updatedGoals = activeGoals.filter((goal) => goal.id !== data.id);
+                    setActiveGoals(updatedGoals);
+                    if (setTableGoals) setTableGoals(updatedGoals);
                     ocultarModal();
                 }, 2000);
             }
