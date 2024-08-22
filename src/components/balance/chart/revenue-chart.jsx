@@ -12,39 +12,36 @@ import { texts, type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 
-export const RevenueChart = ({ transacciones }) => {
+export const RevenueChart = ({ transactions }) => {
     const { dark } = useDark();
-    const transaccionesActivas = transacciones?.filter(({ estaActiva }) => estaActiva);
+    const activeTransactions = transactions?.filter(({ isActive }) => isActive);
 
-    const sumAmounts = (transaccionesActivas) => {
+    const sumAmounts = (activeTransactions) => {
 
         const amounts = {
             incomes: { incomes: 0 },
             expenses: { expenses: 0 }
         };
-        transaccionesActivas?.forEach((transaccion) => {
-            const amount = transaccion?.monto;
-            const isReserve = transaccion.tipoTransaccion === type.RESERVA;
-            const isWithdraw = isReserve && transaccion?.detalle?.includes("Retiro");
-            const isIncome = transaccion.tipoTransaccion === type.INGRESO || isWithdraw;
-            const isExpense = transaccion.tipoTransaccion === type.EGRESO || !isWithdraw;
+        activeTransactions?.forEach((transaction) => {
+            const amount = transaction?.amount;
+            const isReserve = transaction.transactionType === type.RESERVE;
+            const isWithdraw = isReserve && transaction?.details?.includes("Withdraw");
+            const isIncome = transaction.transactionType === type.INCOME || isWithdraw;
+            const isExpense = transaction.transactionType === type.EXPENSE || !isWithdraw;
 
-            if (isIncome) {
-                amounts[texts.INCOMES].incomes += amount;
-            } else if (isExpense) {
-                amounts[texts.EXPENSES].expenses += amount;
-            }
+            if (isIncome) amounts[texts.INCOMES].incomes += amount;
+            else if (isExpense) amounts[texts.EXPENSES].expenses += amount;
         });
         const amountsArray = Object.values(amounts);
         return amountsArray;
     };
 
-    const totalAmounts = sumAmounts(transaccionesActivas);
+    const totalAmounts = sumAmounts(activeTransactions);
     const totalIncomes = totalAmounts.map(({ incomes }) => incomes);
     const totalExpenses = totalAmounts.map(({ expenses }) => expenses);
-    const totalAhorrado = totalAmounts[0]?.incomes - totalAmounts[1]?.expenses;
+    const totalSaved = totalAmounts[0]?.incomes - totalAmounts[1]?.expenses;
 
-    const colores = [
+    const colors = [
         "#22C55E",
         "#EF4444"
     ];
@@ -60,18 +57,18 @@ export const RevenueChart = ({ transacciones }) => {
                 "text-xl text-center font-semibold text-violet-600 antialiased"
                 : "text-xl text-center font-semibold text-violet-400 antialiased"
             )}>
-                Ahorrado
+                Saved
                 <i className="fa-solid fa-circle-question ml-2 text-gray-400"
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="Ahorrado en las últimas 10 transacciones">
+                    data-tooltip-content="Ahorrado en las últimas 10 transactions">
                 </i>
                 {
-                    totalAhorrado?.toFixed(2) > 0 ?
+                    totalSaved?.toFixed(2) > 0 ?
                         <p className="text-green-400">
-                            ${totalAhorrado?.toFixed(2)}
+                            ${totalSaved?.toFixed(2)}
                         </p> :
                         <p className="text-red-500">
-                            ${totalAhorrado?.toFixed(2)}
+                            ${totalSaved?.toFixed(2)}
                         </p>
                 }
             </h3>
@@ -87,12 +84,12 @@ export const RevenueChart = ({ transacciones }) => {
                     width={600} height={250}
                     color={dark === "light" ? "white" : "black"}
                     data={{
-                        labels: ["Ingresos", "Egresos"],
+                        labels: ["Incomes", "Expenses"],
                         datasets: [
                             {
-                                label: "Ingresos",
+                                label: "Incomes",
                                 data: totalIncomes,
-                                backgroundColor: colores[0], // Color para ingresos
+                                backgroundColor: colors[0],
                                 borderWidth: 0,
                                 hoverOffset: 15,
                                 borderRadius: 10,
@@ -100,9 +97,9 @@ export const RevenueChart = ({ transacciones }) => {
                                 categoryPercentage: 0.5
                             },
                             {
-                                label: "Egresos",
+                                label: "Expenses",
                                 data: totalExpenses,
-                                backgroundColor: colores[1], // Color para egresos
+                                backgroundColor: colors[1],
                                 borderWidth: 0,
                                 hoverOffset: 15,
                                 borderRadius: 10,

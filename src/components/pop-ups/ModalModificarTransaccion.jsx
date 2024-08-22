@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { modifyTransaction } from "../../services/myfinances-api/transacciones";
+import { modifyTransaction } from "../../services/myfinances-api/transaction";
 import { amountReGex, errors, textsReGex } from "../../constants/myfinances-constants";
-import Alerta from "../Alerta";
+import Alert from "../Alert";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
@@ -14,21 +14,21 @@ export const ModificarTransaccion = ({
     setAnimarModal,
     setModal,
     transaccionId,
-    transaccion,
+    transaction,
     setTransaccion,
     setTransacciones,
     balance,
-    categorias
+    categories
 }) => {
     const { auth } = useAuth();
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlerta] = useState({});
     const [error, setError] = useState(null);
-    const [cargando, setLoading] = useState(false);
-    const [fecha, setFecha] = useState(new Date(transaccion.fecha).toISOString().substring(0,10));
-    const [detalle, setDetalle] = useState(transaccion.detalle);
-    const [monto, setMonto] = useState(transaccion.monto);
-    const [tipoTransaccion, setTipoTransaccion] = useState(transaccion.tipoTransaccion);
-    const [categoriaId, setCategoria] = useState(transaccion?.categoria?.id ?? transaccion?.cat_Id);
+    const [loading, setLoading] = useState(false);
+    const [date, setFecha] = useState(new Date(transaction.date).toISOString().substring(0,10));
+    const [details, setDetalle] = useState(transaction.details);
+    const [amount, setMonto] = useState(transaction.amount);
+    const [transactionType, setTipoTransaccion] = useState(transaction.transactionType);
+    const [categoriaId, setCategoria] = useState(transaction?.categoria?.id ?? transaction?.cat_Id);
     const user = getUserToken();
     const config = {
         headers: {
@@ -48,7 +48,7 @@ export const ModificarTransaccion = ({
         e.preventDefault();
         setLoading(true);
 
-        if ([detalle, monto].length === 0) {
+        if ([details, amount].length === 0) {
             setAlerta({
                 msg: "Todos los campos son obligatorios",
                 error: true
@@ -61,14 +61,14 @@ export const ModificarTransaccion = ({
 
         const payload = {
             id: transaccionId,
-            fecha: fecha,
-            detalle: detalle,
-            monto: parseFloat(monto),
-            tipoTransaccion: tipoTransaccion,
+            date: date,
+            details: details,
+            amount: parseFloat(amount),
+            transactionType: transactionType,
             cat_Id: parseInt(categoriaId),
             balance_Id: parseInt(balance?.id) ?? null,
             usuarioId: parseInt(user.id),
-            estaActiva: true
+            isActive: true
         };
 
         try {
@@ -82,8 +82,8 @@ export const ModificarTransaccion = ({
                 setTimeout(() => {
                     setAlerta({});
                     setTransaccion(data);
-                    setTransacciones(transacciones => transacciones.map((transaccion) =>
-                        transaccion.id === transaccionId ? data : transaccion
+                    setTransacciones(transactions => transactions.map((transaction) =>
+                        transaction.id === transaccionId ? data : transaction
                     ));
                     ocultarModal();
                 }, 1500);
@@ -116,38 +116,38 @@ export const ModificarTransaccion = ({
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
     return (
-        <div className="modal">
+        <div className="popUp">
             <div className='modalContainer'>
                 <form
                     onSubmit={handleSubmit}
-                    className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+                    className={`form ${animarModal ? "animate" : "close"}`}
                 >
-                    <div className="cerrar-modal">
+                    <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
                             onClick={ocultarModal}></i>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Fecha">Fecha</label>
+                    <div className='field'>
+                        <label htmlFor="Date">Date</label>
                         <ReactDatePicker
                             locale={es}
                             className="bg-[#E5E7EB] rounded-md p-1"
-                            value={fecha}
-                            placeholderText="Fecha"
+                            value={date}
+                            placeholderText="Date"
                             onChange={(date) => setFecha(date.toISOString().split("T")[0])}
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="detalle">Detalle</label>
+                    <div className='field'>
+                        <label htmlFor="details">Details</label>
                         <input
-                            id="detalle"
+                            id="details"
                             type="text"
-                            placeholder="Detalle"
+                            placeholder="Details"
                             maxLength={80}
-                            value={detalle}
+                            value={details}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {
                                     setDetalle(e.target.value);
@@ -155,13 +155,13 @@ export const ModificarTransaccion = ({
                             }}
                         />
                     </div>
-                    <div className='campo'>
-                        <label htmlFor="monto">Monto</label>
+                    <div className='field'>
+                        <label htmlFor="amount">Amount</label>
                         <input
-                            id="monto"
+                            id="amount"
                             type="text"
-                            placeholder="Ingresar monto"
-                            value={monto.toString().replace(",", ".")}
+                            placeholder="Ingresar amount"
+                            value={amount.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
                                     setMonto(e.target.value);
@@ -170,9 +170,9 @@ export const ModificarTransaccion = ({
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="tipo">Tipo de Transacción</label>
-                        <select name="tipo" id="tipo" value={tipoTransaccion}
+                    <div className='field'>
+                        <label htmlFor="transactionType">Type de Transaction</label>
+                        <select name="transactionType" id="transactionType" value={transactionType}
                             onChange={e => setTipoTransaccion(e.target.value)}
                         >
                             <option defaultValue={"Ingreso"} value="Ingreso">Ingreso</option>
@@ -180,19 +180,19 @@ export const ModificarTransaccion = ({
                         </select>
                     </div>
 
-                    <div className='campo'>
+                    <div className='field'>
                         <label htmlFor="categoria">Categoria</label>
                         <select name="categoria" id="categoria" value={categoriaId}
                             onChange={e => setCategoria(e.target.value)}
                         >
                             {
-                                categorias?.map((c, index) => {
+                                categories?.map((c, index) => {
                                     return (
                                         <option
                                             defaultValue={c.id}
                                             value={c.id}
                                             key={index}>
-                                            {c.titulo}
+                                            {c.title}
                                         </option>
                                     );
                                 })
@@ -202,11 +202,11 @@ export const ModificarTransaccion = ({
 
                     <input
                         type="submit"
-                        value={!cargando ? "Enviar" : "Enviando..."}
-                        disabled={cargando}
+                        value={!loading ? "Enviar" : "Enviando..."}
+                        disabled={loading}
                     />
 
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
 
                 </form>
             </div>

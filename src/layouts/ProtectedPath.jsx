@@ -7,8 +7,8 @@ import { Footer } from "../components/footer/Footer";
 
 const ProtectedPath = () => {
 
-    const { auth, cargando } = useAuth();
-    if (cargando) return "Cargando...";
+    const { auth, loading } = useAuth();
+    if (loading) return "Cargando...";
 
     return (
         <>

@@ -1,10 +1,10 @@
 import { PulseLoader } from "react-spinners";
 import { texts, type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
-import Alerta from "../../Alerta";
+import Alert from "../../Alert";
 
-export const ReservesSection = ({ cargando, transacciones }) => {
-    const reserves = transacciones?.filter(({ tipoTransaccion }) => tipoTransaccion === type.RESERVA);
+export const ReservesSection = ({ loading, transactions }) => {
+    const reserves = transactions?.filter(({ transactionType }) => transactionType === type.RESERVE);
     const { dark } = useDark();
 
     return (
@@ -18,11 +18,11 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Últimas Reservas</h2>
+                >Last Reservas</h2>
                 <div className="bg-inherit rounded-lg">
-                    {cargando ?
+                    {loading ?
                         <div className="flex justify-center">
-                            <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                            <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
                         !!reserves?.length
                             ?
@@ -34,33 +34,33 @@ export const ReservesSection = ({ cargando, transacciones }) => {
                                                 "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
                                                 "font-bold text-center py-2 px-10 text-violet-400"
-                                            )}>Transacción</th>
+                                            )}>Transaction</th>
                                             <th className={(dark === "light" ?
                                                 "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
                                                 "font-bold text-center py-2 px-10 text-violet-400"
-                                            )}>Monto</th>
+                                            )}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {reserves?.slice(0, 5).map((transaccion, index) => {
+                                        {reserves?.slice(0, 5).map((transaction, index) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "text-gray-600 text-sm py-2 px-10 font-bold"
                                                         :
                                                         "text-gray-300 text-sm py-2 px-10 font-bold"
-                                                    )}>{transaccion.detalle}</td>
+                                                    )}>{transaction.details}</td>
 
                                                     {
-                                                        transaccion.detalle?.includes("Retiro") ?
+                                                        transaction.details?.includes("Withdraw") ?
                                                             <td className="py-2 px-10 text-green-500 font-semibold font-mono text-sm">
                                                                 <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                    +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                    +${parseFloat(transaction.amount).toFixed(2)}
                                                                 </div>
                                                             </td> :
                                                             <td className="py-2 px-10 text-red-500 font-semibold font-mono">
-                                                                -${parseFloat(transaccion.monto).toFixed(2)}
+                                                                -${parseFloat(transaction.amount).toFixed(2)}
                                                             </td>
                                                     }
                                                 </tr>

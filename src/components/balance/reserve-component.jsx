@@ -1,12 +1,12 @@
 import { HttpStatusCode } from "axios";
 import { texts, type } from "../../constants/myfinances-constants";
-import { filterByType } from "../../services/myfinances-api/transacciones";
+import { filterByType } from "../../services/myfinances-api/transaction";
 import useAuth from "../../context/useAuth";
 import { useEffect, useState } from "react";
-import Alerta from "../Alerta";
 import { PulseLoader } from "react-spinners";
 import { BalancePagination } from "./balance-pagination";
 import useDark from "../../context/useDark";
+import Alert from "../Alert";
 
 export const BalanceReserves = ({ user, config }) => {
     const { auth } = useAuth();
@@ -20,7 +20,7 @@ export const BalanceReserves = ({ user, config }) => {
     useEffect(() => {
         const payload = {
             userId: user.id,
-            tipo: type.RESERVA
+            transactionType: type.RESERVE
         };
         const fetchReserves = async () => {
             try {
@@ -58,12 +58,12 @@ export const BalanceReserves = ({ user, config }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Reservas</h2>
+                >Reserves</h2>
                 {
                     reservesAlert ?
                         <div className="flex justify-center">
                             <div className="absolute">
-                                {msg && <Alerta alerta={reservesAlert} />}
+                                {msg && <Alert alert={reservesAlert} />}
                             </div>
                         </div> : <div></div>
                 }
@@ -82,32 +82,32 @@ export const BalanceReserves = ({ user, config }) => {
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Transacción</th>
+                                            >Transaction</th>
                                             <th className={(dark === "light" ?
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Monto</th>
+                                            >Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {reserves?.map((transaccion, index) => {
+                                        {reserves?.map((transaction, index) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-10 text-gray-800 font-semibold text-sm"
                                                         : "text-gray-100 font-semibold py-2 px-10 text-sm"
-                                                    )}>{transaccion.detalle}</td>
+                                                    )}>{transaction.details}</td>
 
                                                     {
-                                                        transaccion.detalle?.includes("Retiro") ?
+                                                        transaction.details?.includes("Withdraw") ?
                                                             <td className="py-2 px-10 text-green-500 font-semibold font-mono text-sm">
                                                                 <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                        +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                        +${parseFloat(transaction.amount).toFixed(2)}
                                                                 </div>
                                                             </td> :
                                                             <td className="py-2 px-10 text-red-500 font-semibold font-mono text-sm">
-                                                                    -${parseFloat(transaccion.monto).toFixed(2)}
+                                                                    -${parseFloat(transaction.amount).toFixed(2)}
                                                             </td>
                                                     }
                                                 </tr>
@@ -132,7 +132,7 @@ export const BalanceReserves = ({ user, config }) => {
                         <BalancePagination
                             setTransactions={setReserves}
                             auth={auth}
-                            type={type.RESERVA}
+                            type={type.RESERVE}
                             setLoading={setLoading}
                             metadata={metadata}
                             setMetadata={setMetadata}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useAuth from "../../context/useAuth";
-import { getAll } from "../../services/myfinances-api/transacciones";
-import { getAll as getAllGoals } from "../../services/myfinances-api/metaFinanciera";
+import { getAll } from "../../services/myfinances-api/transaction";
+import { getAll as getAllGoals } from "../../services/myfinances-api/financialGoal";
 import { getUserToken } from "../../services/token/tokenService";
 import { ChartSection } from "../../components/dashboard/chart/chart-section";
 import { BalanceSection } from "../../components/dashboard/balance-section";
@@ -9,7 +9,7 @@ import { AllTransactionsSection } from "../../components/dashboard/transactions/
 import { IncomesSection } from "../../components/dashboard/transactions/incomes-section";
 import { ExpensesSection } from "../../components/dashboard/transactions/expenses-section";
 import { LastGoal } from "../../components/dashboard/last-goals-section";
-import Alerta from "../../components/Alerta";
+import Alert from "../../components/Alert";
 import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
@@ -19,12 +19,12 @@ import { ReservesSection } from "../../components/dashboard/transactions/reserve
 
 const Dashboard = () => {
     const { auth } = useAuth();
-    const [transacciones, setTransacciones] = useState([{}]);
+    const [transactions, setTransactions] = useState([{}]);
     const [activeGoals, setActiveGoals] = useState([]);
-    const [cargando, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [alertaMeta, setAlertaMeta] = useState({});
-    const [alertaTransacciones, setAlertaTransacciones] = useState({});
+    const [goalsAlert, setGoalsAlert] = useState({});
+    const [transactionsAlert, setTransactionsAlert] = useState({});
     const [balance, setBalance] = useState({});
     const { dark } = useDark();
 
@@ -49,29 +49,29 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
-        const fetchTransacciones = async () => {
+        const fetchTransactions = async () => {
             try {
                 const { data: response, status } = await getAll({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    const activeTransactions = response.data.filter((t) => t.estaActiva);
-                    setTransacciones(activeTransactions);
+                    const activeTransactions = response.data.filter((transaction) => !!transaction.isActive);
+                    setTransactions(activeTransactions);
                     setLoading(false);
                 }
             } catch (error) {
                 setError(error);
                 setLoading(false);
-                setAlertaTransacciones({
+                setTransactionsAlert({
                     msg: texts.WITH_NO_TRANSACTIONS,
                     error: true
                 });
                 setTimeout(() => {
-                    setAlertaTransacciones({});
+                    setTransactionsAlert({});
                 }, 3000);
             }
         };
         const fetchGoals = async () => {
             try {
-                const { data, status } = await getAllGoals({userId: user.id}, 1, 10, config);
+                const { data, status } = await getAllGoals({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
                     setActiveGoals(data.data);
                     setLoading(false);
@@ -79,28 +79,28 @@ const Dashboard = () => {
             } catch (error) {
                 setError(error);
                 setLoading(false);
-                setAlertaMeta({
+                setGoalsAlert({
                     msgMeta: texts.WITH_NO_GOALS,
                     error: true
                 });
                 setTimeout(() => {
-                    setAlertaMeta({});
+                    setGoalsAlert({});
                 }, 3000);
             }
         };
         fetchBalance();
-        fetchTransacciones();
+        fetchTransactions();
         fetchGoals();
     }, []);
 
-    const { msg } = alertaTransacciones;
+    const { msg } = transactionsAlert;
     return (
         <div className="flex flex-col items-around p-10">
             {
-                alertaTransacciones ?
+                transactionsAlert ?
                     <div className="flex justify-end">
                         <div className="absolute">
-                            {msg && <Alerta alerta={alertaTransacciones} />}
+                            {msg && <Alert alert={transactionsAlert} />}
                         </div>
                     </div> : <div></div>
             }
@@ -109,25 +109,25 @@ const Dashboard = () => {
                 :
                 "mx-5 text-gray-200 font-bold uppercase "
             )}
-            >Hola, {user.nombre}</h2>
+            >Hello, {user.firstName}</h2>
             <div className="bg-inherit rounded flex justify-between">
                 <BalanceSection
                     auth={auth}
                     userId={user.id}
-                    setTransacciones={setTransacciones}
+                    setTransactions={setTransactions}
                     balance={balance}
                     setBalance={setBalance} />
                 <ChartSection
-                    cargando={cargando}
-                    transacciones={transacciones} />
+                    loading={loading}
+                    transactions={transactions} />
                 <LastGoal
                     activeGoals={activeGoals}
                     auth={auth}
-                    cargando={cargando}
+                    loading={loading}
                     setActiveGoals={setActiveGoals}
                     balance={balance}
                     setBalance={setBalance}
-                    setTransacciones={setTransacciones} />
+                    setTransactions={setTransactions} />
             </div>
             <div className={(dark === "light" ?
                 "bg-inherit p-10"
@@ -141,12 +141,12 @@ const Dashboard = () => {
                         :
                         "bg-gray-600 p-10"
                     )}
-                    transacciones={transacciones} cargando={cargando} />
+                    transactions={transactions} loading={loading} />
             </div>
             <div className="bg-inherit rounded flex justify-center">
-                <IncomesSection cargando={cargando} transacciones={transacciones} />
-                <ExpensesSection cargando={cargando} transacciones={transacciones} />
-                <ReservesSection cargando={cargando} transacciones={transacciones} />
+                <IncomesSection loading={loading} transactions={transactions} />
+                <ExpensesSection loading={loading} transactions={transactions} />
+                <ReservesSection loading={loading} transactions={transactions} />
             </div>
         </div>
     );

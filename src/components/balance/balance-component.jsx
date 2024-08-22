@@ -2,7 +2,7 @@ import { PulseLoader } from "react-spinners";
 import { texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
 
-export const BalanceComponent = ({ cargando, balance }) => {
+export const BalanceComponent = ({ loading, balance }) => {
     const { dark } = useDark();
 
     return (
@@ -12,9 +12,9 @@ export const BalanceComponent = ({ cargando, balance }) => {
         )}
         >
             {
-                cargando ?
+                loading ?
                     <div className="flex justify-center">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :
                     balance ?
@@ -28,10 +28,10 @@ export const BalanceComponent = ({ cargando, balance }) => {
                                 </h3>
                                 {
                                     balance.data ?
-                                        balance.data.saldo_Total < 0 ?
+                                        balance.data.totalBalance < 0 ?
                                             <h1 className='text-red-500 font-bold text-5xl font-mono'>
                                                 <span className="mr-1">$</span>
-                                                {parseFloat(balance.data.saldo_Total).toFixed(2)}
+                                                {parseFloat(balance.data.totalBalance).toFixed(2)}
                                             </h1> :
                                             <h1 className={(dark === "light" ?
                                                 "text-gray-600 font-bold text-5xl font-mono"
@@ -39,20 +39,20 @@ export const BalanceComponent = ({ cargando, balance }) => {
                                             )}
                                             >
                                                 <span className="mr-1">$</span>
-                                                {parseFloat(balance.data.saldo_Total).toFixed(2)}
+                                                {parseFloat(balance.data.totalBalance).toFixed(2)}
                                             </h1> :
-                                        balance.saldo_Total < 0 ?
+                                        balance.totalBalance < 0 ?
                                             <h1 className={(dark === "light" ?
                                                 "text-red-600 font-bold text-5xl font-mono"
                                                 : "text-red-600 font-bold text-5xl font-mono"
                                             )}
                                             >
                                                 <span className="mr-1">$</span>
-                                                {parseFloat(balance.saldo_Total).toFixed(2)}
+                                                {parseFloat(balance.totalBalance).toFixed(2)}
                                             </h1> :
                                             <h1 className='text-gray-600 font-bold text-5xl font-mono'>
                                                 <span className="mr-1">$</span>
-                                                {parseFloat(balance.saldo_Total).toFixed(2)}
+                                                {parseFloat(balance.totalBalance).toFixed(2)}
                                             </h1>
                                 }
                             </div>

@@ -44,7 +44,7 @@ const Usuario = () => {
                     "text-gray-200 font-semibold"
                     :
                     "text-gray-900 font-semibold"
-                )}>{user.nombre}</p>
+                )}>{user.firstName}</p>
                 <h1 className={(dark === "dark" ?
                     "text-violet-400 font-semibold"
                     :
@@ -55,7 +55,7 @@ const Usuario = () => {
                     :
                     "text-gray-900 font-semibold"
                 )}
-                >{user.apellido}</p>
+                >{user.lastName}</p>
                 <h1 className={(dark === "dark" ?
                     "text-violet-400 font-semibold"
                     :

@@ -2,10 +2,10 @@ import { PulseLoader } from "react-spinners";
 import { type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
 
-export const AllTransactionsSection = ({ transacciones, cargando }) => {
+export const AllTransactionsSection = ({ transactions, loading }) => {
     const { dark } = useDark();
 
-    const orderedTransactions = transacciones?.slice(0, 5);
+    const orderedTransactions = transactions?.slice(0, 5);
     return (
         <div className={(dark === "light" ?
             "bg-inherit p-4 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 border"
@@ -19,12 +19,12 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                     :
                     "font-bold text-violet-400"
                 )}
-                >Ultimas Transacciones</h3>
+                >Last Transactions</h3>
             </div>
             {
-                !!cargando ?
+                !!loading ?
                     <div className="flex justify-center">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :
                     <div className="flex justify-center">
@@ -36,30 +36,30 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                         :
                                         "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
-                                    >Detalle</th>
+                                    >Details</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
                                         "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
-                                    >Monto</th>
+                                    >Amount</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
                                         "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
-                                    >Fecha</th>
+                                    >Date</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-10 font-semibold text-violet-600"
                                         :
                                         "bg-gray-600 text-left py-2 px-10 font-semibold text-violet-400"
                                     )}
-                                    >Tipo</th>
+                                    >Type</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    orderedTransactions.map((transaccion, index) => {
+                                    orderedTransactions.map((transaction, index) => {
                                         return (
                                             <tr className={(dark === "light" ?
                                                 "border-b border-gray-200"
@@ -73,66 +73,66 @@ export const AllTransactionsSection = ({ transacciones, cargando }) => {
                                                     :
                                                     "text-gray-300 py-2 px-10 font-semibold"
                                                 )}
-                                                >{transaccion.detalle}</td>
+                                                >{transaction.details}</td>
                                                 {
-                                                    transaccion.tipoTransaccion === type.EGRESO ?
+                                                    transaction.transactionType === type.EXPENSE ?
                                                         <td className="py-2 px-10 text-red-500 font-semibold font-mono">
-                                                            -${parseFloat(transaccion.monto).toFixed(2)}
+                                                            -${parseFloat(transaction.amount).toFixed(2)}
                                                         </td> :
-                                                        transaccion.tipoTransaccion === type.INGRESO ?
+                                                        transaction.transactionType === type.INCOME ?
                                                             <td className="py-2 px-10 text-green-500 font-semibold font-mono">
                                                                 <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                    +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                    +${parseFloat(transaction.amount).toFixed(2)}
                                                                 </div>
                                                             </td> :
-                                                            transaccion.tipoTransaccion === type.RESERVA ?
-                                                                transaccion.detalle?.includes("Eliminada") ?
+                                                            transaction.transactionType === type.RESERVE ?
+                                                                transaction.details?.includes("Deleted") ?
                                                                     <td className="py-2 px-10 text-gray-400 font-semibold font-mono">
                                                                         <div className="w-28 flex justify-center rounded-md bg-gray-200">
-                                                                            ${parseFloat(transaccion.monto).toFixed(2)}
+                                                                            ${parseFloat(transaction.amount).toFixed(2)}
                                                                         </div>
                                                                     </td> :
-                                                                transaccion.detalle?.includes("Retiro") || 
-                                                                transaccion.detalle?.includes("Monto Menor") ?
+                                                                transaction.details?.includes("Withdraw") || 
+                                                                transaction.details?.includes("Lower amount") ?
                                                                     <td className="py-2 px-10 text-green-500 font-semibold font-mono">
                                                                         <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                            +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                            +${parseFloat(transaction.amount).toFixed(2)}
                                                                         </div>
                                                                     </td> :
                                                                     <td className="py-2 px-10 text-red-500 font-semibold font-mono">
-                                                                        -${parseFloat(transaccion.monto).toFixed(2)}
+                                                                        -${parseFloat(transaction.amount).toFixed(2)}
                                                                     </td>
                                                                 : <td></td>
                                                 }
                                                 {
-                                                    transaccion.fecha ?
+                                                    transaction.date ?
                                                         <td className={(dark === "light" ?
                                                             "py-2 px-10 text-gray-600 font-semibold font-mono"
                                                             :
                                                             "py-2 px-10 text-gray-300 font-semibold font-mono"
                                                         )}
-                                                        >{new Date(transaccion.fecha).toLocaleDateString()}</td> :
+                                                        >{new Date(transaction.date).toLocaleDateString()}</td> :
                                                         <td></td>
                                                 }
                                                 {
-                                                    transaccion && transaccion.tipoTransaccion === type.EGRESO ?
+                                                    transaction && transaction.transactionType === type.EXPENSE ?
                                                         <td className="py-2 px-10 text-gray-400">
-                                                            {transaccion.tipoTransaccion}
+                                                            {transaction.transactionType}
                                                             <span className="text-red-500 font-bold ml-1 pointer-events-none">
                                                                 <i className="fa-solid fa-arrow-trend-down"></i>
                                                             </span>
                                                         </td>
                                                         :
-                                                        transaccion && transaccion.tipoTransaccion === type.INGRESO ?
+                                                        transaction && transaction.transactionType === type.INCOME ?
                                                             <td className="py-2 px-10 text-gray-400">
-                                                                {transaccion.tipoTransaccion}
+                                                                {transaction.transactionType}
                                                                 <span className="text-green-500 font-bold ml-1 pointer-events-none">
                                                                     <i className="fa-solid fa-arrow-trend-up"></i>
                                                                 </span>
                                                             </td> :
-                                                            transaccion.tipoTransaccion === type.RESERVA ?
+                                                            transaction.transactionType === type.RESERVE ?
                                                                 <td className="py-2 px-10 text-gray-400">
-                                                                    {transaccion.tipoTransaccion}
+                                                                    {transaction.transactionType}
                                                                     <i className="fa-solid fa-piggy-bank ml-1 pointer-events-none"></i>
                                                                 </td>
                                                                 : <td></td>

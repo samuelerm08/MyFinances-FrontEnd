@@ -4,19 +4,19 @@ import { BorrarTransaccion } from "../pop-ups/ModalBorrarTransaccion";
 import { useEffect, useState } from "react";
 import { ModificarTransaccion } from "../pop-ups/ModalModificarTransaccion";
 import useAuth from "../../context/useAuth";
-import { getCategories } from "../../services/myfinances-api/categorias";
+import { getCategories } from "../../services/myfinances-api/category";
 import useDark from "../../context/useDark";
 
-export const TransactionsTable = ({ cargando, transacciones, setTransacciones, balance }) => {
+export const TransactionsTable = ({ loading, transactions, setTransacciones, balance }) => {
     const { auth } = useAuth();
-    const orderedTransactions = transacciones?.slice(0, 10);
+    const orderedTransactions = transactions?.slice(0, 10);
     const [error, setError] = useState(null);
     const [deleteModal, setDeleteModal] = useState(false);
     const [modifyModal, setModifyModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [transaccionId, setTransaccionId] = useState(0);
     const [toModifyTransact, setTransaccion] = useState({});
-    const [categorias, setCategorias] = useState([""]);
+    const [categories, setCategorias] = useState([""]);
     const { dark } = useDark();
 
     const handleModifyModal = (tId, t) => {
@@ -44,7 +44,7 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
         const fetchCategorias = async () => {
             try {
                 const { data: response } = await getCategories(config);
-                const validCategories = response?.filter(({ titulo }) => !titulo.includes(type.RESERVA));
+                const validCategories = response?.filter(({ title }) => !title.includes(type.RESERVE));
                 setCategorias(validCategories);
             } catch (error) {
                 setError(error);
@@ -55,9 +55,9 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
     return (
         <div className="t-table">
             {
-                cargando ?
+                loading ?
                     <div className="flex justify-center items-center h-full">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :
                     <table className={(dark === "light" ?
@@ -73,41 +73,41 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Detalle</th>
+                                >Details</th>
                                 <th className={(dark === "light" ?
                                     "text-left py-2 px-4 font-semibold text-violet-600"
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Monto</th>
+                                >Amount</th>
                                 <th className={(dark === "light" ?
                                     "text-left py-2 px-4 font-semibold text-violet-600"
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Fecha</th>
+                                >Date</th>
                                 <th className={(dark === "light" ?
                                     "text-left py-2 px-4 font-semibold text-violet-600"
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Tipo</th>
+                                >Type</th>
                                 <th className={(dark === "light" ?
                                     "text-left py-2 px-4 font-semibold text-violet-600"
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Estado</th>
+                                >State</th>
                                 <th className={(dark === "light" ?
                                     "text-left py-2 px-4 font-semibold text-violet-600"
                                     :
                                     "text-left py-2 px-4 font-semibold text-violet-400"
                                 )}
-                                >Operación</th>
+                                >Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {orderedTransactions?.map((transaccion, index) => {
+                            {orderedTransactions?.map((transaction, index) => {
                                 return (
                                     <tr className={(dark === "light" ?
                                         "border-b border-gray-200 "
@@ -121,110 +121,110 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                             :
                                             "py-2 px-4 text-gray-200 font-semibold"
                                         )}
-                                        >{transaccion.detalle}</td>
+                                        >{transaction.details}</td>
                                         {
-                                            transaccion.tipoTransaccion === type.EGRESO
+                                            transaction.transactionType === type.EXPENSE
                                                 ?
-                                                !transaccion.estaActiva
+                                                !transaction.isActive
                                                     ?
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-4 text-gray-400 font-semibold font-mono"
                                                         :
                                                         "py-2 px-4 text-gray-300 font-semibold font-mono"
                                                     )}>
-                                                        -${parseFloat(transaccion.monto).toFixed(2)}
+                                                        -${parseFloat(transaction.amount).toFixed(2)}
                                                     </td>
                                                     :
                                                     <td className="py-2 px-4 text-red-500 font-semibold font-mono">
-                                                        -${parseFloat(transaccion.monto).toFixed(2)}
+                                                        -${parseFloat(transaction.amount).toFixed(2)}
                                                     </td>
-                                                : transaccion.tipoTransaccion === type.INGRESO ?
-                                                    !transaccion.estaActiva
+                                                : transaction.transactionType === type.INCOME ?
+                                                    !transaction.isActive
                                                         ?
                                                         <td className="py-2 px-4 text-gray-400 font-semibold font-mono">
                                                             <div className="w-28 flex justify-center rounded-md bg-gray-200">
-                                                                +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                +${parseFloat(transaction.amount).toFixed(2)}
                                                             </div>
                                                         </td>
                                                         :
                                                         <td className="py-2 px-4 text-green-500 font-semibold font-mono">
                                                             <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                +${parseFloat(transaction.amount).toFixed(2)}
                                                             </div>
                                                         </td>
                                                     :
-                                                    transaccion.detalle?.includes("Eliminada") ?
+                                                    transaction.details?.includes("Deleted") ?
                                                         <td className="py-2 px-4 text-gray-400 font-semibold font-mono">
                                                             <div className="w-28 flex justify-center rounded-md bg-gray-200">
-                                                                ${parseFloat(transaccion.monto).toFixed(2)}
+                                                                ${parseFloat(transaction.amount).toFixed(2)}
                                                             </div>
                                                         </td> :
-                                                    transaccion.detalle?.includes("Retiro") || 
-                                                    transaccion.detalle?.includes("Monto Menor") ?
+                                                    transaction.details?.includes("Withdraw") || 
+                                                    transaction.details?.includes("Lower amount") ?
                                                         <td className="py-2 px-4 text-green-500 font-semibold font-mono">
                                                             <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                +${parseFloat(transaccion.monto).toFixed(2)}
+                                                                +${parseFloat(transaction.amount).toFixed(2)}
                                                             </div>
                                                         </td> :
                                                         <td className="py-2 px-4 text-red-500 font-semibold font-mono">
-                                                            -${parseFloat(transaccion.monto).toFixed(2)}
+                                                            -${parseFloat(transaction.amount).toFixed(2)}
                                                         </td>
                                         }
                                         {
-                                            transaccion.fecha
+                                            transaction.date
                                                 ?
-                                                !transaccion.estaActiva
+                                                !transaction.isActive
                                                     ?
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-4 text-gray-300  font-mono"
                                                         :
                                                         "py-2 px-4 text-gray-500  font-mono"
-                                                    )}>{new Date(transaccion.fecha).toLocaleDateString()}</td>
+                                                    )}>{new Date(transaction.date).toLocaleDateString()}</td>
                                                     :
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-4 text-gray-400 font-semibold font-mono"
                                                         :
                                                         "py-2 px-4 text-gray-200 font-semibold font-mono"
-                                                    )}>{new Date(transaccion.fecha).toLocaleDateString()}</td>
+                                                    )}>{new Date(transaction.date).toLocaleDateString()}</td>
                                                 :
                                                 <td></td>
                                         }
                                         {
-                                            transaccion.tipoTransaccion === type.EGRESO ?
+                                            transaction.transactionType === type.EXPENSE ?
                                                 <td className="py-2 px-4 text-gray-400">
-                                                    {transaccion.tipoTransaccion}
+                                                    {transaction.transactionType}
                                                     <span className="text-red-500 font-bold ml-2 pointer-events-none">
                                                         <i className="fa-solid fa-arrow-trend-down"></i>
                                                     </span>
                                                 </td>
                                                 :
-                                                transaccion.tipoTransaccion === type.INGRESO ?
+                                                transaction.transactionType === type.INCOME ?
                                                     <td className="py-2 px-4 text-gray-400">
-                                                        {transaccion.tipoTransaccion}
+                                                        {transaction.transactionType}
                                                         <span className="text-green-500 font-bold ml-2 pointer-events-none">
                                                             <i className="fa-solid fa-arrow-trend-up"></i>
                                                         </span>
                                                     </td> :
                                                     <td className="py-2 px-4 text-gray-400">
-                                                        {transaccion.tipoTransaccion}
+                                                        {transaction.transactionType}
                                                         <i className="fa-solid fa-piggy-bank ml-2 pointer-events-none"></i>
                                                     </td>
                                         }
                                         {
-                                            !transaccion.estaActiva ?
+                                            !transaction.isActive ?
                                                 <td className="py-2 px-4 text-orange-400 font-semibold">
                                                     <div className="w-24 text-center rounded-md bg-orange-200">
-                                                        Anulada
+                                                        Canceled
                                                     </div>
                                                 </td> :
                                                 <td className="py-2 px-4 text-green-500 font-semibold">
                                                     <div className="w-24 text-center rounded-md bg-green-200">
-                                                        Activa
+                                                        Active
                                                     </div>
                                                 </td>
                                         }
                                         <td>
-                                            <button disabled={!transaccion.estaActiva || transaccion.tipoTransaccion === type.RESERVA}>
+                                            <button disabled={!transaction.isActive || transaction.transactionType === type.RESERVE}>
                                                 <i className={(dark === "light" ?
                                                     "fa-regular fa-pen-to-square text-gray-600 m-3"
                                                     :
@@ -232,8 +232,8 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                                 )}
                                                     data-tooltip-id="my-tooltip"
                                                     data-tooltip-content="Modificar"
-                                                    onClick={e => handleModifyModal(transaccion.id, transaccion)}
-                                                    style={!transaccion.estaActiva || transaccion.tipoTransaccion === type.RESERVA ?
+                                                    onClick={e => handleModifyModal(transaction.id, transaction)}
+                                                    style={!transaction.isActive || transaction.transactionType === type.RESERVE ?
                                                     { cursor: "not-allowed" } : { cursor: "pointer" }
                                                 }>
                                                 </i>
@@ -244,19 +244,19 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                                     setModal={setModifyModal}
                                                     animarModal={animarModal}
                                                     transaccionId={transaccionId}
-                                                    transaccion={toModifyTransact}
+                                                    transaction={toModifyTransact}
                                                     setTransaccion={setTransaccion}
                                                     setTransacciones={setTransacciones}
                                                     balance={balance}
-                                                    categorias={categorias}
+                                                    categories={categories}
                                                 />
                                             }
-                                            <button disabled={!transaccion.estaActiva || transaccion.tipoTransaccion === type.RESERVA}>
+                                            <button disabled={!transaction.isActive || transaction.transactionType === type.RESERVE}>
                                                 <i className="fa-solid fa-ban pl-2 text-red-600"
                                                     data-tooltip-id="my-tooltip"
                                                     data-tooltip-content="Anular"
-                                                    onClick={e => handleDeletingModal(transaccion.id)}
-                                                    style={!transaccion.estaActiva || transaccion.tipoTransaccion === type.RESERVA ?
+                                                    onClick={e => handleDeletingModal(transaction.id)}
+                                                    style={!transaction.isActive || transaction.transactionType === type.RESERVE ?
                                                         { cursor: "not-allowed" } : { cursor: "pointer" }
                                                     }>
                                                 </i>
@@ -268,7 +268,7 @@ export const TransactionsTable = ({ cargando, transacciones, setTransacciones, b
                                                     animarModal={animarModal}
                                                     auth={auth}
                                                     transaccionId={transaccionId}
-                                                    transacciones={transacciones}
+                                                    transactions={transactions}
                                                     setTransacciones={setTransacciones}
                                                 />
                                             }

@@ -6,16 +6,16 @@ import { BalanceExpenses } from "../../components/balance/expenses-component";
 import { BalanceComponent } from "../../components/balance/balance-component";
 import { RevenueChart } from "../../components/balance/chart/revenue-chart";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
-import { getAll } from "../../services/myfinances-api/transacciones";
+import { getAll } from "../../services/myfinances-api/transaction";
 import { HttpStatusCode } from "axios";
 import { BalanceReserves } from "../../components/balance/reserve-component";
 
 const Balance = () => {
     const { auth } = useAuth();
-    const [cargando, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [balance, setBalance] = useState(null);
-    const [transacciones, setTransacciones] = useState([]);
+    const [transactions, setTransactions] = useState([]);
 
     const user = getUserToken();
     const config = {
@@ -38,12 +38,12 @@ const Balance = () => {
                 setLoading(false);
             }
         };
-        const fetchTransacciones = async () => {
+        const fetchTransactions = async () => {
             try {
                 const { data: response, status } = await getAll({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    const filteredTransactions = response.data.filter(({ estaActiva }) => estaActiva);
-                    setTransacciones(filteredTransactions);
+                    const filteredTransactions = response.data.filter(({ isActive }) => isActive);
+                    setTransactions(filteredTransactions);
                     setLoading(false);
                 }
             } catch (error) {
@@ -51,7 +51,7 @@ const Balance = () => {
                 setLoading(false);
             }
         };
-        fetchTransacciones();
+        fetchTransactions();
         fetchBalance();
     }, []);
 
@@ -64,10 +64,10 @@ const Balance = () => {
                 <BalanceReserves user={user} config={config} />
             </div>
             <div className="bg-inherit p-2 flex justify-center">
-                <BalanceComponent cargando={cargando} balance={balance} />
+                <BalanceComponent loading={loading} balance={balance} />
             </div>
             <div className="flex flex-col items-center">
-                <RevenueChart transacciones={transacciones} />
+                <RevenueChart transactions={transactions} />
             </div>
         </div>
     );

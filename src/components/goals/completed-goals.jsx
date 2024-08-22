@@ -1,7 +1,7 @@
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
 import useAuth from "../../context/useAuth";
-import { getByState, withdrawGoal } from "../../services/myfinances-api/metaFinanciera";
+import { getByState, withdrawGoal } from "../../services/myfinances-api/financialGoal";
 import { texts } from "../../constants/myfinances-constants";
 import { useState } from "react";
 import { HttpStatusCode } from "axios";
@@ -10,7 +10,7 @@ import { getUserToken } from "../../services/token/tokenService";
 export const CompletedGoals = ({
     goals,
     error,
-    cargando,
+    loading,
     completedGoalsMetadata,
     setCompletedGoalsMetadata,
     setCompletedGoals,
@@ -21,7 +21,7 @@ export const CompletedGoals = ({
     const { auth } = useAuth();
     const [goalError, setError] = useState(null);
     const [goalLoading, setGoalLoading] = useState(false);
-    const completedGoals = goals?.filter(({ completada, retirada }) => completada && !retirada);
+    const completedGoals = goals?.filter(({ completed, withdrawn }) => completed && !withdrawn);
     const user = getUserToken();
 
     const handleGoalWithdrawal = async (goalId) => {
@@ -51,14 +51,14 @@ export const CompletedGoals = ({
                 }, 1500);
                 setTimeout(async () => {
                     setCompletedGoals(completedGoals => completedGoals.map((goal) => {
-                        return goalId === goal.id ? { ...goal, retirada: data.retirada } : goal;
+                        return goalId === goal.id ? { ...goal, withdrawn: data.withdrawn } : goal;
                     }));
                     setTableGoals(tableGoals => tableGoals.map((goal) => {
-                        return goalId === goal.id ? { ...goal, retirada: data.retirada } : goal;
+                        return goalId === goal.id ? { ...goal, withdrawn: data.withdrawn } : goal;
                     }));
                     const payload = {
                         userId: user.id,
-                        completada: true
+                        completed: true
                     };
 
                     let page = completedGoalsMetadata?.page ?? 1;
@@ -94,9 +94,9 @@ export const CompletedGoals = ({
                 : "text-xl font-semibold text-violet-400 antialiased"
             )}>Metas Completadas</h3>
             {
-                !!cargando ?
+                !!loading ?
                     <div className="flex justify-center items-center h-full">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div> :
                     !!goals?.length || (!!goals?.length && !error) ?
                         <div className="flex flex-wrap justify-center items-center mt-10">
@@ -109,11 +109,11 @@ export const CompletedGoals = ({
                                         )}
                                         key={index}>
                                         <div className="flex justify-between items-center">
-                                            <span className="font-semibold text-gray-500 text-sm text-left">{goal.titulo}</span>
+                                            <span className="font-semibold text-gray-500 text-sm text-left">{goal.title}</span>
                                             <span className="font-semibold text-xs text-violet-500 font-mono">
-                                                {`$${parseFloat(goal.montoActual.toFixed(2))}`}
+                                                {`$${parseFloat(goal.currentAmount.toFixed(2))}`}
                                                 <span className="font-semibold text-gray-500">
-                                                    {` / $${parseFloat(goal.montoFinal.toFixed(2))}`}
+                                                    {` / $${parseFloat(goal.finalAmount.toFixed(2))}`}
                                                 </span>
                                             </span>
                                         </div>
@@ -121,16 +121,16 @@ export const CompletedGoals = ({
                                         <div className="mb-6 mt-6" style={{ width: "100%", display: "flex" }}>
                                             <div className="w-full">
                                                 <span className="font-semibold text-xs text-gray-500">
-                                                    Progreso
+                                                    Progress
                                                 </span>
                                                 <div className="w-full rounded-lg bg-gray-400">
                                                     <div
                                                         className="bg-violet-500 p-0.5 text-center text-xs font-semibold font-mono text-white rounded-lg"
-                                                        style={{ width: `${(goal.montoActual / goal.montoFinal) * 100}%` }}
+                                                        style={{ width: `${(goal.currentAmount / goal.finalAmount) * 100}%` }}
                                                     >
                                                         {
-                                                            !!goal.montoActual && !!goal.montoFinal ?
-                                                            `${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%` : `${(100).toFixed(2)}%`
+                                                            !!goal.currentAmount && !!goal.finalAmount ?
+                                                            `${((goal.currentAmount / goal.finalAmount) * 100).toFixed(2)}%` : `${(100).toFixed(2)}%`
                                                         }
                                                     </div>
                                                 </div>

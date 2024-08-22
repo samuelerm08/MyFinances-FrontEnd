@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import useAuth from "../../../context/useAuth";
 import useDark from "../../../context/useDark";
-import { filterTransactions } from "../../../services/myfinances-api/transacciones";
+import { filterTransactions } from "../../../services/myfinances-api/transaction";
 import { getUserToken } from "../../../services/token/tokenService";
 
 export const StateFilter = ({
@@ -30,12 +30,12 @@ export const StateFilter = ({
         setPayloadProps({
             ...payloadProps,
             userId: user.id,
-            estaActiva: state
+            isActive: state
         });
         const payload = {
             ...payloadProps,
             userId: user.id,
-            estaActiva: state
+            isActive: state
         };
         try {
             const { data: response, status } = await filterTransactions(payload, 1, 10, config);
@@ -55,7 +55,7 @@ export const StateFilter = ({
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
-                estaActiva: null
+                isActive: null
             });
             setAlerta({
                 msg: error.response.data,
@@ -68,12 +68,12 @@ export const StateFilter = ({
     };
     return (
         <div className='flex flex-col mx-2'>
-            <div className="campo flex flex-col font-mono font-sm text-left p-2">
+            <div className="field flex flex-col font-mono font-sm text-left p-2">
                 <label className={(dark === "light" ?
                     "font-semibold text-violet-600"
                     : "font-semibold text-violet-400"
                 )}
-                >Estado</label>
+                >State</label>
                 <select
                     name="estado"
                     id="estado"
@@ -85,8 +85,8 @@ export const StateFilter = ({
                     onChange={e => handleStateChange(e.target.value)}
                 >
                     <option defaultValue={""} value="">Ninguno</option>
-                    <option value={true}>Activa</option>
-                    <option value={false}>Anulada</option>
+                    <option value={true}>Active</option>
+                    <option value={false}>Canceled</option>
                 </select>
             </div>
         </div>

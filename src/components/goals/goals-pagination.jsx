@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getAll, getByState } from "../../services/myfinances-api/metaFinanciera";
+import { getAll, getByState } from "../../services/myfinances-api/financialGoal";
 import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
 import { HttpStatusCode } from "axios";
@@ -60,11 +60,11 @@ export const GoalsPagination = ({
                 if (!comesFromTable) {
                     const payload = {
                         userId: user.id,
-                        completada: isCompleted
+                        completed: isCompleted
                     };
                     const { data, status } = await getByState(payload, page, pageSize, config);
                     if (status === HttpStatusCode.Ok) {
-                        if (!payload.completada) {
+                        if (!payload.completed) {
                             setLoading(false);
                             setActiveGoals(data.data);
                         } else {

@@ -3,8 +3,8 @@ import { ExpensesChart } from "./expenses-chart";
 import { texts, type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
 
-export const ChartSection = ({ cargando, transacciones }) => {
-    const filteredExpenses = transacciones?.filter(({ tipoTransaccion }) => tipoTransaccion === type.EGRESO);
+export const ChartSection = ({ loading, transactions }) => {
+    const filteredExpenses = transactions?.filter(({ transactionType }) => transactionType === type.EXPENSE);
 
     const { dark } = useDark();
 
@@ -15,9 +15,9 @@ export const ChartSection = ({ cargando, transacciones }) => {
         )}
         >
             {
-                cargando ?
+                loading ?
                     <div className="flex justify-center">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div> :
                     filteredExpenses?.length ?
                         <div className="w-full flex justify-center">
@@ -29,10 +29,10 @@ export const ChartSection = ({ cargando, transacciones }) => {
                                             : "text-xl font-semibold text-violet-400"
                                         )}
                                         >
-                                            Ultimos Gastos
+                                            Last Expenses
                                         </h2>
                                     </div>
-                                    <ExpensesChart egresos={filteredExpenses.splice(0, 5)} />
+                                    <ExpensesChart expenses={filteredExpenses.splice(0, 5)} />
                                 </div>
                             </div>
                         </div> :

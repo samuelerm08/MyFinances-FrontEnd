@@ -1,8 +1,7 @@
 import { PulseLoader } from "react-spinners";
 import { useEffect, useState } from "react";
-import { filterByType } from "../../services/myfinances-api/transacciones";
+import { filterByType } from "../../services/myfinances-api/transaction";
 import { texts, type } from "../../constants/myfinances-constants";
-import Alerta from "../Alerta";
 import { BalancePagination } from "./balance-pagination";
 import useAuth from "../../context/useAuth";
 import useDark from "../../context/useDark";
@@ -11,7 +10,7 @@ import { HttpStatusCode } from "axios";
 export const BalanceIncomes = ({ user, config }) => {
     const { auth } = useAuth();
     const [incomes, setIncomes] = useState([]);
-    const [cargando, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [incomesAlert, setIncomesAlert] = useState({});
     const [metadata, setMetadata] = useState({});
@@ -21,13 +20,13 @@ export const BalanceIncomes = ({ user, config }) => {
         const fetchIncomes = async () => {
             const payload = {
                 userId: user.id,
-                tipo: type.INGRESO
+                transactionType: type.INCOME
             };
             try {
                 const { data, status } = await filterByType(payload, 1, 5, config);
                 if (status === HttpStatusCode.Ok) {
                     setLoading(false);
-                    const validIncomes = data?.data.filter(({ estaActiva }) => estaActiva);
+                    const validIncomes = data?.data.filter(({ isActive }) => isActive);
                     setIncomes(validIncomes);
                     setMetadata(data.meta);
                 }
@@ -57,19 +56,19 @@ export const BalanceIncomes = ({ user, config }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Ingresos</h2>
+                >Incomes</h2>
                 {
                     !!incomesAlert ?
                         <div className="flex justify-center">
                             <div className="absolute">
-                                {msg && <Alerta alerta={incomesAlert} />}
+                                {msg && <Alert alert={incomesAlert} />}
                             </div>
                         </div> : <div></div>
                 }
                 {
-                    !!cargando ?
+                    !!loading ?
                         <div className="flex justify-center items-center h-full">
-                            <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                            <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
                         !!incomes?.length
                             ?
@@ -81,25 +80,25 @@ export const BalanceIncomes = ({ user, config }) => {
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Transacción</th>
+                                            >Transaction</th>
                                             <th className={(dark === "light" ?
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Monto</th>
+                                            >Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {incomes?.map((transaccion, index) => {
+                                        {incomes?.map((transaction, index) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-10 text-gray-800 font-semibold text-sm"
                                                         : "text-gray-100 font-semibold py-2 px-10 text-sm"
-                                                    )}>{transaccion.detalle}</td>
+                                                    )}>{transaction.details}</td>
                                                     <td className="py-2 px-10 text-green-500 font-semibold font-mono text-sm">
                                                         <div className="w-28 flex justify-center rounded-md bg-green-300">
-                                                            +${parseFloat(transaccion.monto).toFixed(2)}
+                                                            +${parseFloat(transaction.amount).toFixed(2)}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -124,7 +123,7 @@ export const BalanceIncomes = ({ user, config }) => {
                         <BalancePagination
                             setTransactions={setIncomes}
                             auth={auth}
-                            type={type.INGRESO}
+                            type={type.INCOME}
                             setLoading={setLoading}
                             metadata={metadata}
                             setMetadata={setMetadata}

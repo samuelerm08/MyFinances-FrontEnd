@@ -1,15 +1,15 @@
 import { useState } from "react";
-import Alerta from "../Alerta";
-import { altaMetaFinanciera, getByState } from "../../services/myfinances-api/metaFinanciera";
+import { create, getByState } from "../../services/myfinances-api/financialGoal";
 import useAuth from "../../context/useAuth";
 import { getUserToken } from "../../services/token/tokenService";
 import { amountReGex, errors } from "../../constants/myfinances-constants";
 import { HttpStatusCode } from "axios";
+import Alert from "../Alert";
 
-const ModalMetas = ({
-    setModal,
-    animarModal,
-    setAnimarModal,
+const CreateGoal = ({
+    setPopUp,
+    animate,
+    setAnimate,
     setActiveGoals,
     activeGoals,
     tableGoals,
@@ -17,16 +17,16 @@ const ModalMetas = ({
     setActiveGoalsMetadata,
     activeGoalsMetadata
 }) => {
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlert] = useState({});
     const { auth } = useAuth();
-    const [tituloMeta, setTituloMeta] = useState("");
-    const [metaFinal, setMetaFinal] = useState("");
-    const [cargando, setLoading] = useState(false);
+    const [goalTitle, setGoalTitle] = useState("");
+    const [finalGoal, setFinalGoal] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
@@ -34,38 +34,28 @@ const ModalMetas = ({
         e.preventDefault();
         setLoading(true);
 
-        if ((metaFinal === "" || metaFinal.length === 0) ||
-            (tituloMeta === "" || tituloMeta.length === 0)) {
-            setAlerta({
-                msg: "Todos los campos son obligatorios!",
+        if ((finalGoal === "" || finalGoal.length === 0) ||
+            (goalTitle === "" || goalTitle.length === 0)) {
+            setAlert({
+                msg: "All fields are required!",
                 error: true
             });
             setTimeout(() => {
                 setLoading(false);
-                setAlerta({});
+                setAlert({});
             }, 2000);
             return;
         }
-        if (metaFinal <= 0) {
-            setAlerta({
-                msg: "El monto debe ser positivo!",
-                error: true
-            });
-            setTimeout(() => {
-                setLoading(false);
-                setAlerta({});
-            }, 2000);
-            return;
-        }
+
         setTimeout(() => {
-            setAlerta({});
+            setAlert({});
         }, 3000);
 
         const user = getUserToken();
         const payload = {
-            titulo: tituloMeta,
-            montoFinal: parseFloat(metaFinal),
-            usuarioId: parseInt(user.id)
+            title: goalTitle,
+            finalAmount: parseFloat(finalGoal),
+            userId: parseInt(user.id)
         };
         const config = {
             headers: {
@@ -75,15 +65,15 @@ const ModalMetas = ({
         };
 
         try {
-            const { data, status } = await altaMetaFinanciera(payload, config);
+            const { data, status } = await create(payload, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
-                setAlerta({
-                    msg: "Nueva meta creada!",
+                setAlert({
+                    msg: "Goal Created!",
                     error: false
                 });
                 setTimeout(async () => {
-                    setAlerta({});
+                    setAlert({});
                     !activeGoals.length ? setActiveGoals([data]) : setActiveGoals([data, ...activeGoals]);
                     if (tableGoals) {
                         !tableGoals.length ? setTableGoals([data]) : setTableGoals([data, ...tableGoals]);
@@ -92,7 +82,7 @@ const ModalMetas = ({
                     if (setActiveGoalsMetadata) {
                         const payload = {
                             userId: user.id,
-                            completada: false
+                            completed: false
                         };
                         const page = activeGoalsMetadata?.page ?? 1;
                         const { data: response, status } = await getByState(payload, page, 4, config);
@@ -103,54 +93,54 @@ const ModalMetas = ({
             }
         } catch (error) {
             if (error.message === errors.badRequests.BAD_REQUEST) {
-                setAlerta({
+                setAlert({
                     msg: errors.badRequests.REQUIRED_FIELDS,
                     error: true
                 });
                 setTimeout(() => {
                     setLoading(false);
-                    setAlerta({});
+                    setAlert({});
                 }, 3000);
             }
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
-        <div className="modal">
+        <div className="popUp">
             <div className='modalContainer'>
                 <form
                     onSubmit={handleSubmit}
-                    className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+                    className={`form ${animate ? "animate" : "close"}`}
                 >
-                    <div className="cerrar-modal">
+                    <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hide}></i>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Titulo">Titulo</label>
+                    <div className='field'>
+                        <label htmlFor="Title">Title</label>
                         <input
-                            id="Titulo"
+                            id="Title"
                             type="text"
                             maxLength={30}
-                            placeholder="Titulo de la meta"
-                            value={tituloMeta}
-                            onChange={e => setTituloMeta(e.target.value)}
+                            placeholder="Goal Title"
+                            value={goalTitle}
+                            onChange={e => setGoalTitle(e.target.value)}
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="metaFinanciera">Monto Meta</label>
+                    <div className='field'>
+                        <label htmlFor="Amount">Amount</label>
                         <input
-                            id="metaFinanciera"
+                            id="Amount"
                             type="text"
-                            placeholder="Monto"
-                            value={metaFinal.replace(",", ".")}
+                            placeholder="Amount"
+                            value={finalGoal.replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
-                                    setMetaFinal(e.target.value);
+                                    setFinalGoal(e.target.value);
                                 }
                             }}
                         />
@@ -159,14 +149,14 @@ const ModalMetas = ({
 
                     <input
                         type="submit"
-                        value={!cargando ? "Enviar" : "Enviando..."}
-                        disabled={cargando}
+                        value={!loading ? "Submit" : "Loading..."}
+                        disabled={loading}
                     />
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                 </form>
             </div>
         </div>
     );
 };
 
-export default ModalMetas;
+export default CreateGoal;

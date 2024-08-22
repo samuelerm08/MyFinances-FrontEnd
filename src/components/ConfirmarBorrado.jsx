@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { EliminarTransaccion } from "../services/transacciones";
+import { EliminarTransaccion } from "../services/transactions";
 import useAuth from "../hooks/useAuth";
 import { HttpStatusCode } from "axios";
 
 const BorrarTransaccion = ({ setModal, animarModal, setAnimarModal, transaccionId }) => {
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlerta] = useState({});
     const { auth } = useAuth();
 
     const ocultarModal = () => {
@@ -27,7 +27,7 @@ const BorrarTransaccion = ({ setModal, animarModal, setAnimarModal, transaccionI
             const { data, status } = await EliminarTransaccion(transaccionId, config);
             console.log(data);
             if (status === HttpStatusCode.Ok) {
-                setAlerta("Transaccion Eliminada");
+                setAlerta("Transaccion Deleted");
                 setTimeout(() => {
                     setModal(false);
                 }, 200);
@@ -38,20 +38,20 @@ const BorrarTransaccion = ({ setModal, animarModal, setAnimarModal, transaccionI
         ocultarModal();
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className="">
 
             <div className='modalContainer'>
 
-                <p>Seguro desea eliminar esta transaccion?</p>
+                <p>Seguro desea eliminar esta transaction?</p>
                 <div className="flex">
                     <input
                         type="button"
                         value="Eliminar"
                         onClick={handleBorrado}
-                        className={`${animarModal ? "animar" : "cerrar"} bg-red-400`}
+                        className={`${animarModal ? "animate" : "close"} bg-red-400`}
                     />
 
                     <button
@@ -60,7 +60,7 @@ const BorrarTransaccion = ({ setModal, animarModal, setAnimarModal, transaccionI
                         className="bg-blue-200"
                     />
                 </div>
-                {msg && <Alerta alerta={alerta} />}
+                {msg && <Alert alert={alert} />}
 
             </div>
 

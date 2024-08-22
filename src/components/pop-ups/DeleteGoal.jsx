@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Alerta from "../Alerta";
-import { deleteGoal } from "../../services/myfinances-api/metaFinanciera";
+import { deleteGoal } from "../../services/myfinances-api/financialGoal";
 import { HttpStatusCode } from "axios";
 import { texts } from "../../constants/myfinances-constants";
+import Alert from "../Alert";
 
 export const DeleteGoal = ({
-    animarModal,
-    setAnimarModal,
-    setModal,
+    animate,
+    setAnimate,
+    setPopUp,
     goalId,
     auth,
     activeGoals,
@@ -16,13 +16,13 @@ export const DeleteGoal = ({
     balance,
     setBalance
 }) => {
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlert] = useState({});
     const [loading, setLoading] = useState(false);
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
@@ -36,26 +36,26 @@ export const DeleteGoal = ({
         };
 
         setTimeout(() => {
-            setAlerta({});
+            setAlert({});
         }, 3000);
 
         try {
             const { data, status } = await deleteGoal(goalId, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
-                setAlerta({
-                    msg: "Meta Eliminada!",
+                setAlert({
+                    msg: "Goal Deleted!",
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                     const updatedGoals = activeGoals.filter((goal) => goal.id !== data.id);
                     setActiveGoals(updatedGoals);
                     if (setTableGoals) setTableGoals(updatedGoals);
                     if (setBalance) {
                         setBalance({
                             ...balance,
-                            saldo_Total: balance.saldo_Total + data.montoActual
+                            totalBalance: balance.totalBalance + data.currentAmount
                         });
                     }
                     ocultarModal();
@@ -63,20 +63,19 @@ export const DeleteGoal = ({
             }
         } catch (error) {
             setLoading(false);
-            console.log(error);
         }
     };
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className="modalDelete">
             <div className="modalDeleteContainer shadow-md p-5">
                 <div
-                    className={`deletePopUp ${animarModal ? "animar" : "cerrar"}`}
+                    className={`deletePopUp ${animate ? "animate" : "close"}`}
                 >
                     <div className="closeDeletePopUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
                     <div className='textDelete text-center pb-10 pr-10 pl-10 pt-10 flex flex-col items-center'>
@@ -91,18 +90,18 @@ export const DeleteGoal = ({
                             </div>
                         </div>
                     </div>
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                     <div className="deletePopUpButtons flex flex-row justify-around">
                         <input
                             type="submit"
-                            value={"Volver"}
-                            onClick={ocultarModal}
+                            value={"Back"}
+                            onClick={hidePopUp}
                             className="backDeleteButton"
                         />
 
                         <input
                             type="submit"
-                            value={!loading ? "Eliminar" : "Eliminando..."}
+                            value={!loading ? "Delete" : "Deleting..."}
                             disabled={loading}
                             onClick={() => handleGoalDeleting(goalId)}
                             className="deleteButton"

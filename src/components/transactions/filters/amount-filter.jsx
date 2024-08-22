@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { amountReGex } from "../../../constants/myfinances-constants";
 import useAuth from "../../../context/useAuth";
 import useDark from "../../../context/useDark";
-import { filterTransactions } from "../../../services/myfinances-api/transacciones";
+import { filterTransactions } from "../../../services/myfinances-api/transaction";
 import { getUserToken } from "../../../services/token/tokenService";
 
 export const AmountFilter = ({
@@ -13,7 +13,7 @@ export const AmountFilter = ({
     setMetadata,
     setPayloadProps,
     setMonto,
-    monto,
+    amount,
     payloadProps
 }) => {
     const { auth } = useAuth();
@@ -70,21 +70,21 @@ export const AmountFilter = ({
 
     return (
         <div className='flex flex-col mx-2'>
-            <div className="campo flex flex-col font-mono font-sm text-left p-2">
+            <div className="field flex flex-col font-mono font-sm text-left p-2">
                 <label className={(dark === "light" ?
                     "font-semibold text-violet-600"
                     : "font-semibold text-violet-400"
                 )}
-                >Monto Hasta</label>
+                >Amount Up To</label>
                 <input
-                    id="monto"
+                    id="amount"
                     type="text"
                     className={(dark === "light" ?
                         "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
                         : "bg-gray-600 rounded-md p-1 font-mono text-white"
                     )}
-                    placeholder="Ingresar monto"
-                    value={monto.replace(",", ".")}
+                    placeholder="Ingresar amount"
+                    value={amount.replace(",", ".")}
                     onChange={e => {
                         if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
                             handleAmountChange(e.target.value);

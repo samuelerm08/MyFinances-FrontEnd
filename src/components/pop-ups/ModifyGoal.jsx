@@ -1,14 +1,14 @@
 import { HttpStatusCode } from "axios";
 import { amountReGex, textsReGex, type } from "../../constants/myfinances-constants";
-import { getByState, modifyGoal } from "../../services/myfinances-api/metaFinanciera";
-import Alerta from "../Alerta";
+import { getByState, modifyGoal } from "../../services/myfinances-api/financialGoal";
 import { useState } from "react";
 import { getUserToken } from "../../services/token/tokenService";
+import Alert from "../Alert";
 
 export const ModifyGoal = ({
-    animarModal,
-    setAnimarModal,
-    setModal,
+    animate,
+    setAnimate,
+    setPopUp,
     goalId,
     goal,
     auth,
@@ -22,19 +22,19 @@ export const ModifyGoal = ({
     setCompletedGoalsMetadata,
     setBalance,
     balance,
-    setTransacciones
+    setTransactions
 }) => {
-    const [alerta, setAlerta] = useState({});
-    const [title, setTitle] = useState(goal.titulo ?? "");
-    const [currentAmount, setCurrentAmount] = useState(goal.montoActual ?? "");
-    const [finalAmount, setFinalAmount] = useState(goal.montoFinal ?? "");
-    const [cargando, setLoading] = useState(false);
+    const [alert, setAlert] = useState({});
+    const [title, setTitle] = useState(goal.title ?? "");
+    const [currentAmount, setCurrentAmount] = useState(goal.currentAmount ?? "");
+    const [finalAmount, setFinalAmount] = useState(goal.finalAmount ?? "");
+    const [loading, setLoading] = useState(false);
     const user = getUserToken();
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
@@ -49,127 +49,119 @@ export const ModifyGoal = ({
         };
 
         setTimeout(() => {
-            setAlerta({});
+            setAlert({});
         }, 3000);
 
         const payload = {
             id: goalId,
-            titulo: title,
-            montoActual: !!currentAmount ? parseFloat(currentAmount) : 0,
-            montoFinal: !!finalAmount ? parseFloat(finalAmount) : 0
+            title: title,
+            currentAmount: !!currentAmount ? parseFloat(currentAmount) : 0,
+            finalAmount: !!finalAmount ? parseFloat(finalAmount) : 0
         };
 
         try {
             const { data, status } = await modifyGoal(goalId, payload, config);
             if (status === HttpStatusCode.Ok) {
-                const isLower = goal.montoActual > parseFloat(currentAmount);
-                const amountDiff = goal.montoActual - parseFloat(currentAmount);
+                const isLower = goal.currentAmount > parseFloat(currentAmount);
+                const amountDiff = goal.currentAmount - parseFloat(currentAmount);
                 const amountToDiscount = amountDiff > 0 ? amountDiff : -amountDiff;
                 setLoading(false);
-                setAlerta({
-                    msg: "Meta Modificada!",
+                setAlert({
+                    msg: "Goal Modified!",
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                     setActiveGoals(activeGoals => activeGoals.map((goal) => {
                         return goal.id === goalId ? {
                             ...goal,
-                            titulo: data.titulo,
-                            montoActual: data.montoActual,
-                            montoFinal: data.montoFinal
+                            title: data.title,
+                            currentAmount: data.currentAmount,
+                            finalAmount: data.finalAmount
                         } : goal;
                     }));
                     if (setTableGoals) {
                         setTableGoals(tableGoals => tableGoals.map((goal) => {
                             return goal.id === goalId ? {
                                 ...goal,
-                                titulo: data.titulo,
-                                montoActual: data.montoActual,
-                                montoFinal: data.montoFinal
+                                title: data.title,
+                                currentAmount: data.currentAmount,
+                                finalAmount: data.finalAmount
                             } : goal;
                         }))
                     }
                     if (setBalance) {
-                        if (!balance.saldo_Total) {
+                        if (!balance.totalBalance) {
                             setBalance({
                                 ...balance,
-                                saldo_Total: parseFloat(amountToDiscount) * -1
+                                totalBalance: parseFloat(amountToDiscount) * -1
                             });
                         }
                         else {
                             if (!!amountToDiscount) {
                                 setBalance({
                                     ...balance,
-                                    saldo_Total: !isLower ?
-                                        balance.saldo_Total - parseFloat(amountToDiscount) :
-                                        balance.saldo_Total + parseFloat(amountToDiscount)
+                                    totalBalance: !isLower ?
+                                        balance.totalBalance - parseFloat(amountToDiscount) :
+                                        balance.totalBalance + parseFloat(amountToDiscount)
                                 });
                             }
                         }
                     }
-                    if (setTransacciones) {
+                    if (setTransactions) {
                         if (!!amountToDiscount) {
                             const goalTransaction = {
-                                detalle: !isLower ?
-                                    `Modificacion/Monto Mayor - Meta: ${data.titulo}` :
-                                    `Modificacion/Monto Menor - Meta: ${data.titulo}`,
-                                monto: parseFloat(amountToDiscount),
-                                fecha: new Date(),
-                                tipoTransaccion: type.RESERVA
+                                details: !isLower ?
+                                    `Update/Greater amount - Goal: ${data.title}` :
+                                    `Update/Lower amount - Goal: ${data.title}`,
+                                amount: parseFloat(amountToDiscount),
+                                date: new Date(),
+                                transactionType: type.RESERVE
                             };
-                            setTransacciones(transacciones => [
+                            setTransactions(transactions => [
                                 goalTransaction,
-                                ...transacciones
+                                ...transactions
                             ]);
                         }
                     }
-                    if (data.completada) {
+                    if (data.completed) {
                         setTimeout(async () => {
                             setActiveGoals(activeGoals => activeGoals.map((goal) => {
-                                return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
+                                return goal.id === goalId ? { ...goal, completed: data.completed } : goal;
                             }));
                             if (setTableGoals) {
                                 setTableGoals(setTableGoals => setTableGoals.map((goal) => {
-                                    return goal.id === goalId ? { ...goal, completada: data.completada } : goal;
+                                    return goal.id === goalId ? { ...goal, completed: data.completed } : goal;
                                 }));
                             }
                             if (setCompletedGoals) {
                                 setCompletedGoals(completedGoals => [data, ...completedGoals]);
                                 const payload = {
                                     userId: user.id,
-                                    completada: true
+                                    completed: true
                                 };
+
                                 let page = completedGoalsMetadata?.page ?? 1;
                                 const resetPageEnabled =
-                                    page !== 1 &&
-                                    (
-                                        !completedGoalsMetadata?.hasNextPage &&
-                                        lastGoalIndex === 0
-                                    );
-                                if (resetPageEnabled) {
-                                    page = page - 1;
-                                }
+                                    page !== 1 && (!completedGoalsMetadata?.hasNextPage && lastGoalIndex === 0);
+
+                                if (resetPageEnabled) page = page - 1;
+
                                 const { data: response, status } = await getByState(payload, page, 4, config);
-                                if (status === HttpStatusCode.Ok) {
-                                    setCompletedGoalsMetadata(response.meta);
-                                }
+                                if (status === HttpStatusCode.Ok) setCompletedGoalsMetadata(response.meta);
                             }
                             if (setActiveGoalsMetadata) {
                                 const payload = {
                                     userId: user.id,
-                                    completada: false
+                                    completed: false
                                 };
+
                                 let page = activeGoalsMetadata?.page ?? 1;
                                 const resetPageEnabled =
-                                    page !== 1 &&
-                                    (
-                                        !activeGoalsMetadata?.hasNextPage &&
-                                        lastGoalIndex === 0
-                                    );
-                                if (resetPageEnabled) {
-                                    page = page - 1;
-                                }
+                                    page !== 1 && (!activeGoalsMetadata?.hasNextPage && lastGoalIndex === 0);
+
+                                if (resetPageEnabled) page = page - 1;
+
                                 const { data: response, status } = await getByState(payload, page, 4, config);
                                 if (status === HttpStatusCode.Ok) {
                                     setActiveGoals(response.data);
@@ -178,41 +170,39 @@ export const ModifyGoal = ({
                             }
                         }, 100);
                     }
-                    ocultarModal();
+                    hidePopUp();
                 }, 1500);
             }
         } catch (error) {
             setLoading(false);
             if (currentAmount > finalAmount) {
-                setAlerta({
-                    msg: "El monto actual no puede ser mayor al monto final",
+                setAlert({
+                    msg: "The current amount cannot be greater than the final amount",
                     error: true
                 });
             }
-            console.log(error);
         }
     };
-    const { msg } = alerta;
-
+    const { msg } = alert;
     return (
-        <div className="modal">
+        <div className="popUp">
             <div className="modalContainer">
                 <form
                     onSubmit={handleAdding}
-                    className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+                    className={`form ${animate ? "animate" : "close"}`}
                 >
-                    <div className="cerrar-modal">
+                    <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Titulo">Titulo</label>
+                    <div className='field'>
+                        <label htmlFor="Ti">Title</label>
                         <input
-                            id="Titulo"
+                            id="Title"
                             type="text"
                             maxLength={30}
-                            placeholder="Titulo de la meta"
+                            placeholder="Title de la meta"
                             value={title}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {
@@ -222,12 +212,12 @@ export const ModifyGoal = ({
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Monto Actual">Monto Actual</label>
+                    <div className='field'>
+                        <label htmlFor="Current Amount">Current Amount</label>
                         <input
-                            id="MontoActual"
+                            id="CurrentAmount"
                             type="text"
-                            placeholder="Monto Actual"
+                            placeholder="Current Amount"
                             value={currentAmount.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
@@ -237,12 +227,12 @@ export const ModifyGoal = ({
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Monto Final">Monto Final</label>
+                    <div className='field'>
+                        <label htmlFor="Final Amount">Final Amount</label>
                         <input
-                            id="MontoFinal"
+                            id="FinalAmount"
                             type="text"
-                            placeholder="Monto Final"
+                            placeholder="Final Amount"
                             value={finalAmount.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
@@ -254,10 +244,10 @@ export const ModifyGoal = ({
 
                     <input
                         type="submit"
-                        value={!cargando ? "Modificar" : "Modificando..."}
-                        disabled={cargando}
+                        value={!loading ? "Submit" : "Loading..."}
+                        disabled={loading}
                     />
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                 </form>
             </div>
         </div>

@@ -1,17 +1,17 @@
 import { PulseLoader } from "react-spinners";
 import { texts, type } from "../../constants/myfinances-constants";
 import { useEffect, useState } from "react";
-import { filterByType } from "../../services/myfinances-api/transacciones";
-import Alerta from "../Alerta";
+import { filterByType } from "../../services/myfinances-api/transaction";
 import { BalancePagination } from "./balance-pagination";
 import useAuth from "../../context/useAuth";
 import useDark from "../../context/useDark";
 import { HttpStatusCode } from "axios";
+import Alert from "../Alert";
 
 export const BalanceExpenses = ({ user, config }) => {
     const { auth } = useAuth();
     const [expenses, setExpenses] = useState([]);
-    const [cargando, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [expensesAlert, setExpensesAlert] = useState({});
     const [metadata, setMetadata] = useState({});
@@ -20,13 +20,13 @@ export const BalanceExpenses = ({ user, config }) => {
         const fetchExpenses = async () => {
             const payload = {
                 userId: user.id,
-                tipo: type.EGRESO
+                transactionType: type.EXPENSE
             };
             try {
                 const { data, status } = await filterByType(payload, 1, 5, config);
                 if (status === HttpStatusCode.Ok) {
                     setLoading(false);
-                    const validExpenses = data?.data.filter(({ estaActiva }) => estaActiva);
+                    const validExpenses = data?.data.filter(({ isActive }) => isActive);
                     setExpenses(validExpenses);
                     setMetadata(data.meta);
                 }
@@ -56,19 +56,19 @@ export const BalanceExpenses = ({ user, config }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Gastos</h2>
+                >Expenses</h2>
                 {
                     !!expensesAlert ?
                         <div className="flex justify-center">
                             <div className="absolute">
-                                {msg && <Alerta alerta={expensesAlert} />}
+                                {msg && <Alert alert={expensesAlert} />}
                             </div>
                         </div> : <div></div>
                 }
                 {
-                    !!cargando ?
+                    !!loading ?
                         <div className="flex justify-center items-center h-full">
-                            <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                            <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
                         !!expenses?.length
                             ?
@@ -80,25 +80,25 @@ export const BalanceExpenses = ({ user, config }) => {
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Transacción</th>
+                                            >Transaction</th>
                                             <th className={(dark === "light" ?
                                                 "text-center py-2 px-10 font-semibold text-violet-600 text-sm"
                                                 : "text-center py-2 px-10 font-semibold text-violet-400 text-sm"
                                             )}
-                                            >Monto</th>
+                                            >Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {expenses?.map((transaccion, index) => {
+                                        {expenses?.map((transaction, index) => {
                                             return (
                                                 <tr className=" border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-10 text-gray-800 font-semibold text-sm"
                                                         : "text-gray-100 font-semibold py-2 px-10 text-sm"
-                                                    )}>{transaccion.detalle}</td>
+                                                    )}>{transaction.details}</td>
                                                     <td className="py-2 px-10 text-red-500 font-semibold font-mono text-sm">
                                                         <div className="w-28 flex justify-center">
-                                                            -${parseFloat(transaccion.monto).toFixed(2)}
+                                                            -${parseFloat(transaction.amount).toFixed(2)}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -123,7 +123,7 @@ export const BalanceExpenses = ({ user, config }) => {
                         <BalancePagination
                             setTransactions={setExpenses}
                             auth={auth}
-                            type={type.EGRESO}
+                            type={type.EXPENSE}
                             setLoading={setLoading}
                             metadata={metadata}
                             setMetadata={setMetadata}

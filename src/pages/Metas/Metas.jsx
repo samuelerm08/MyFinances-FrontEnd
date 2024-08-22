@@ -1,12 +1,12 @@
 import { useState } from "react";
-import ModalMetas from "../../components/pop-ups/ModalMetas";
+import ModalMetas from "../../components/pop-ups/CreateGoal";
 import { ActiveGoals } from "../../components/goals/active-goals";
 import { CompletedGoals } from "../../components/goals/completed-goals";
 import { useEffect } from "react";
-import { getAll, getByState } from "../../services/myfinances-api/metaFinanciera";
+import { getAll, getByState } from "../../services/myfinances-api/financialGoal";
 import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
-import Alerta from "../../components/Alerta";
+import Alert from "../../components/Alert";
 import { texts } from "../../constants/myfinances-constants";
 import { GoalsTable } from "../../components/goals/goals-table";
 import useDark from "../../context/useDark";
@@ -16,7 +16,7 @@ import { GoalsPagination } from "../../components/goals/goals-pagination";
 const Metas = () => {
     const { auth } = useAuth();
     const { dark } = useDark();
-    const [modal, setModal] = useState(false);
+    const [popUp, setModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
     const [activeGoals, setActiveGoals] = useState([]);
     const [activeGoalsMetadata, setActiveGoalsMetadata] = useState({});
@@ -28,7 +28,7 @@ const Metas = () => {
     const [loadingCompletedGoals, setLoadingCompletedGoals] = useState(true);
     const [loadingTableGoals, setLoadingTableGoals] = useState(true);
     const [error, setError] = useState(null);
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlerta] = useState({});
 
     const user = getUserToken();
     const handleGoals = () => {
@@ -50,7 +50,7 @@ const Metas = () => {
             try {
                 const activeGoalsPayload = {
                     userId: user.id,
-                    completada: false
+                    completed: false
                 };
                 const { data: activeGoalsResponse, status: activeGoalsStatus } = await getByState(activeGoalsPayload, 1, 4, config);
                 if (activeGoalsStatus === HttpStatusCode.Ok) {
@@ -78,7 +78,7 @@ const Metas = () => {
             try {
                 const completedGoalsPayload = {
                     userId: user.id,
-                    completada: true
+                    completed: true
                 };
                 const { data: completedGoalsResponse, status: completedGoalsStatus } = await getByState(completedGoalsPayload, 1, 4, config);
                 if (completedGoalsStatus === HttpStatusCode.Ok) {
@@ -114,7 +114,7 @@ const Metas = () => {
         fetchGoals();
     }, []);
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div>
@@ -124,10 +124,10 @@ const Metas = () => {
                     className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold shadow-md hover:shadow-violet-500'
                     onClick={handleGoals}
                 >
-                    Nueva Meta
+                    New Meta
                 </button>
 
-                {modal &&
+                {popUp &&
                     <ModalMetas
                         setModal={setModal}
                         animarModal={animarModal}
@@ -141,7 +141,7 @@ const Metas = () => {
                     />
                 }
                 <div className="flex justify-center text-center">
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                 </div>
             </div>
             <div className="flex justify-center">
@@ -153,7 +153,7 @@ const Metas = () => {
                         goals={activeGoals}
                         auth={auth}
                         error={error}
-                        cargando={loadingActiveGoals}
+                        loading={loadingActiveGoals}
                         setLoading={setLoadingActiveGoals}
                         setActiveGoals={setActiveGoals}
                         setCompletedGoals={setCompletedGoals}
@@ -184,7 +184,7 @@ const Metas = () => {
                     <CompletedGoals
                         goals={completedGoals}
                         error={error}
-                        cargando={loadingCompletedGoals}
+                        loading={loadingCompletedGoals}
                         setCargando={setLoadingCompletedGoals}
                         completedGoalsMetadata={completedGoalsMetadata}
                         setCompletedGoalsMetadata={setCompletedGoalsMetadata}

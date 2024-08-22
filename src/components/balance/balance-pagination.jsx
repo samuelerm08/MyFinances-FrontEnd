@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getUserToken } from "../../services/token/tokenService";
-import { filterByType } from "../../services/myfinances-api/transacciones";
+import { filterByType } from "../../services/myfinances-api/transaction";
 
 export const BalancePagination = ({
     setTransactions,
@@ -39,16 +39,14 @@ export const BalancePagination = ({
         const fetchTransactions = async () => {
             const payload = {
                 userId: user.id,
-                tipo: type
+                transactionType: type
             };
             try {
                 const { data: response } = await filterByType(payload, page, 5, config);
                 setLoading(false);
                 setTransactions(response.data);
-                if (setMetadata)
-                    setMetadata(response.meta);
-                if (response.meta?.hasNextPage)
-                    hasNextPage = response.meta?.hasNextPage;
+                if (setMetadata) setMetadata(response.meta);
+                if (response.meta?.hasNextPage) hasNextPage = response.meta?.hasNextPage;
             } catch (error) {
                 setError(error);
                 setLoading(false);
@@ -69,7 +67,7 @@ export const BalancePagination = ({
                         >
                             <i className="fa-solid fa-arrow-left text-sm"
                                 style={currentPage === 1 ? { cursor: "not-allowed" } : { cursor: "pointer" }}></i>
-                            <span className="m-1 text-sm">Anterior</span>
+                            <span className="m-1 text-sm">Previous</span>
                         </button>
                         <button
                             disabled={!hasNextPage || (currentPage === 1 && !hasNextPage)}
@@ -77,7 +75,7 @@ export const BalancePagination = ({
                             className="inline-flex items-center rounded-r-md px-2 py-1 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             onClick={() => nextPage(currentPage)}
                         >
-                            <span className="m-1 text-sm">Siguiente</span>
+                            <span className="m-1 text-sm">Next</span>
                             <i className="fa-solid fa-arrow-right text-sm"
                                 style={!hasNextPage || (currentPage === 1 && !hasNextPage) ? { cursor: "not-allowed" } : { cursor: "pointer" }}></i>
                         </button>

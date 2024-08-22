@@ -4,12 +4,12 @@ import useDark from "../../../context/useDark";
 
 ChartJS.register(CategoryScale, ArcElement, BarElement, Tooltip, Legend, Title);
 
-export const ExpensesChart = ({ egresos }) => {
+export const ExpensesChart = ({ expenses }) => {
 
     const { dark } = useDark();
-    const detalles = egresos?.map(({ detalle }) => detalle);
-    const montos = egresos?.map(data => data.monto);
-    const colores = [
+    const details = expenses?.map(({ details }) => details);
+    const amounts = expenses?.map(data => data.amount);
+    const colors = [
         "rgb(113, 50, 255)",
         "rgb(139, 79, 255)",
         "rgb(180, 130, 255)",
@@ -21,12 +21,12 @@ export const ExpensesChart = ({ egresos }) => {
         <div className="chart-container">
             <Doughnut
                 data={{
-                    labels: detalles,
+                    labels: details,
                     datasets: [
                         {
                             label: "",
-                            data: montos,
-                            backgroundColor: colores,
+                            data: amounts,
+                            backgroundColor: colors,
                             borderWidth: 0,
                             hoverOffset: 25,
                             borderRadius: 15,

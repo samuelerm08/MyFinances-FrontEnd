@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { texts } from "../../constants/myfinances-constants";
-import Alerta from "../Alerta";
-import { deleteTransaction } from "../../services/myfinances-api/transacciones";
+import Alert from "../Alert";
+import { deleteTransaction } from "../../services/myfinances-api/transaction";
 import { HttpStatusCode } from "axios";
 
-export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, transaccionId, auth, transacciones, setTransacciones }) => {
-    const [alerta, setAlerta] = useState({});
-    const [cargando, setLoading] = useState(false);
+export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, transaccionId, auth, transactions, setTransacciones }) => {
+    const [alert, setAlerta] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const ocultarModal = () => {
         setAnimarModal(false);
@@ -34,9 +34,9 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
                 });
                 setTimeout(() => {
                     setAlerta({});
-                    setTransacciones(transacciones.map((transaccion) =>
-                        transaccion.id === transaccionId ?
-                            { ...transaccion, estaActiva: data.estaActiva } : transaccion
+                    setTransacciones(transactions.map((transaction) =>
+                        transaction.id === transaccionId ?
+                            { ...transaction, isActive: data.isActive } : transaction
                     ));
                     ocultarModal();
                 }, 2000);
@@ -46,13 +46,13 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className="modalDelete">
             <div className="modalDeleteContainer shadow-md p-5">
                 <div
-                    className={`deletePopUp ${animarModal ? "animar" : "cerrar"}`}
+                    className={`deletePopUp ${animarModal ? "animate" : "close"}`}
                 >
                     <div className="closeDeletePopUp">
                         <i className="fa-regular fa-circle-xmark"
@@ -71,7 +71,7 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
                             </div>
                         </div>
                     </div>
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                     <div className="deletePopUpButtons flex flex-row justify-around">
                         <input
                             type="submit"
@@ -82,8 +82,8 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
 
                         <input
                             type="submit"
-                            value={!cargando ? "Anular" : "Anulando..."}
-                            disabled={cargando}
+                            value={!loading ? "Anular" : "Anulando..."}
+                            disabled={loading}
                             onClick={() => handleBorrado(transaccionId)}
                             className="deleteButton"
                         />

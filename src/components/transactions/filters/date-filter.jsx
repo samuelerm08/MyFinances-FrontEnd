@@ -3,7 +3,7 @@ import { getUserToken } from "../../../services/token/tokenService";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
-import { filterTransactions } from "../../../services/myfinances-api/transacciones";
+import { filterTransactions } from "../../../services/myfinances-api/transaction";
 import useDark from "../../../context/useDark";
 import { HttpStatusCode } from "axios";
 
@@ -12,7 +12,7 @@ export const DateFilter = ({
     setAlerta,
     setLoading,
     setMetadata,
-    fecha,
+    date,
     setFecha,
     setCurrentPage,
     setPayloadProps,
@@ -33,12 +33,12 @@ export const DateFilter = ({
         setPayloadProps({
             ...payloadProps,
             userId: user.id,
-            fecha: date
+            date: date
         });
         const payload = {
             ...payloadProps,
             userId: user.id,
-            fecha: date
+            date: date
         };
         try {
             const { data: response, status } = await filterTransactions(payload, 1, 10, config);
@@ -47,7 +47,7 @@ export const DateFilter = ({
                 setCurrentPage(1);
                 setTransacciones(response.data);
                 setMetadata(response.meta);
-                setFecha(payload.fecha);
+                setFecha(payload.date);
             }
         } catch (error) {
             console.log(error);
@@ -58,7 +58,7 @@ export const DateFilter = ({
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
-                fecha: null
+                date: null
             });
             setAlerta({
                 msg: error.response.data,
@@ -75,7 +75,7 @@ export const DateFilter = ({
                 "font-semibold text-violet-600"
                 : "font-semibold text-violet-400"
             )}
-            >Fecha</label>
+            >Date</label>
             <ReactDatePicker
                 showIcon
                 locale={es}
@@ -83,8 +83,8 @@ export const DateFilter = ({
                     "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
                     : "bg-gray-600 rounded-md p-1 font-mono text-white"
                 )}
-                value={fecha}
-                placeholderText="Filtrar por fecha"
+                value={date}
+                placeholderText="Filtrar por date"
                 onChange={(date) => handleDateChange(date.toISOString().split("T")[0])}
             />
         </div>

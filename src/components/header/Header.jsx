@@ -11,7 +11,7 @@ import useDark from "../../context/useDark";
 const Header = () => {
     const user = getUserToken();
     const navigate = useNavigate();
-    const [cargando, setCargando] = useState(false);
+    const [loading, setCargando] = useState(false);
 
     const { dark , changeDarkMode } = useDark();
 
@@ -62,7 +62,7 @@ const Header = () => {
                         </NavLink>
 
                         <NavLink
-                            to="transacciones"
+                            to="transactions"
                             className={({ isActive, isPending }) =>
                                 isPending ? "text-violet-600 hover:text-violet-800 font-bold"
                                     :
@@ -73,7 +73,7 @@ const Header = () => {
                         >
                             <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
                                 <i className="fa-solid fa-money-bill-trend-up"></i>
-                                <p>Transacciones</p>
+                                <p>Transactions</p>
                             </div>
                         </NavLink>
 
@@ -140,7 +140,7 @@ const Header = () => {
                             data-tooltip-content="Perfil"
                         >
                             <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
-                                <i className={`fa-solid fa-${user.nombre ? user.nombre.charAt(0).toLowerCase() : "x"}`}></i>
+                                <i className={`fa-solid fa-${user.firstName ? user.firstName.charAt(0).toLowerCase() : "x"}`}></i>
                             </div>
                         </Link>
 
@@ -152,8 +152,8 @@ const Header = () => {
                             onClick={handleClick}
                         >
                             {
-                                cargando ?
-                                    <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={8} />
+                                loading ?
+                                    <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={8} />
                                     :
                                     <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
                                         <i className="fa-solid fa-power-off"></i>

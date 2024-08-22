@@ -2,8 +2,8 @@ import { PulseLoader } from "react-spinners";
 import { texts, type } from "../../../constants/myfinances-constants";
 import useDark from "../../../context/useDark";
 
-export const ExpensesSection = ({ cargando, transacciones }) => {
-    const egresos = transacciones?.filter(({ tipoTransaccion }) => tipoTransaccion === type.EGRESO);
+export const ExpensesSection = ({ loading, transactions }) => {
+    const egresos = transactions?.filter(({ transactionType }) => transactionType === type.EXPENSE);
     const { dark } = useDark();
 
     return (
@@ -17,11 +17,11 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                     "font-bold text-center p-1 text-violet-600"
                     :
                     "font-bold text-center p-1 text-violet-400"
-                )}>Ultimos Gastos</h2>
+                )}>Last Gastos</h2>
                 <div className="bg-inherit rounded-lg mb-5">
-                    {cargando ?
+                    {loading ?
                         <div className="flex justify-center">
-                            <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                            <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
                         !!egresos?.length
                             ?
@@ -33,26 +33,26 @@ export const ExpensesSection = ({ cargando, transacciones }) => {
                                                 "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
                                                 "font-bold text-center py-2 px-10 text-violet-400"
-                                            )}>Transacción</th>
+                                            )}>Transaction</th>
                                             <th className={(dark === "light" ?
                                                 "font-bold text-center py-2 px-10 text-violet-600"
                                                 :
                                                 "font-bold text-center py-2 px-10 text-violet-400"
-                                            )}>Monto</th>
+                                            )}>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {egresos?.slice(0, 5).map((transaccion, index) => {
+                                        {egresos?.slice(0, 5).map((transaction, index) => {
                                             return (
                                                 <tr className="border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?
                                                         "text-gray-600 text-sm py-2 px-10 font-bold"
                                                         :
                                                         "text-gray-300 text-sm py-2 px-10 font-bold"
-                                                    )}>{transaccion.detalle}</td>
+                                                    )}>{transaction.details}</td>
                                                     <td className="py-2 px-10 text-red-500 font-semibold font-mono text-sm">
                                                         <div className="w-28 flex justify-center">
-                                                            -${parseFloat(transaccion.monto).toFixed(2)}
+                                                            -${parseFloat(transaction.amount).toFixed(2)}
                                                         </div>
                                                     </td>
                                                 </tr>

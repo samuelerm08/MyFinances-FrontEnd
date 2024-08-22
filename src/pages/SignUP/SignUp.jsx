@@ -1,25 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.css";
 import { useState } from "react";
-import Alerta from "../../components/Alerta";
-import { register } from "../../services/myfinances-api/usuario";
+import Alert from "../../components/Alert";
+import { register } from "../../services/myfinances-api/user";
 import { textsReGex } from "../../constants/myfinances-constants";
 import { HttpStatusCode } from "axios";
 
 const SignUp = () => {
-    const [nombre, setNombre] = useState("");
-    const [apellido, setApellido] = useState("");
+    const [firstName, setNombre] = useState("");
+    const [lastName, setApellido] = useState("");
     const [email, setEmail] = useState("");
     const [contraseña, setPassword] = useState("");
     const [repetirPassword, setRepetirPassword] = useState("");
-    const [cargando, setLoading] = useState(false);
-    const [alerta, setAlerta] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [alert, setAlerta] = useState({});
     const navigate = useNavigate();
 
     const handleSubmit = async e => {
         e.preventDefault();
         setLoading(true);
-        if ([nombre, apellido, email, contraseña, repetirPassword].includes("")) {
+        if ([firstName, lastName, email, contraseña, repetirPassword].includes("")) {
             setLoading(false);
             setAlerta({
                 msg: "Todos los campos son obligatorios",
@@ -40,7 +40,7 @@ const SignUp = () => {
         setAlerta({});
 
         try {
-            const { status } = await register({ nombre, apellido, email, esAdmin: false, contraseña });
+            const { status } = await register({ firstName, lastName, email, esAdmin: false, contraseña });
             if (status === HttpStatusCode.Created) {
                 setLoading(false);
                 setAlerta({
@@ -67,7 +67,7 @@ const SignUp = () => {
             }, 5000);
         }
     };
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className={styles.container}>
@@ -81,15 +81,15 @@ const SignUp = () => {
             >
                 <div>
                     <label className={styles.label}
-                        htmlFor="nombre"
+                        htmlFor="firstName"
                     >Nombre</label>
                     <input
-                        id="nombre"
-                        type="nombre"
+                        id="firstName"
+                        type="firstName"
                         placeholder="Nombre"
                         maxLength={30}
                         className={styles.input}
-                        value={nombre}
+                        value={firstName}
                         onChange={e => {
                             if (textsReGex.test(e.target.value) || e.target.value === "") {
                                 setNombre(e.target.value);
@@ -100,15 +100,15 @@ const SignUp = () => {
                 </div>
                 <div>
                     <label className={styles.label}
-                        htmlFor="apellido"
+                        htmlFor="lastName"
                     >Apellido</label>
                     <input
-                        id="apellido"
+                        id="lastName"
                         type="text"
                         placeholder="Apellido"
                         maxLength={30}
                         className={styles.input}
-                        value={apellido}
+                        value={lastName}
                         onChange={e => {
                             if (textsReGex.test(e.target.value) || e.target.value === "") {
                                 setApellido(e.target.value);
@@ -167,11 +167,11 @@ const SignUp = () => {
                     <input
                         className={`${styles.button}`}
                         type="submit"
-                        value={!cargando ? "Crear Cuenta" : "Registrando..."}
-                        disabled={cargando}
+                        value={!loading ? "Crear Cuenta" : "Registrando..."}
+                        disabled={loading}
                     />
                 </div>
-                {msg && <Alerta alerta={alerta} />}
+                {msg && <Alert alert={alert} />}
             </form>
             <div className={styles.nav}>
                 <nav>

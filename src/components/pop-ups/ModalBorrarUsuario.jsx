@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { texts } from "../../constants/myfinances-constants";
-import Alerta from "../Alerta";
-import { deleteUser } from "../../services/myfinances-api/usuario";
+import Alert from "../Alert";
+import { deleteUser } from "../../services/myfinances-api/user";
 import { useNavigate } from "react-router-dom";
 import { HttpStatusCode } from "axios";
 
 export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, userId }) => {
-    const [alerta, setAlerta] = useState({});
-    const [cargando, setLoading] = useState(false);
+    const [alert, setAlerta] = useState({});
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const ocultarModal = () => {
@@ -46,13 +46,13 @@ export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, use
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className="modalDelete">
             <div className="modalDeleteContainer shadow-md p-5">
                 <div
-                    className={`deletePopUp ${animarModal ? "animar" : "cerrar"}`}
+                    className={`deletePopUp ${animarModal ? "animate" : "close"}`}
                 >
                     <div className="closeDeletePopUp">
                         <i className="fa-regular fa-circle-xmark"
@@ -81,13 +81,13 @@ export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, use
 
                         <input
                             type="submit"
-                            value={!cargando ? "Eliminar" : "Eliminando..."}
-                            disabled={cargando}
+                            value={!loading ? "Eliminar" : "Eliminando..."}
+                            disabled={loading}
                             onClick={handleBorrado}
                             className="deleteButton"
                         />
                     </div>
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                 </div>
             </div>
         </div>

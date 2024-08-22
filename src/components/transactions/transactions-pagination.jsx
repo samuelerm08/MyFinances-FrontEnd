@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { filterTransactions, getAll } from "../../services/myfinances-api/transacciones";
+import { filterTransactions, getAll } from "../../services/myfinances-api/transaction";
 import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
 
@@ -51,14 +51,14 @@ export const TransactionsPagination = ({
         const fetchTransacciones = async () => {
             const payload = {
                 userId: user.id,
-                tipo: payloadProps.tipo,
-                fecha: payloadProps.fecha,
+                transactionType: payloadProps.transactionType,
+                date: payloadProps.date,
                 montoHasta: payloadProps.montoHasta,
-                estaActiva: payloadProps.estaActiva
+                isActive: payloadProps.isActive
             };
             try {
                 const { data: response } =
-                    payloadProps.tipo || payloadProps.fecha || payloadProps.montoHasta || payloadProps.estaActiva
+                    payloadProps.transactionType || payloadProps.date || payloadProps.montoHasta || payloadProps.isActive
                         ? await filterTransactions(payload, page, 10, config)
                         : await getAll({ userId: user.id }, page, 10, config);
                 setLoading(false);

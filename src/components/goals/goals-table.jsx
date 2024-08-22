@@ -34,25 +34,25 @@ export const GoalsTable = ({
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Monto Actual</th>
+                                    >Amount Actual</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Monto Final</th>
+                                    >Amount Final</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Progreso</th>
+                                    >Progress</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Estado</th>
+                                    >State</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,9 +69,9 @@ export const GoalsTable = ({
                                                 :
                                                 "py-2 px-4 text-gray-200 font-semibold font-mono"
                                             )}
-                                            >{goal.titulo}</td>
+                                            >{goal.title}</td>
                                             {
-                                                !goal.montoActual ?
+                                                !goal.currentAmount ?
                                                     <td className={(dark === "light" ?
                                                         "py-2 px-4 text-gray-400 font-semibold font-mono"
                                                         :
@@ -84,7 +84,7 @@ export const GoalsTable = ({
                                                         :
                                                         "py-2 px-4 text-gray-300 font-semibold font-mono"
                                                     )}>
-                                                        ${parseFloat(goal.montoActual).toFixed(2)}
+                                                        ${parseFloat(goal.currentAmount).toFixed(2)}
                                                     </td>
                                             }
                                             <td className={(dark === "light" ?
@@ -92,19 +92,19 @@ export const GoalsTable = ({
                                                 :
                                                 "py-2 px-4 text-gray-300 font-semibold font-mono"
                                             )}>
-                                                ${parseFloat(goal.montoFinal).toFixed(2)}
+                                                ${parseFloat(goal.finalAmount).toFixed(2)}
                                             </td>
                                             <td className={(dark === "light" ?
                                                 "py-2 px-4 text-gray-400 font-semibold font-mono"
                                                 :
                                                 "py-2 px-4 text-gray-300 font-semibold font-mono"
                                             )}>
-                                                {`${((goal.montoActual / goal.montoFinal) * 100).toFixed(2)}%`}
+                                                {`${((goal.currentAmount / goal.finalAmount) * 100).toFixed(2)}%`}
                                             </td>
 
                                             {
-                                                goal.completada ?
-                                                    !goal.retirada ?
+                                                goal.completed ?
+                                                    !goal.withdrawn ?
                                                         <td className="py-2 px-4  text-green-500 font-semibold font-mono">
                                                             Completada
                                                             <span className={(dark === "light" ?

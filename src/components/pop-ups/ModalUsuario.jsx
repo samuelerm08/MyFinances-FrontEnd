@@ -1,17 +1,17 @@
 import { useState } from "react";
-import Alerta from "../Alerta";
+import Alert from "../Alert";
 import useAuth from "../../context/useAuth";
 import { getUserToken, setUserToken } from "../../services/token/tokenService";
-import { modifyProfile } from "../../services/myfinances-api/usuario";
+import { modifyProfile } from "../../services/myfinances-api/user";
 import { textsReGex } from "../../constants/myfinances-constants";
 
 
 const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
-    const [alerta, setAlerta] = useState({});
+    const [alert, setAlerta] = useState({});
     const user = getUserToken();
     const { auth } = useAuth();
-    const [nombre, setNombre] = useState(user.nombre);
-    const [apellido, setApellido] = useState(user.apellido);
+    const [firstName, setNombre] = useState(user.firstName);
+    const [lastName, setApellido] = useState(user.lastName);
 
     const ocultarModal = () => {
         setAnimarModal(false);
@@ -26,8 +26,8 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
 
         const payload = {
             Id: parseInt(user.id),
-            Nombre: nombre,
-            Apellido: apellido
+            Nombre: firstName,
+            Apellido: lastName
         };
 
         const config = {
@@ -42,8 +42,8 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
             const { data } = await modifyProfile(user.id, payload, config);
             setUserToken("user",JSON.stringify({
                 ...user,
-                nombre: data.nombre,
-                apellido: data.apellido
+                firstName: data.firstName,
+                lastName: data.lastName
             }));
             setAlerta({
                 msg: "Usuario Modificado!",
@@ -58,30 +58,30 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
-        <div className="modal">
+        <div className="popUp">
 
             <div className='modalContainer'>
                 <form
 
                     onSubmit={handleSubmit}
-                    className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+                    className={`form ${animarModal ? "animate" : "close"}`}
                 >
-                    <div className="cerrar-modal">
+                    <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
                             onClick={ocultarModal}></i>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="nombre">Nombre</label>
+                    <div className='field'>
+                        <label htmlFor="firstName">Nombre</label>
                         <input
-                            id="nombre"
+                            id="firstName"
                             type="text"
                             placeholder="Nombre"
                             maxLength={30}
-                            value={nombre}
+                            value={firstName}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {
                                     setNombre(e.target.value);
@@ -91,13 +91,13 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
 
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="apellido">Apellido</label>
+                    <div className='field'>
+                        <label htmlFor="lastName">Apellido</label>
                         <input
-                            id="apellido"
+                            id="lastName"
                             type="text"
                             placeholder="Apellido"
-                            value={apellido}
+                            value={lastName}
                             maxLength={30}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {
@@ -108,7 +108,7 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
 
                     </div>
 
-                    <div className='campo'>
+                    <div className='field'>
                         <label htmlFor="email">Correo Electrónico</label>
                         <input
                             id="email"
@@ -123,7 +123,7 @@ const ModalUsuario = ({ setModal, animarModal, setAnimarModal }) => {
                     <input
                         type="submit"
                         value="Aceptar"/>
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
                 </form>
             </div>
         </div>

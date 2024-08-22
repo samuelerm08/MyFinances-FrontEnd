@@ -1,27 +1,27 @@
 import { useState } from "react";
-import ModalTransaccion from "../pop-ups/ModalTransaccion";
-import { getCategories } from "../../services/myfinances-api/categorias";
+import { getCategories } from "../../services/myfinances-api/category";
 import { useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import { getDollarExchangeRate } from "../../services/dolar/cotizacion-api";
 import { currency, texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
+import TransactionPopUp from "../pop-ups/TransactionPopUp";
 
-export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) => {
-    const [cargando, setLoading] = useState(true);
+export const BalanceSection = ({ auth, setTransactions, balance, setBalance }) => {
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [categorias, setCategorias] = useState([]);
-    const [modal, setModal] = useState(false);
-    const [animarModal, setAnimarModal] = useState(false);
-    const [dolarValue, setDolarValue] = useState(null);
-    const [dolarDate, setDolarDate] = useState(null);
-    const [divisa, setDivisa] = useState("ARS");
+    const [categories, setCategories] = useState([]);
+    const [popUp, setPopUp] = useState(false);
+    const [animate, setAnimate] = useState(false);
+    const [dollarValue, setDollarValue] = useState(null);
+    const [dollarDate, setDollarDate] = useState(null);
+    const [currentCurrency, setCurrency] = useState("ARS");
     const { dark } = useDark();
 
-    const handleModalTransaccion = () => {
-        setModal(true);
+    const handleTransactionPopUp = () => {
+        setPopUp(true);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
     const config = {
@@ -32,11 +32,11 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
     };
 
     useEffect(() => {
-        const fetchCategorias = async () => {
+        const fetchCategories = async () => {
             try {
                 const { data: response } = await getCategories(config);
-                const validCategories = response?.filter(({ titulo }) => !titulo.includes("Reserva"));
-                setCategorias(validCategories);
+                const validCategories = response?.filter(({ title }) => !title.includes("Reserve"));
+                setCategories(validCategories);
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -45,10 +45,10 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
         };
         const fetchDollars = async () => {
             const { data } = await getDollarExchangeRate();
-            setDolarValue(data.blue.value_sell);
-            setDolarDate(data.last_update);
+            setDollarValue(data.blue.value_sell);
+            setDollarDate(data.last_update);
         };
-        fetchCategorias();
+        fetchCategories();
         fetchDollars();
     }, []);
     return (
@@ -57,9 +57,9 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
             : "bg-gray-600 rounded-lg shadow-md transition ease-in duration-300 hover:shadow-violet-400 w-full m-2 flex flex-col justify-around "
         )}>
             {
-                cargando ?
+                loading ?
                     <div className="flex justify-center items-center h-full">
-                        <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                        <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                     </div>
                     :
                     balance ?
@@ -68,13 +68,13 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                 <div className="flex justify-end">
                                     <div>
                                         <select
-                                            className={`${divisa === "ARS" ?
+                                            className={`${currentCurrency === currency.ARS ?
                                                 "font-semibold text-black bg-blue-200 shadow-md hover:shadow-blue-400" :
                                                 "font-semibold text-black bg-green-200 shadow-md hover:shadow-green-400"}`}
-                                            name="divisa"
-                                            id="divisa"
-                                            value={divisa}
-                                            onChange={e => setDivisa(e.target.value)}
+                                            name="currentCurrency"
+                                            id="currentCurrency"
+                                            value={currentCurrency}
+                                            onChange={e => setCurrency(e.target.value)}
                                         >
                                             <option className="font-semibold" value="ARS">ARS</option>
                                             <option className="font-semibold" value="USD">USD</option>
@@ -86,10 +86,10 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                     : "text-xl font-semibold text-violet-400 antialiased"
                                 )}
                                 >
-                                    Saldo
+                                    Balance
                                 </h3>
                                 {
-                                    !balance?.saldo_Total ?
+                                    !balance?.totalBalance ?
                                         <h1 className={(dark === "light" ?
                                             "text-gray-600 font-bold text-5xl font-mono"
                                             : "text-gray-200 font-bold text-5xl font-mono"
@@ -98,12 +98,12 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                             <span className="mr-1">$</span>
                                             {parseFloat(0).toFixed(2)}
                                         </h1> :
-                                        divisa === currency.ARS
+                                        currentCurrency === currency.ARS
                                             ?
-                                            balance?.saldo_Total < 0 ?
+                                            balance?.totalBalance < 0 ?
                                                 <h1 className='text-red-500 font-bold text-5xl font-mono'>
                                                     <span className="mr-1">$</span>
-                                                    {parseFloat(balance?.saldo_Total).toFixed(2)}
+                                                    {parseFloat(balance?.totalBalance).toFixed(2)}
                                                 </h1> :
                                                 <h1 className={(dark === "light" ?
                                                     "text-gray-600 font-bold text-5xl font-mono"
@@ -111,30 +111,30 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                                 )}
                                                 >
                                                     <span className="mr-1">$</span>
-                                                    {parseFloat(balance?.saldo_Total).toFixed(2)}
+                                                    {parseFloat(balance?.totalBalance).toFixed(2)}
                                                 </h1> :
-                                            divisa === currency.USD
+                                            currentCurrency === currency.USD
                                                 ?
-                                                balance?.saldo_Total < 0 ?
+                                                balance?.totalBalance < 0 ?
                                                     <h1 className='text-red-500 font-bold text-5xl font-mono'>
                                                         <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance?.saldo_Total / dolarValue).toFixed(2)}
+                                                        {parseFloat(balance?.totalBalance / dollarValue).toFixed(2)}
                                                     </h1> :
                                                     <h1 className={(dark === "light" ?
                                                         "text-gray-600 font-bold text-5xl font-mono"
                                                         : "text-gray-200 font-bold text-5xl font-mono"
                                                     )}>
                                                         <span className="mr-1">U$S</span>
-                                                        {parseFloat(balance?.saldo_Total / dolarValue).toFixed(2)}
+                                                        {parseFloat(balance?.totalBalance / dollarValue).toFixed(2)}
                                                     </h1>
                                                 :
                                                 <div className="flex justify-center">
-                                                    <PulseLoader loading={cargando} color="rgb(113, 50, 255)" size={10} />
+                                                    <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                                                 </div>
                                 }
                                 <br />
                                 {
-                                    !!dolarValue && !!dolarDate ?
+                                    !!dollarValue && !!dollarDate ?
                                         <div className={(dark === "light" ?
                                             "text-center rounded-2xl p-3 m-3 bg-green-100 shadow-md hover:shadow-green-400"
                                             : "text-center rounded-2xl p-3 m-3 bg-green-200 shadow-md hover:shadow-green-400"
@@ -142,12 +142,12 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                                             <div className="flex flex-col items-center font-semibold mb-4 text-violet-600">
                                                 <h3 className="w-24 text-white shadow-md font-semibold text-center rounded-3xl bg-green-400 font-mono">
                                                     <span className="mr-1">ARS</span>
-                                                    {dolarValue}
+                                                    {dollarValue}
                                                 </h3>
                                             </div>
                                             <div className="flex flex-col items-center font-bold text-green-500 mt-4">
-                                                <h3>Cotización Dólar</h3>
-                                                <h3>{new Date(dolarDate).toLocaleDateString()}</h3>
+                                                <h3>Dollar rate</h3>
+                                                <h3>{new Date(dollarDate).toLocaleDateString()}</h3>
                                             </div>
                                         </div> :
                                         <div></div>
@@ -163,24 +163,24 @@ export const BalanceSection = ({ auth, setTransacciones, balance, setBalance }) 
                         </div>
             }
             {
-                !cargando ?
+                !loading ?
                     <div className="flex justify-center pb-5">
                         <button
                             type="button"
                             className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold p-absolute shadow-md hover:shadow-violet-500'
-                            onClick={handleModalTransaccion}
+                            onClick={handleTransactionPopUp}
                         >
-                            Nueva Transacción
+                            New Transaction
                         </button>
 
                         {
-                            modal &&
-                            <ModalTransaccion
-                                setModal={setModal}
-                                animarModal={animarModal}
-                                setAnimarModal={setAnimarModal}
-                                categorias={categorias}
-                                setTransacciones={setTransacciones}
+                            popUp &&
+                            <TransactionPopUp
+                                setPopUp={setPopUp}
+                                animate={animate}
+                                setAnimate={setAnimate}
+                                categories={categories}
+                                setTransactions={setTransactions}
                                 setBalance={setBalance}
                                 balance={balance}
                             />

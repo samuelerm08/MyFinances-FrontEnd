@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import useAuth from "../../../context/useAuth";
 import useDark from "../../../context/useDark";
-import { filterTransactions } from "../../../services/myfinances-api/transacciones";
+import { filterTransactions } from "../../../services/myfinances-api/transaction";
 import { getUserToken } from "../../../services/token/tokenService";
 
 export const TypeFilter = ({
@@ -12,7 +12,7 @@ export const TypeFilter = ({
     setMetadata,
     setPayloadProps,
     setTipo,
-    tipo,
+    transactionType,
     payloadProps
 }) => {
     const { auth } = useAuth();
@@ -30,12 +30,12 @@ export const TypeFilter = ({
         setPayloadProps({
             ...payloadProps,
             userId: user.id,
-            tipo: type
+            transactionType: type
         });
         const payload = {
             ...payloadProps,
             userId: user.id,
-            tipo: type
+            transactionType: type
         };
         try {
             const { data: response, status } = await filterTransactions(payload, 1, 10, config);
@@ -55,7 +55,7 @@ export const TypeFilter = ({
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
-                tipo: null
+                transactionType: null
             });
             setAlerta({
                 msg: error.response.data,
@@ -68,20 +68,20 @@ export const TypeFilter = ({
     };
     return (
         <div className='flex flex-col mx-2'>
-            <div className="campo flex flex-col font-mono font-sm text-left p-2">
+            <div className="field flex flex-col font-mono font-sm text-left p-2">
                 <label className={(dark === "light" ?
                     "font-semibold text-violet-600"
                     : "font-semibold text-violet-400"
                 )}
-                >Tipo</label>
+                >Type</label>
                 <select
-                    name="tipo"
-                    id="tipo"
+                    name="transactionType"
+                    id="transactionType"
                     className={(dark === "light" ?
                         "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
                         : "bg-gray-600 text-gray-400 font-semibold rounded-md p-1 font-mono text-white"
                     )}
-                    value={tipo}
+                    value={transactionType}
                     onChange={e => handleTypeChange(e.target.value)}
                 >
                     <option defaultValue={""} value="">Ninguno</option>

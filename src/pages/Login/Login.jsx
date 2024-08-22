@@ -1,18 +1,18 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
-import Alerta from "../../components/Alerta";
+import Alert from "../../components/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { setUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
-import { login } from "../../services/myfinances-api/usuario";
+import { login } from "../../services/myfinances-api/user";
 import { HttpStatusCode } from "axios";
 
 const Login = () => {
     const [email, setEmail] = useState("");
-    const [contraseña, setContraseña] = useState("");
-    const [alerta, setAlerta] = useState({});
-    const [cargando, setCargando] = useState(true);
+    const [password, setContraseña] = useState("");
+    const [alert, setAlerta] = useState({});
+    const [loading, setCargando] = useState(true);
     const { setAuth } = useAuth();
     const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const Login = () => {
         e.preventDefault();
         setCargando(false);
         /* Validación de campos */
-        if ([email, contraseña].includes("")) {
+        if ([email, password].includes("")) {
             setAlerta({
                 msg: "Todos los campos son obligatorios",
                 error: true
@@ -33,7 +33,7 @@ const Login = () => {
         }
         else {
             try {
-                const { data, status } = await login({ email, contraseña });
+                const { data, status } = await login({ email, password });
                 if (status === HttpStatusCode.Ok) {
                     setUserToken("token", data.token);
                     setAuth(data.token);
@@ -53,7 +53,7 @@ const Login = () => {
             }
         }
     };
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className={styles.container}>
@@ -84,14 +84,14 @@ const Login = () => {
                 </div>
                 <div>
                     <label className={styles.label}
-                        htmlFor='contraseña'
+                        htmlFor='password'
                     >Contraseña</label>
                     <input
-                        id='contraseña'
+                        id='password'
                         type='password'
                         placeholder='Contraseña'
                         className={styles.input}
-                        value={contraseña}
+                        value={password}
                         onChange={e => setContraseña(e.target.value)}
                     />
 
@@ -103,11 +103,11 @@ const Login = () => {
                     <input
                         className={styles.button}
                         type="submit"
-                        value={!cargando ? "Ingresando..." : "Ingresar"}
-                        disabled={!cargando}
+                        value={!loading ? "Ingresando..." : "Ingresar"}
+                        disabled={!loading}
                     />
                 </div>
-                {msg && <Alerta alerta={alerta} />}
+                {msg && <Alert alert={alert} />}
             </form>
 
             <div className={styles.nav}>

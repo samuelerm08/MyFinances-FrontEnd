@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
-import ModalTransaccion from "../../components/pop-ups/ModalTransaccion";
-import { getAll } from "../../services/myfinances-api/transacciones";
-import { getCategories } from "../../services/myfinances-api/categorias";
+import ModalTransaccion from "../../components/pop-ups/TransactionPopUp";
+import { getAll } from "../../services/myfinances-api/transaction";
+import { getCategories } from "../../services/myfinances-api/category";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { TransactionsTable } from "../../components/transactions/transactions-table";
 import { texts, type } from "../../constants/myfinances-constants";
-import Alerta from "../../components/Alerta";
+import Alert from "../../components/Alert";
 import { DateFilter } from "../../components/transactions/filters/date-filter";
 import { TypeFilter } from "../../components/transactions/filters/type-filter";
 import { StateFilter } from "../../components/transactions/filters/state-filter";
@@ -15,31 +15,31 @@ import { AmountFilter } from "../../components/transactions/filters/amount-filte
 import { TransactionsPagination } from "../../components/transactions/transactions-pagination";
 import useDark from "../../context/useDark";
 
-const Transacciones = () => {
+const Transactions = () => {
     const { auth } = useAuth();
-    const [transacciones, setTransacciones] = useState([]);
+    const [transactions, setTransacciones] = useState([]);
     const [metadata, setMetadata] = useState({});
     const [balance, setBalance] = useState();
-    const [cargando, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [modal, setModal] = useState(false);
+    const [popUp, setModal] = useState(false);
     const [animarModal, setAnimarModal] = useState(false);
-    const [categorias, setCategorias] = useState([""]);
-    const [alerta, setAlerta] = useState({});
+    const [categories, setCategorias] = useState([""]);
+    const [alert, setAlerta] = useState({});
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [tipo, setTipo] = useState("");
-    const [fecha, setFecha] = useState("");
-    const [monto, setMonto] = useState("");
+    const [transactionType, setTipo] = useState("");
+    const [date, setFecha] = useState("");
+    const [amount, setMonto] = useState("");
     const [state, setState] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const { dark } = useDark();
 
     const [payloadProps, setPayloadProps] = useState({
         userId: null,
-        tipo: null,
-        fecha: null,
+        transactionType: null,
+        date: null,
         montoHasta: null,
-        estaActiva: null
+        isActive: null
     });
 
     const handleModalClosing = () => {
@@ -71,10 +71,10 @@ const Transacciones = () => {
             setMonto("");
             setState("");
             setPayloadProps({
-                tipo: null,
-                fecha: null,
+                transactionType: null,
+                date: null,
                 montoHasta: null,
-                estaActiva: null
+                isActive: null
             });
         } catch (error) {
             setError(error);
@@ -103,7 +103,7 @@ const Transacciones = () => {
         const fetchCategorias = async () => {
             try {
                 const { data: response } = await getCategories(config);
-                const validCategories = response?.filter(({ titulo }) => !titulo.includes(type.RESERVA));
+                const validCategories = response?.filter(({ title }) => !title.includes(type.RESERVE));
                 setCategorias(validCategories);
                 setLoading(false);
             } catch (error) {
@@ -126,7 +126,7 @@ const Transacciones = () => {
         fetchBalance();
     }, []);
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
         <div className={(dark === "light" ?
@@ -135,10 +135,10 @@ const Transacciones = () => {
             "bg-inherit p-10"
         )}
         >
-            {alerta ?
+            {alert ?
                 <div className="flex justify-end mb-20">
                     <div className="absolute">
-                        {msg && <Alerta alerta={alerta} />}
+                        {msg && <Alert alert={alert} />}
                     </div>
                 </div> : <div></div>}
             <div className="flex justify-between items-center mb-5">
@@ -148,18 +148,18 @@ const Transacciones = () => {
                         className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold p-absolute shadow-md hover:shadow-violet-500'
                         onClick={handleModalClosing}
                     >
-                        Nueva Transacción
+                        New Transaction
                     </button>
 
-                    {modal &&
+                    {popUp &&
                         <ModalTransaccion
                             setModal={setModal}
                             animarModal={animarModal}
                             setAnimarModal={setAnimarModal}
-                            categorias={categorias}
+                            categories={categories}
                             balance={balance}
                             setTransacciones={setTransacciones}
-                            transacciones={transacciones}
+                            transactions={transactions}
                             setMetadata={setMetadata}
                             metadata={metadata}
                         />
@@ -174,7 +174,7 @@ const Transacciones = () => {
                         setMetadata={setMetadata}
                         setPayloadProps={setPayloadProps}
                         setMonto={setMonto}
-                        monto={monto}
+                        amount={amount}
                         payloadProps={payloadProps} />
                     <DateFilter
                         setTransacciones={setTransacciones}
@@ -183,7 +183,7 @@ const Transacciones = () => {
                         setMetadata={setMetadata}
                         setCurrentPage={setCurrentPage}
                         setPayloadProps={setPayloadProps}
-                        fecha={fecha}
+                        date={date}
                         setFecha={setFecha}
                         payloadProps={payloadProps} />
                     <TypeFilter
@@ -194,7 +194,7 @@ const Transacciones = () => {
                         setMetadata={setMetadata}
                         setPayloadProps={setPayloadProps}
                         setTipo={setTipo}
-                        tipo={tipo}
+                        transactionType={transactionType}
                         payloadProps={payloadProps} />
                     <StateFilter
                         setLoading={setLoading}
@@ -220,8 +220,8 @@ const Transacciones = () => {
             )}
             >
                 <TransactionsTable
-                    cargando={cargando}
-                    transacciones={transacciones}
+                    loading={loading}
+                    transactions={transactions}
                     setTransacciones={setTransacciones}
                     metadata={metadata}
                     balance={balance}
@@ -246,4 +246,4 @@ const Transacciones = () => {
     );
 };
 
-export default Transacciones;
+export default Transactions;

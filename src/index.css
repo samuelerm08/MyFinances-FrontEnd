@@ -23,8 +23,8 @@
     --blue-mod: #15084e;
     --gris-popup: rgb(229 231 235);
     /* Tipografía */
-    --tipo-principal: Monospace, Arial, sans-serif;
-    --tipo-secundaria: Verdana;
+    --transactionType-principal: Monospace, Arial, sans-serif;
+    --transactionType-secundaria: Verdana;
 }
 
 body {
@@ -94,7 +94,7 @@ em {
 }
 
 /* MODAL */
-.formulario {
+.form {
     width: 100%;
     margin: 0 auto;
     padding: 10rem 0;
@@ -108,14 +108,14 @@ em {
 }
 
 @media (min-width: 768px) {
-    .formulario {
+    .form {
         padding: 2rem 0;
         width: 60rem;
 
     }
 }
 
-.formulario legend {
+.form legend {
     font-size: 1.2rem;
     text-align: center;
     display: block;
@@ -126,7 +126,7 @@ em {
     border-bottom: 2px solid var(--violetdark);
 }
 
-.formulario .campo {
+.form .field {
     display: grid;
     margin-bottom: 1rem;
     color: var(--negro);
@@ -140,7 +140,7 @@ em {
     color: var(--gristopo-crema);
 }
 
-.deletePopUp.animar {
+.deletePopUp.animate {
     padding: 0;
 }
 
@@ -154,7 +154,7 @@ i {
     font-size: 25px;
 }
 
-.formulario label {
+.form label {
     color: var(--violetdark);
     font-size: 1rem;
     text-align: center;
@@ -162,9 +162,9 @@ i {
     text-transform: capitalize;
 }
 
-.formulario input[type="text"],
-.formulario input[type="number"],
-.formulario input[type="date"],
+.form input[type="text"],
+.form input[type="number"],
+.form input[type="date"],
 select {
     background-color: var(--gris-popup);
     border-radius: 0.3rem;
@@ -175,7 +175,7 @@ select {
     color: var(--negro);
 }
 
-.formulario input[type="submit"] {
+.form input[type="submit"] {
     background-color: var(--violetlight);
     border: none;
     border-radius: 0.5rem;
@@ -233,20 +233,20 @@ select {
 }
 
 @media (min-width: 768px) {
-    .formulario input[type="submit"] {
+    .form input[type="submit"] {
         display: block;
         padding: 0.6rem 5rem;
     }
 }
 
-.formulario input[type="submit"]:hover {
+.form input[type="submit"]:hover {
     background-color: var(--violethover);
     color: var(--blanco);
 
     cursor: pointer;
 }
 
-.modal {
+.popUp {
     position: fixed;
     background-color: rgba(0, 0, 0, 0.040);
     top: 0;
@@ -288,7 +288,7 @@ select {
     color: var(--gristopo-crema);
 }
 
-.modal .cerrar-modal {
+.popUp .close-popUp {
     border-radius: 1rem;
     position: absolute;
     right: 0.3rem;
@@ -306,7 +306,7 @@ select {
     height: 2rem;
 }
 
-.modal .formulario {
+.popUp .form {
     max-width: 30rem;
     width: 20rem;
     transition-property: all;
@@ -323,7 +323,7 @@ select {
     opacity: 0;
 }
 
-.modal .campo label {
+.popUp .field label {
     color: var(--violetlight);
     font-weight: bolder;
 }
@@ -334,7 +334,7 @@ select {
 }
 
 
-body .modal {
+body .popUp {
     overflow: hidden;
 }
 
@@ -342,30 +342,30 @@ body .modalDelete {
     overflow: hidden;
 }
 
-.modal .formulario.animar {
+.popUp .form.animate {
     position: relative;
     opacity: 1;
 }
 
-.modalDelete .deletePopUp.animar {
+.modalDelete .deletePopUp.animate {
     position: relative;
     opacity: 1;
 }
 
-.modal .formulario.cerrar {
+.popUp .form.close {
     opacity: 0;
 }
 
-.modalDelete .deletePopUp.cerrar {
+.modalDelete .deletePopUp.close {
     opacity: 0;
 }
 
-.modal .formulario.cerrar i.fa-regular,
-.modalDelete .deletePopUp.cerrar i.fa-regular {
+.popUp .form.close i.fa-regular,
+.modalDelete .deletePopUp.close i.fa-regular {
     display: none;
 }
 
-.modal label {
+.popUp label {
     text-align: left;
 }
 

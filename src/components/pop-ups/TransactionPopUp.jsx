@@ -1,26 +1,35 @@
 import { useState } from "react";
-import Alerta from "../Alerta";
 import useAuth from "../../context/useAuth";
 import { getUserToken } from "../../services/token/tokenService";
-import { newTransaction } from "../../services/myfinances-api/transacciones";
+import { newTransaction } from "../../services/myfinances-api/transaction";
 import { amountReGex, errors, type } from "../../constants/myfinances-constants";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { HttpStatusCode } from "axios";
+import Alert from "../Alert";
 
-const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransacciones, setBalance, balance, categorias, setMetadata, metadata }) => {
-
-    const [alerta, setAlerta] = useState({});
+const TransactionPopUp = ({
+    setPopUp,
+    animate,
+    setAnimate,
+    setTransactions,
+    setBalance,
+    balance,
+    categories,
+    setMetadata,
+    metadata
+}) => {
+    const [alert, setAlert] = useState({});
     const { auth } = useAuth();
     const [error, setError] = useState(null);
-    const [cargando, setLoading] = useState(false);
-    const [fecha, setFecha] = useState("");
-    const [detalle, setDetalle] = useState("");
-    const [monto, setMonto] = useState("");
-    const [tipoTransaccion, setTipoTransaccion] = useState("Ingreso");
-    const [categoriaId, setCategoria] = useState(categorias[0].id);
+    const [loading, setLoading] = useState(false);
+    const [date, setDate] = useState("");
+    const [details, setDetails] = useState("");
+    const [amount, setAmount] = useState("");
+    const [transactionType, setTransactionType] = useState("Income");
+    const [categoryId, setCategory] = useState(categories[0].id);
     const user = getUserToken();
     const isNavigationEnabled = !!setMetadata && metadata.totalCount <= 10;
 
@@ -31,10 +40,10 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
         }
     };
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
@@ -42,32 +51,32 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
         e.preventDefault();
         setLoading(true);
 
-        if ([detalle, monto].length === 0) {
-            setAlerta({
+        if ([details, amount].length === 0) {
+            setAlert({
                 msg: "Todos los campos son obligatorios",
                 error: true
             });
         }
 
         setTimeout(() => {
-            setAlerta({});
+            setAlert({});
         }, 3000);
 
         let payload = {
-            fecha: fecha,
-            detalle: detalle,
-            monto: parseFloat(monto),
-            tipoTransaccion: tipoTransaccion,
-            cat_Id: parseInt(categoriaId),
-            balance_Id: parseInt(balance?.id) ?? null,
-            usuarioId: parseInt(user.id),
-            estaActiva: true
+            date: date,
+            details: details,
+            amount: parseFloat(amount),
+            transactionType: transactionType,
+            categoryId: parseInt(categoryId),
+            balanceId: parseInt(balance?.id) ?? null,
+            userId: parseInt(user.id),
+            isActive: true
         };
 
         if (!balance?.id) {
             try {
                 const { data, status } = await getBalanceByUserId(user.id, config);
-                if (status === HttpStatusCode.Ok) payload = { ...payload, balance_Id: data.id };
+                if (status === HttpStatusCode.Ok) payload = { ...payload, balanceId: data.id };
             } catch (error) {
                 setError(error);
             }
@@ -77,138 +86,138 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
             const { data, status } = await newTransaction(payload, config);
             if (status === 201) {
                 setLoading(false);
-                setAlerta({
-                    msg: "Transaccion Creada!",
+                setAlert({
+                    msg: "Transaction Created!",
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
-                    setTransacciones(transacciones => [data, ...transacciones]);
+                    setAlert({});
+                    setTransactions(transactions => [data, ...transactions]);
                     if (setBalance) {
-                        const isExpense = data.tipoTransaccion === type.EGRESO;
-                        !balance?.saldo_Total
+                        const isExpense = data.transactionType === type.EXPENSE;
+                        !balance?.totalBalance
                             ?
                             setBalance({
                                 ...balance,
                                 id: parseInt(data.balance_Id),
-                                saldo_Total: parseFloat(data.balance?.saldo_Total)
+                                totalBalance: parseFloat(data.balance?.totalBalance)
                             })
                             :
                             setBalance({
                                 ...balance,
-                                id: parseInt(data.balance_Id),
-                                saldo_Total:
+                                id: parseInt(data.balanceId),
+                                totalBalance:
                                     !isExpense ?
-                                        balance.saldo_Total + parseFloat(monto) :
-                                        balance.saldo_Total - parseFloat(monto)
+                                        balance.totalBalance + parseFloat(amount) :
+                                        balance.totalBalance - parseFloat(amount)
                             });
                     }
 
                     if (isNavigationEnabled) setMetadata({ ...metadata, totalCount: metadata.totalCount + 1 });
-                    ocultarModal();
+                    hidePopUp();
                 }, 1500);
             }
         } catch (error) {
             if (!error.errors) {
                 if (error.message === errors.badRequests.BAD_REQUEST) {
-                    setAlerta({
+                    setAlert({
                         msg: errors.badRequests.REQUIRED_FIELDS,
                         error: true
                     });
                     setTimeout(() => {
                         setLoading(false);
-                        setAlerta({});
+                        setAlert({});
                     }, 3000);
                 }
             }
             else {
                 if (error.status === errors.badRequests.BAD_REQUEST_CODE) {
-                    setAlerta({
+                    setAlert({
                         msg: errors.badRequests.REQUIRED_FIELDS,
                         error: true
                     });
                     setTimeout(() => {
                         setLoading(false);
-                        setAlerta({});
+                        setAlert({});
                     }, 3000);
                 }
             }
         }
     };
 
-    const { msg } = alerta;
+    const { msg } = alert;
 
     return (
-        <div className="modal">
+        <div className="popUp">
             <div className='modalContainer'>
                 <form
                     onSubmit={handleSubmit}
-                    className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+                    className={`form ${animate ? "animate" : "close"}`}
                 >
-                    <div className="cerrar-modal">
+                    <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="Fecha">Fecha</label>
+                    <div className='field'>
+                        <label htmlFor="Date">Date</label>
                         <ReactDatePicker
                             locale={es}
-                            value={fecha}
-                            placeholderText="Fecha"
-                            onChange={(date) => setFecha(date.toISOString().split("T")[0])}
+                            value={date}
+                            placeholderText="Date"
+                            onChange={(date) => setDate(date.toISOString().split("T")[0])}
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="detalle">Detalle</label>
+                    <div className='field'>
+                        <label htmlFor="details">Details</label>
                         <input
-                            id="detalle"
+                            id="details"
                             type="text"
                             maxLength={80}
-                            placeholder="Detalle"
-                            value={detalle}
-                            onChange={e => setDetalle(e.target.value)}
+                            placeholder="Details"
+                            value={details}
+                            onChange={e => setDetails(e.target.value)}
                         />
                     </div>
-                    <div className='campo'>
-                        <label htmlFor="monto">Monto</label>
+                    <div className='field'>
+                        <label htmlFor="amount">Amount</label>
                         <input
-                            id="monto"
+                            id="amount"
                             type="text"
-                            placeholder="Ingresar monto"
-                            value={monto.replace(",", ".")}
+                            placeholder="Enter amount"
+                            value={amount.replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
-                                    setMonto(e.target.value);
+                                    setAmount(e.target.value);
                                 }
                             }}
                         />
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="tipo">Tipo de Transacción</label>
-                        <select name="tipo" id="tipo" value={tipoTransaccion}
-                            onChange={e => setTipoTransaccion(e.target.value)}
+                    <div className='field'>
+                        <label htmlFor="transactionType">Type</label>
+                        <select name="transactionType" id="transactionType" value={transactionType}
+                            onChange={e => setTransactionType(e.target.value)}
                         >
-                            <option defaultValue={"Ingreso"} value="Ingreso">Ingreso</option>
-                            <option value="Egreso">Egreso</option>
+                            <option defaultValue={"Income"} value="Income">Income</option>
+                            <option value="Expense">Expense</option>
                         </select>
                     </div>
 
-                    <div className='campo'>
-                        <label htmlFor="categoria">Categoria</label>
-                        <select name="categoria" id="categoria" value={categoriaId}
-                            onChange={e => setCategoria(e.target.value)}
+                    <div className='field'>
+                        <label htmlFor="category">Category</label>
+                        <select name="category" id="category" value={categoryId}
+                            onChange={e => setCategory(e.target.value)}
                         >
                             {
-                                categorias?.map((c, index) => {
+                                categories?.map((c, index) => {
                                     return (
                                         <option
                                             defaultValue={c.id}
                                             value={c.id}
                                             key={index}>
-                                            {c.titulo}
+                                            {c.title}
                                         </option>
                                     );
                                 })
@@ -218,11 +227,11 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
 
                     <input
                         type="submit"
-                        value={!cargando ? "Enviar" : "Enviando..."}
-                        disabled={cargando}
+                        value={!loading ? "Submit" : "Loading..."}
+                        disabled={loading}
                     />
 
-                    {msg && <Alerta alerta={alerta} />}
+                    {msg && <Alert alert={alert} />}
 
                 </form>
             </div>
@@ -230,4 +239,4 @@ const ModalTransaccion = ({ setModal, animarModal, setAnimarModal, setTransaccio
     );
 };
 
-export default ModalTransaccion;
+export default TransactionPopUp;
