@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ModalMetas from "../../components/pop-ups/CreateGoal";
 import { ActiveGoals } from "../../components/goals/active-goals";
 import { CompletedGoals } from "../../components/goals/completed-goals";
 import { useEffect } from "react";
@@ -12,12 +11,13 @@ import { GoalsTable } from "../../components/goals/goals-table";
 import useDark from "../../context/useDark";
 import { HttpStatusCode } from "axios";
 import { GoalsPagination } from "../../components/goals/goals-pagination";
+import CreateGoal from "../../components/pop-ups/CreateGoal";
 
-const Metas = () => {
+const Goals = () => {
     const { auth } = useAuth();
     const { dark } = useDark();
-    const [popUp, setModal] = useState(false);
-    const [animarModal, setAnimarModal] = useState(false);
+    const [popUp, setPopUp] = useState(false);
+    const [animate, setAnimate] = useState(false);
     const [activeGoals, setActiveGoals] = useState([]);
     const [activeGoalsMetadata, setActiveGoalsMetadata] = useState({});
     const [completedGoals, setCompletedGoals] = useState([]);
@@ -28,13 +28,13 @@ const Metas = () => {
     const [loadingCompletedGoals, setLoadingCompletedGoals] = useState(true);
     const [loadingTableGoals, setLoadingTableGoals] = useState(true);
     const [error, setError] = useState(null);
-    const [alert, setAlerta] = useState({});
+    const [alert, setAlert] = useState({});
 
     const user = getUserToken();
     const handleGoals = () => {
-        setModal(true);
+        setPopUp(true);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
 
@@ -61,12 +61,12 @@ const Metas = () => {
             } catch (error) {
                 setError(error);
                 setLoadingActiveGoals(false);
-                setAlerta({
+                setAlert({
                     msg: texts.WITH_NO_GOALS,
                     warn: true
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                 }, 3000);
             }
         };
@@ -124,14 +124,14 @@ const Metas = () => {
                     className='text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold shadow-md hover:shadow-violet-500'
                     onClick={handleGoals}
                 >
-                    New Meta
+                    New Goal
                 </button>
 
                 {popUp &&
-                    <ModalMetas
-                        setModal={setModal}
-                        animarModal={animarModal}
-                        setAnimarModal={setAnimarModal}
+                    <CreateGoal
+                        setPopUp={setPopUp}
+                        animate={animate}
+                        setAnimate={setAnimate}
                         setActiveGoals={setActiveGoals}
                         activeGoals={activeGoals}
                         setTableGoals={setTableGoals}
@@ -185,12 +185,11 @@ const Metas = () => {
                         goals={completedGoals}
                         error={error}
                         loading={loadingCompletedGoals}
-                        setCargando={setLoadingCompletedGoals}
                         completedGoalsMetadata={completedGoalsMetadata}
                         setCompletedGoalsMetadata={setCompletedGoalsMetadata}
                         setCompletedGoals={setCompletedGoals}
                         setTableGoals={setTableGoals}
-                        setAlerta={setAlerta}
+                        setAlert={setAlert}
                     />
                     {
                         completedGoalsMetadata.totalCount > 4 ?
@@ -213,11 +212,7 @@ const Metas = () => {
                 )}>
                     <GoalsTable
                         tableGoals={tableGoals}
-                        loading={loadingTableGoals}
-                        setLoading={setLoadingTableGoals}
-                        setTableGoals={setTableGoals}
-                        setTableGoalsMetadata={setTableGoalsMetadata}
-                        tableGoalsMetadata={tableGoalsMetadata} />
+                        loading={loadingTableGoals} />
                     {
                         tableGoalsMetadata.totalCount > 10 ?
                             <div className="w-full">
@@ -235,4 +230,4 @@ const Metas = () => {
         </div>
     );
 };
-export default Metas;
+export default Goals;

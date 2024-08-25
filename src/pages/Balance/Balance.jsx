@@ -28,21 +28,21 @@ const Balance = () => {
     useEffect(() => {
         const fetchBalance = async () => {
             try {
-                const res = await getBalanceByUserId(user.id, config);
-                if (res) {
-                    setBalance(res);
+                const { data, status } = await getBalanceByUserId(user.id, config);
+                if (status === HttpStatusCode.Ok) {
+                    setBalance(data);
                     setLoading(false);
                 }
             } catch (error) {
-                setError(error);
+                setError(error); 
                 setLoading(false);
             }
         };
         const fetchTransactions = async () => {
             try {
-                const { data: response, status } = await getAll({ userId: user.id }, 1, 10, config);
+                const { data, status } = await getAll({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    const filteredTransactions = response.data.filter(({ isActive }) => isActive);
+                    const filteredTransactions = data.filter(({ isActive }) => isActive);
                     setTransactions(filteredTransactions);
                     setLoading(false);
                 }

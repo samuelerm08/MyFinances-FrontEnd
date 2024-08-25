@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
-import ModalTransaccion from "../../components/pop-ups/TransactionPopUp";
 import { getAll } from "../../services/myfinances-api/transaction";
 import { getCategories } from "../../services/myfinances-api/category";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
@@ -14,22 +13,23 @@ import { StateFilter } from "../../components/transactions/filters/state-filter"
 import { AmountFilter } from "../../components/transactions/filters/amount-filter";
 import { TransactionsPagination } from "../../components/transactions/transactions-pagination";
 import useDark from "../../context/useDark";
+import TransactionPopUp from "../../components/pop-ups/TransactionPopUp";
 
 const Transactions = () => {
     const { auth } = useAuth();
-    const [transactions, setTransacciones] = useState([]);
+    const [transactions, setTransactions] = useState([]);
     const [metadata, setMetadata] = useState({});
     const [balance, setBalance] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [popUp, setModal] = useState(false);
-    const [animarModal, setAnimarModal] = useState(false);
-    const [categories, setCategorias] = useState([""]);
-    const [alert, setAlerta] = useState({});
+    const [popUp, setPopUp] = useState(false);
+    const [animate, setAnimate] = useState(false);
+    const [categories, setCategories] = useState([""]);
+    const [alert, setAlert] = useState({});
     const [hasNextPage, setHasNextPage] = useState(true);
-    const [transactionType, setTipo] = useState("");
-    const [date, setFecha] = useState("");
-    const [amount, setMonto] = useState("");
+    const [transactionType, setType] = useState("");
+    const [date, setDate] = useState("");
+    const [amount, setAmount] = useState("");
     const [state, setState] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const { dark } = useDark();
@@ -43,9 +43,9 @@ const Transactions = () => {
     });
 
     const handleModalClosing = () => {
-        setModal(true);
+        setPopUp(true);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
 
@@ -62,18 +62,18 @@ const Transactions = () => {
         try {
             const { data: response } = await getAll({ userId: user.id }, 1, 10, config);
             setLoading(false);
-            setTransacciones(response.data);
+            setTransactions(response.data);
             setMetadata(response.meta);
             setCurrentPage(1);
             setHasNextPage(response.meta.hasNextPage);
-            setTipo("");
-            setFecha("");
-            setMonto("");
+            setType("");
+            setDate("");
+            setAmount("");
             setState("");
             setPayloadProps({
                 transactionType: null,
                 date: null,
-                montoHasta: null,
+                amountUpTo: null,
                 isActive: null
             });
         } catch (error) {
@@ -82,29 +82,29 @@ const Transactions = () => {
     };
 
     useEffect(() => {
-        const fetchTransacciones = async () => {
+        const fetchTransactions = async () => {
             try {
                 const { data: response } = await getAll({ userId: user.id }, 1, 10, config);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 setMetadata(response.meta);
                 setLoading(false);
             } catch (error) {
                 setError(error);
                 setLoading(false);
-                setAlerta({
+                setAlert({
                     msg: texts.WITH_NO_TRANSACTIONS,
                     error: true
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                 }, 3000);
             }
         };
-        const fetchCategorias = async () => {
+        const fetchCategories = async () => {
             try {
                 const { data: response } = await getCategories(config);
                 const validCategories = response?.filter(({ title }) => !title.includes(type.RESERVE));
-                setCategorias(validCategories);
+                setCategories(validCategories);
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -121,8 +121,8 @@ const Transactions = () => {
                 setLoading(false);
             }
         };
-        fetchTransacciones();
-        fetchCategorias();
+        fetchTransactions();
+        fetchCategories();
         fetchBalance();
     }, []);
 
@@ -152,13 +152,13 @@ const Transactions = () => {
                     </button>
 
                     {popUp &&
-                        <ModalTransaccion
-                            setModal={setModal}
-                            animarModal={animarModal}
-                            setAnimarModal={setAnimarModal}
+                        <TransactionPopUp
+                            setPopUp={setPopUp}
+                            animate={animate}
+                            setAnimate={setAnimate}
                             categories={categories}
                             balance={balance}
-                            setTransacciones={setTransacciones}
+                            setTransactions={setTransactions}
                             transactions={transactions}
                             setMetadata={setMetadata}
                             metadata={metadata}
@@ -168,39 +168,39 @@ const Transactions = () => {
                 <div className="flex justify-center items-center">
                     <AmountFilter
                         setLoading={setLoading}
-                        setAlerta={setAlerta}
+                        setAlert={setAlert}
                         setCurrentPage={setCurrentPage}
-                        setTransacciones={setTransacciones}
+                        setTransactions={setTransactions}
                         setMetadata={setMetadata}
                         setPayloadProps={setPayloadProps}
-                        setMonto={setMonto}
+                        setAmount={setAmount}
                         amount={amount}
                         payloadProps={payloadProps} />
                     <DateFilter
-                        setTransacciones={setTransacciones}
-                        setAlerta={setAlerta}
+                        setTransactions={setTransactions}
+                        setAlert={setAlert}
                         setLoading={setLoading}
                         setMetadata={setMetadata}
                         setCurrentPage={setCurrentPage}
                         setPayloadProps={setPayloadProps}
                         date={date}
-                        setFecha={setFecha}
+                        setDate={setDate}
                         payloadProps={payloadProps} />
                     <TypeFilter
                         setLoading={setLoading}
-                        setAlerta={setAlerta}
+                        setAlert={setAlert}
                         setCurrentPage={setCurrentPage}
-                        setTransacciones={setTransacciones}
+                        setTransactions={setTransactions}
                         setMetadata={setMetadata}
                         setPayloadProps={setPayloadProps}
-                        setTipo={setTipo}
+                        setType={setType}
                         transactionType={transactionType}
                         payloadProps={payloadProps} />
                     <StateFilter
                         setLoading={setLoading}
-                        setAlerta={setAlerta}
+                        setAlert={setAlert}
                         setCurrentPage={setCurrentPage}
-                        setTransacciones={setTransacciones}
+                        setTransactions={setTransactions}
                         setMetadata={setMetadata}
                         setPayloadProps={setPayloadProps}
                         setState={setState}
@@ -210,7 +210,7 @@ const Transactions = () => {
                 <button
                     className="text-white text-sm bg-red-500 p-3 rounded-md uppercase font-semibold p-absolute shadow-md hover:shadow-red-600"
                     onClick={() => handleFiltersReset()}>
-                    Borrar Filtros
+                    Reset Filters
                 </button>
             </div>
             <div className={(dark === "light" ?
@@ -222,7 +222,7 @@ const Transactions = () => {
                 <TransactionsTable
                     loading={loading}
                     transactions={transactions}
-                    setTransacciones={setTransacciones}
+                    setTransactions={setTransactions}
                     metadata={metadata}
                     balance={balance}
                 />
@@ -230,7 +230,7 @@ const Transactions = () => {
                     metadata.totalCount > 10 ?
                         <div className="w-full">
                             <TransactionsPagination
-                                setTransacciones={setTransacciones}
+                                setTransactions={setTransactions}
                                 metadata={metadata}
                                 hasNextPage={hasNextPage}
                                 setHasNextPage={setHasNextPage}

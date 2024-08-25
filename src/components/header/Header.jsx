@@ -6,24 +6,18 @@ import { useState } from "react";
 import { PulseLoader } from "react-spinners";
 import useDark from "../../context/useDark";
 
-
-
 const Header = () => {
     const user = getUserToken();
     const navigate = useNavigate();
-    const [loading, setCargando] = useState(false);
-
-    const { dark , changeDarkMode } = useDark();
-
-    /* Inicio código para darkmode */
+    const [loading, setLoading] = useState(false);
+    const { dark, changeDarkMode } = useDark();
 
     const darkMode = () => {
-        // Llamamos a la función desde aca
         changeDarkMode();
     };
 
     const handleClick = () => {
-        setCargando(true);
+        setLoading(true);
         setTimeout(() => {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
@@ -46,7 +40,7 @@ const Header = () => {
                     <div className="flex headerButtons">
                         <NavLink
                             to="index"
-                            className={({ isActive, isPending}) =>
+                            className={({ isActive, isPending }) =>
 
                                 isPending ? "text-violet-600 hover:text-violet-800 font-bold"
                                     :
@@ -78,7 +72,7 @@ const Header = () => {
                         </NavLink>
 
                         <NavLink
-                            to="metas"
+                            to="goals"
                             className={({ isActive, isPending }) =>
                                 isPending ? "text-violet-600 hover:text-violet-800 font-bold"
                                     :
@@ -89,7 +83,7 @@ const Header = () => {
                         >
                             <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
                                 <i className="fa-solid fa-piggy-bank"></i>
-                                <p>Metas</p>
+                                <p>Goals</p>
                             </div>
                         </NavLink>
 
@@ -118,26 +112,26 @@ const Header = () => {
                             onClick={darkMode}
 
                         >
-                            { dark === "light" ?
+                            {dark === "light" ?
                                 <i
                                     className="fa-solid fa-moon"
                                     data-tooltip-id="my-tooltip"
-                                    data-tooltip-content="Apariencia"
+                                    data-tooltip-content="Dark"
                                 ></i>
                                 :
                                 <i
                                     className="fa-regular fa-sun"
                                     data-tooltip-id="my-tooltip"
-                                    data-tooltip-content="Apariencia"
+                                    data-tooltip-content="Light"
                                 ></i>
                             }
                         </button>
 
                         <Link
-                            to="usuario"
+                            to="user"
                             className='p-[0.9rem] mb-1 mr-2 text-violet-600 font-bold uppercase bg-gray-100  rounded-xl'
                             data-tooltip-id="my-tooltip"
-                            data-tooltip-content="Perfil"
+                            data-tooltip-content="Profile"
                         >
                             <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
                                 <i className={`fa-solid fa-${user.firstName ? user.firstName.charAt(0).toLowerCase() : "x"}`}></i>
@@ -148,7 +142,7 @@ const Header = () => {
                             type="button"
                             className='p-[0.56rem] mb-1 text-violet-600 font-bold uppercase bg-gray-100  rounded-xl'
                             data-tooltip-id="my-tooltip"
-                            data-tooltip-content="Cerrar Sesión"
+                            data-tooltip-content="Sign out"
                             onClick={handleClick}
                         >
                             {

@@ -4,7 +4,7 @@ import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
 
 export const TransactionsPagination = ({
-    setTransacciones,
+    setTransactions,
     hasNextPage,
     setHasNextPage,
     setLoading,
@@ -48,21 +48,21 @@ export const TransactionsPagination = ({
                 Authorization: `Bearer ${auth}`
             }
         };
-        const fetchTransacciones = async () => {
+        const fetchTransactions = async () => {
             const payload = {
                 userId: user.id,
                 transactionType: payloadProps.transactionType,
                 date: payloadProps.date,
-                montoHasta: payloadProps.montoHasta,
+                montoHasta: payloadProps.amountUpTo,
                 isActive: payloadProps.isActive
             };
             try {
                 const { data: response } =
-                    payloadProps.transactionType || payloadProps.date || payloadProps.montoHasta || payloadProps.isActive
+                    payloadProps.transactionType || payloadProps.date || payloadProps.amountUpTo || payloadProps.isActive
                         ? await filterTransactions(payload, page, 10, config)
                         : await getAll({ userId: user.id }, page, 10, config);
                 setLoading(false);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 response.meta?.hasNextPage
                     ? setHasNextPage(response.meta?.hasNextPage)
                     : setHasNextPage(response.meta?.hasNextPage);
@@ -70,7 +70,7 @@ export const TransactionsPagination = ({
                 setError(error);
             }
         };
-        fetchTransacciones();
+        fetchTransactions();
     };
     return (
         <div className="flex items-center justify-between border-t border-gray-200 bg-inherit px-4 py-3 sm:px-6">

@@ -10,26 +10,25 @@ import { HttpStatusCode } from "axios";
 
 const Login = () => {
     const [email, setEmail] = useState("");
-    const [password, setContraseña] = useState("");
-    const [alert, setAlerta] = useState({});
-    const [loading, setCargando] = useState(true);
+    const [password, setPassword] = useState("");
+    const [alert, setAlert] = useState({});
+    const [loading, setLoading] = useState(true);
     const { setAuth } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async e => {
         e.preventDefault();
-        setCargando(false);
-        /* Validación de campos */
+        setLoading(false);
         if ([email, password].includes("")) {
-            setAlerta({
-                msg: "Todos los campos son obligatorios",
+            setAlert({
+                msg: "All fields are required!",
                 error: true
             });
             setTimeout(() => {
-                setAlerta({});
+                setAlert({});
             }, 5000);
 
-            setCargando(true);
+            setLoading(true);
         }
         else {
             try {
@@ -42,14 +41,14 @@ const Login = () => {
                 }
             } catch (error) {
                 console.log(error);
-                setAlerta({
+                setAlert({
                     msg: error.response.data,
                     error: true
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                 }, 5000);
-                setCargando(true);
+                setLoading(true);
             }
         }
     };
@@ -62,8 +61,8 @@ const Login = () => {
                     <i className="fa-solid fa-dragon"></i>
                 </div>
             </div>
-            <span className={styles.span}>Bienvenido a My Finances</span>
-            <h1 className={styles.title}>Inicia sesión</h1>
+            <span className={styles.span}>Welcome to MyFinances</span>
+            <h1 className={styles.title}>Login</h1>
 
             <form
                 className={styles.form}
@@ -72,11 +71,11 @@ const Login = () => {
                 <div>
                     <label className={styles.label}
                         htmlFor='email'
-                    >Correo Electrónico</label>
+                    >Email</label>
                     <input
                         id='email'
                         type='email'
-                        placeholder='Correo Electrónico'
+                        placeholder='Email'
                         className={styles.input}
                         value={email}
                         onChange={e => setEmail(e.target.value)}
@@ -85,14 +84,14 @@ const Login = () => {
                 <div>
                     <label className={styles.label}
                         htmlFor='password'
-                    >Contraseña</label>
+                    >Password</label>
                     <input
                         id='password'
                         type='password'
-                        placeholder='Contraseña'
+                        placeholder='Password'
                         className={styles.input}
                         value={password}
-                        onChange={e => setContraseña(e.target.value)}
+                        onChange={e => setPassword(e.target.value)}
                     />
 
                 </div>
@@ -103,7 +102,7 @@ const Login = () => {
                     <input
                         className={styles.button}
                         type="submit"
-                        value={!loading ? "Ingresando..." : "Ingresar"}
+                        value={!loading ? "Loading..." : "Login"}
                         disabled={!loading}
                     />
                 </div>
@@ -113,11 +112,11 @@ const Login = () => {
             <div className={styles.nav}>
                 <nav>
                     <p>
-                        ¿Aún no tienes tu cuenta?
+                        Don't have an account?
                     </p>
                     <Link
                         className={styles.link} to="/signup">
-                        Regístrate
+                        Sign up
                     </Link>
                 </nav>
             </div>

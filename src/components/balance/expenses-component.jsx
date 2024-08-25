@@ -16,6 +16,7 @@ export const BalanceExpenses = ({ user, config }) => {
     const [expensesAlert, setExpensesAlert] = useState({});
     const [metadata, setMetadata] = useState({});
     const { dark } = useDark();
+    
     useEffect(() => {
         const fetchExpenses = async () => {
             const payload = {
@@ -25,10 +26,10 @@ export const BalanceExpenses = ({ user, config }) => {
             try {
                 const { data, status } = await filterByType(payload, 1, 5, config);
                 if (status === HttpStatusCode.Ok) {
-                    setLoading(false);
                     const validExpenses = data?.data.filter(({ isActive }) => isActive);
                     setExpenses(validExpenses);
                     setMetadata(data.meta);
+                    setLoading(false);
                 }
             } catch (error) {
                 setError(error);

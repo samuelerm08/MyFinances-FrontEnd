@@ -2,18 +2,18 @@ import useAuth from "../../../context/useAuth";
 import { getUserToken } from "../../../services/token/tokenService";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import es from "date-fns/locale/es";
+import en from "date-fns/locale/en-US";
 import { filterTransactions } from "../../../services/myfinances-api/transaction";
 import useDark from "../../../context/useDark";
 import { HttpStatusCode } from "axios";
 
 export const DateFilter = ({
-    setTransacciones,
-    setAlerta,
+    setTransactions,
+    setAlert,
     setLoading,
     setMetadata,
     date,
-    setFecha,
+    setDate,
     setCurrentPage,
     setPayloadProps,
     payloadProps
@@ -45,27 +45,27 @@ export const DateFilter = ({
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
                 setCurrentPage(1);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 setMetadata(response.meta);
-                setFecha(payload.date);
+                setDate(payload.date);
             }
         } catch (error) {
             console.log(error);
             setLoading(false);
-            setFecha("");
+            setDate("");
             setMetadata({});
-            setTransacciones([]);
+            setTransactions([]);
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
                 date: null
             });
-            setAlerta({
+            setAlert({
                 msg: error.response.data,
                 error: true
             });
             setTimeout(() => {
-                setAlerta({});
+                setAlert({});
             }, 3000);
         }
     };
@@ -78,13 +78,13 @@ export const DateFilter = ({
             >Date</label>
             <ReactDatePicker
                 showIcon
-                locale={es}
+                locale={en}
                 className={(dark === "light" ?
                     "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
                     : "bg-gray-600 rounded-md p-1 font-mono text-white"
                 )}
                 value={date}
-                placeholderText="Filtrar por date"
+                placeholderText="Filter by date"
                 onChange={(date) => handleDateChange(date.toISOString().split("T")[0])}
             />
         </div>

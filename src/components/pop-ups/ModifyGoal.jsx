@@ -202,7 +202,7 @@ export const ModifyGoal = ({
                             id="Title"
                             type="text"
                             maxLength={30}
-                            placeholder="Title de la meta"
+                            placeholder="Goal title"
                             value={title}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {

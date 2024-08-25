@@ -4,18 +4,18 @@ import Alert from "../Alert";
 import { deleteTransaction } from "../../services/myfinances-api/transaction";
 import { HttpStatusCode } from "axios";
 
-export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, transaccionId, auth, transactions, setTransacciones }) => {
-    const [alert, setAlerta] = useState({});
+export const DeleteTransaction = ({ animate, setAnimate, setPopUp, transactionId, auth, transactions, setTransactions }) => {
+    const [alert, setAlert] = useState({});
     const [loading, setLoading] = useState(false);
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
-    const handleBorrado = async (transaccionId) => {
+    const handleDelete = async (transactionId) => {
         setLoading(true);
         const config = {
             headers: {
@@ -25,24 +25,24 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
         };
 
         try {
-            const { data, status } = await deleteTransaction(transaccionId, config);
+            const { data, status } = await deleteTransaction(transactionId, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
-                setAlerta({
+                setAlert({
                     msg: texts.ON_DELETING_SUCCESS,
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
-                    setTransacciones(transactions.map((transaction) =>
-                        transaction.id === transaccionId ?
+                    setAlert({});
+                    setTransactions(transactions.map((transaction) =>
+                        transaction.id === transactionId ?
                             { ...transaction, isActive: data.isActive } : transaction
                     ));
-                    ocultarModal();
+                    hidePopUp();
                 }, 2000);
             }
         } catch (error) {
-            console.log(error);
+            
         }
     };
 
@@ -52,11 +52,11 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
         <div className="modalDelete">
             <div className="modalDeleteContainer shadow-md p-5">
                 <div
-                    className={`deletePopUp ${animarModal ? "animate" : "close"}`}
+                    className={`deletePopUp ${animate ? "animate" : "close"}`}
                 >
                     <div className="closeDeletePopUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
                     <div className='textDelete text-center pb-10 pr-10 pl-10 pt-10 flex flex-col items-center'>
@@ -75,16 +75,16 @@ export const BorrarTransaccion = ({ animarModal, setAnimarModal, setModal, trans
                     <div className="deletePopUpButtons flex flex-row justify-around">
                         <input
                             type="submit"
-                            value={"Volver"}
-                            onClick={ocultarModal}
+                            value={"Back"}
+                            onClick={hidePopUp}
                             className="backDeleteButton"
                         />
 
                         <input
                             type="submit"
-                            value={!loading ? "Anular" : "Anulando..."}
+                            value={!loading ? "Delete" : "Deleting..."}
                             disabled={loading}
-                            onClick={() => handleBorrado(transaccionId)}
+                            onClick={() => handleDelete(transactionId)}
                             className="deleteButton"
                         />
                     </div>

@@ -28,19 +28,19 @@ export const GoalsTable = ({
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Meta</th>
+                                    >Goal</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Amount Actual</th>
+                                    >Current Amount</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
                                         "text-left py-2 px-4 font-semibold text-violet-400"
                                     )}
-                                    >Amount Final</th>
+                                    >Final Amount</th>
                                     <th className={(dark === "light" ?
                                         "text-left py-2 px-4 font-semibold text-violet-600"
                                         :
@@ -106,7 +106,7 @@ export const GoalsTable = ({
                                                 goal.completed ?
                                                     !goal.withdrawn ?
                                                         <td className="py-2 px-4  text-green-500 font-semibold font-mono">
-                                                            Completada
+                                                            Completed
                                                             <span className={(dark === "light" ?
                                                                 "py-2 px-1 text-gray-800 pointer-events-none font-mono"
                                                                 :
@@ -116,7 +116,7 @@ export const GoalsTable = ({
                                                             </span>
                                                         </td> :
                                                         <td className="py-2 px-4 text-gray-400 font-semibold font-mono">
-                                                            Retirada
+                                                            Withdrawn
                                                             <span className={(dark === "light" ?
                                                                 "py-2 px-2 text-gray-800 pointer-events-none font-mono"
                                                                 :
@@ -126,7 +126,7 @@ export const GoalsTable = ({
                                                             </span>
                                                         </td> :
                                                     <td className="py-2 px-4 font-semibold font-mono text-orange-400">
-                                                        En progreso
+                                                        In Progress
                                                         <span className={(dark === "light" ?
                                                             "py-2 px-1 text-gray-800 pointer-events-none font-mono"
                                                             :

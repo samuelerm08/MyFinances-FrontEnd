@@ -25,10 +25,10 @@ export const BalanceIncomes = ({ user, config }) => {
             try {
                 const { data, status } = await filterByType(payload, 1, 5, config);
                 if (status === HttpStatusCode.Ok) {
-                    setLoading(false);
                     const validIncomes = data?.data.filter(({ isActive }) => isActive);
                     setIncomes(validIncomes);
                     setMetadata(data.meta);
+                    setLoading(false);
                 }
             } catch (error) {
                 setError(error);

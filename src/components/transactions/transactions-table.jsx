@@ -1,37 +1,37 @@
 import { PulseLoader } from "react-spinners";
 import { type } from "../../constants/myfinances-constants";
-import { BorrarTransaccion } from "../pop-ups/ModalBorrarTransaccion";
+import { DeleteTransaction } from "../pop-ups/ModalBorrarTransaccion";
 import { useEffect, useState } from "react";
 import { ModificarTransaccion } from "../pop-ups/ModalModificarTransaccion";
 import useAuth from "../../context/useAuth";
 import { getCategories } from "../../services/myfinances-api/category";
 import useDark from "../../context/useDark";
 
-export const TransactionsTable = ({ loading, transactions, setTransacciones, balance }) => {
+export const TransactionsTable = ({ loading, transactions, setTransactions, balance }) => {
     const { auth } = useAuth();
     const orderedTransactions = transactions?.slice(0, 10);
     const [error, setError] = useState(null);
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [modifyModal, setModifyModal] = useState(false);
-    const [animarModal, setAnimarModal] = useState(false);
-    const [transaccionId, setTransaccionId] = useState(0);
-    const [toModifyTransact, setTransaccion] = useState({});
-    const [categories, setCategorias] = useState([""]);
+    const [deleteModal, setDeletePopUp] = useState(false);
+    const [modifyModal, setModifyPopUp] = useState(false);
+    const [animate, setAnimate] = useState(false);
+    const [transactionId, setTransactionId] = useState(0);
+    const [transactionToModify, setTransaction] = useState({});
+    const [categories, setCategories] = useState([""]);
     const { dark } = useDark();
 
     const handleModifyModal = (tId, t) => {
-        setModifyModal(true);
-        setTransaccionId(tId);
-        setTransaccion(t);
+        setModifyPopUp(true);
+        setTransactionId(tId);
+        setTransaction(t);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
     const handleDeletingModal = (tId) => {
-        setDeleteModal(true);
-        setTransaccionId(tId);
+        setDeletePopUp(true);
+        setTransactionId(tId);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
     useEffect(() => {
@@ -45,7 +45,7 @@ export const TransactionsTable = ({ loading, transactions, setTransacciones, bal
             try {
                 const { data: response } = await getCategories(config);
                 const validCategories = response?.filter(({ title }) => !title.includes(type.RESERVE));
-                setCategorias(validCategories);
+                setCategories(validCategories);
             } catch (error) {
                 setError(error);
             }
@@ -231,7 +231,7 @@ export const TransactionsTable = ({ loading, transactions, setTransacciones, bal
                                                     "fa-regular fa-pen-to-square text-gray-200 m-3"
                                                 )}
                                                     data-tooltip-id="my-tooltip"
-                                                    data-tooltip-content="Modificar"
+                                                    data-tooltip-content="Modify"
                                                     onClick={e => handleModifyModal(transaction.id, transaction)}
                                                     style={!transaction.isActive || transaction.transactionType === type.RESERVE ?
                                                     { cursor: "not-allowed" } : { cursor: "pointer" }
@@ -240,13 +240,13 @@ export const TransactionsTable = ({ loading, transactions, setTransacciones, bal
                                             </button>
                                             {
                                                 modifyModal && <ModificarTransaccion
-                                                    setAnimarModal={setAnimarModal}
-                                                    setModal={setModifyModal}
-                                                    animarModal={animarModal}
-                                                    transaccionId={transaccionId}
-                                                    transaction={toModifyTransact}
-                                                    setTransaccion={setTransaccion}
-                                                    setTransacciones={setTransacciones}
+                                                    setAnimate={setAnimate}
+                                                    setModal={setModifyPopUp}
+                                                    animate={animate}
+                                                    transactionId={transactionId}
+                                                    transaction={transactionToModify}
+                                                    setTransaction={setTransaction}
+                                                    setTransactions={setTransactions}
                                                     balance={balance}
                                                     categories={categories}
                                                 />
@@ -254,7 +254,7 @@ export const TransactionsTable = ({ loading, transactions, setTransacciones, bal
                                             <button disabled={!transaction.isActive || transaction.transactionType === type.RESERVE}>
                                                 <i className="fa-solid fa-ban pl-2 text-red-600"
                                                     data-tooltip-id="my-tooltip"
-                                                    data-tooltip-content="Anular"
+                                                    data-tooltip-content="Cancel"
                                                     onClick={e => handleDeletingModal(transaction.id)}
                                                     style={!transaction.isActive || transaction.transactionType === type.RESERVE ?
                                                         { cursor: "not-allowed" } : { cursor: "pointer" }
@@ -262,14 +262,14 @@ export const TransactionsTable = ({ loading, transactions, setTransacciones, bal
                                                 </i>
                                             </button>
                                             {
-                                                deleteModal && <BorrarTransaccion
-                                                    setAnimarModal={setAnimarModal}
-                                                    setModal={setDeleteModal}
-                                                    animarModal={animarModal}
+                                                deleteModal && <DeleteTransaction
+                                                    setAnimate={setAnimate}
+                                                    setModal={setDeletePopUp}
+                                                    animate={animate}
                                                     auth={auth}
-                                                    transaccionId={transaccionId}
+                                                    transactionId={transactionId}
                                                     transactions={transactions}
-                                                    setTransacciones={setTransacciones}
+                                                    setTransactions={setTransactions}
                                                 />
                                             }
                                         </td>

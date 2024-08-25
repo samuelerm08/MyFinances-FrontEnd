@@ -1,30 +1,30 @@
 import { useState } from "react";
 import { getUserToken } from "../../services/token/tokenService";
-import ModalUsuario from "../../components/pop-ups/ModalUsuario";
 import useDark from "../../context/useDark";
-import { BorrarUsuario } from "../../components/pop-ups/ModalBorrarUsuario";
+import { DeleteUserData } from "../../components/pop-ups/DeleteUserData";
 import useAuth from "../../context/useAuth";
+import UserPopUp from "../../components/pop-ups/UserPopUp";
 
-const Usuario = () => {
+const User = () => {
     const user = getUserToken();
     const { auth } = useAuth();
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [animarModal, setAnimarModal] = useState(false);
-    const [modalModificarPerfil, setModalPerfil] = useState(false);
-    const [animarModalPerfil, setAnimarModalPerfil] = useState(false);
+    const [deletePopUp, setDeletePopUp] = useState(false);
+    const [animate, setAnimate] = useState(false);
+    const [modifyPopUp, setModifyPopUp] = useState(false);
+    const [animateProfilePopUp, setAnimateProfilePopUp] = useState(false);
     const { dark } = useDark();
 
-    const handleModificarPerfil = () => {
-        setModalPerfil(true);
+    const modifyProfile = () => {
+        setModifyPopUp(true);
         setTimeout(() => {
-            setAnimarModalPerfil(true);
+            setAnimateProfilePopUp(true);
         }, 400);
     };
 
-    const handleDeletingModal = () => {
-        setDeleteModal(true);
+    const handleDelete = () => {
+        setDeletePopUp(true);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
 
@@ -39,7 +39,7 @@ const Usuario = () => {
                     "text-violet-400 font-semibold"
                     :
                     "text-violet-600 font-semibold"
-                )}>NOMBRE</h1>
+                )}>First Name</h1>
                 <p className={(dark === "dark" ?
                     "text-gray-200 font-semibold"
                     :
@@ -49,7 +49,7 @@ const Usuario = () => {
                     "text-violet-400 font-semibold"
                     :
                     "text-violet-600 font-semibold"
-                )}>APELLIDO</h1>
+                )}>Last Name</h1>
                 <p className={(dark === "dark" ?
                     "text-gray-200 font-semibold"
                     :
@@ -60,7 +60,7 @@ const Usuario = () => {
                     "text-violet-400 font-semibold"
                     :
                     "text-violet-600 font-semibold"
-                )}>CORREO ELECTRÓNICO</h1>
+                )}>Email</h1>
                 <p className={(dark === "dark" ?
                     "text-gray-200 font-semibold"
                     :
@@ -69,29 +69,29 @@ const Usuario = () => {
                 >{user.email}</p>
                 <div className="flex justify-around items-center p-5">
                     <button
-                        onClick={handleModificarPerfil}
+                        onClick={modifyProfile}
                         className="text-white text-sm bg-violet-400 p-3 rounded-md uppercase font-bold p-absolute shadow-md hover:shadow-violet-500">
-                        Modificar Perfil
+                        Modify Profile
                     </button>
                     {
-                        modalModificarPerfil &&
-                        <ModalUsuario
-                            setModal={setModalPerfil}
-                            animarModal={animarModalPerfil}
-                            setAnimarModal={setAnimarModalPerfil}
+                        modifyPopUp &&
+                        <UserPopUp
+                            setPopUp={setModifyPopUp}
+                            setAnimate={setAnimate}
+                            animate={animateProfilePopUp}
                         />
                     }
 
                     <button
                         className="text-white text-sm bg-red-500 p-3 rounded-md uppercase font-semibold p-absolute shadow-md hover:shadow-red-600"
-                        onClick={() => handleDeletingModal()}>
-                        Eliminar cuenta
+                        onClick={handleDelete}>
+                        Delete account
                     </button>
                     {
-                        deleteModal && <BorrarUsuario
-                            setAnimarModal={setAnimarModal}
-                            setModal={setDeleteModal}
-                            animarModal={animarModal}
+                        deletePopUp && <DeleteUserData
+                            setAnimate={setAnimate}
+                            setPopUp={setDeletePopUp}
+                            animate={animate}
                             auth={auth}
                             userId={user.id}
                         />
@@ -101,4 +101,4 @@ const Usuario = () => {
         </div>
     );
 };
-export default Usuario;
+export default User;

@@ -6,9 +6,9 @@ import { getUserToken } from "../../../services/token/tokenService";
 
 export const StateFilter = ({
     setLoading,
-    setAlerta,
+    setAlert,
     setCurrentPage,
-    setTransacciones,
+    setTransactions,
     setMetadata,
     setPayloadProps,
     setState,
@@ -42,7 +42,7 @@ export const StateFilter = ({
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
                 setCurrentPage(1);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 setMetadata(response.meta);
                 setState(state);
             }
@@ -50,19 +50,19 @@ export const StateFilter = ({
             console.log(error);
             setLoading(false);
             setState("");
-            setTransacciones([]);
+            setTransactions([]);
             setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
                 isActive: null
             });
-            setAlerta({
+            setAlert({
                 msg: error.response.data,
                 error: true
             });
             setTimeout(() => {
-                setAlerta({});
+                setAlert({});
             }, 3000);
         }
     };
@@ -84,7 +84,7 @@ export const StateFilter = ({
                     value={state}
                     onChange={e => handleStateChange(e.target.value)}
                 >
-                    <option defaultValue={""} value="">Ninguno</option>
+                    <option defaultValue={""} value="">None</option>
                     <option value={true}>Active</option>
                     <option value={false}>Canceled</option>
                 </select>

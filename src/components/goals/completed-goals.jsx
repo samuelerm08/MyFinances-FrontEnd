@@ -15,7 +15,7 @@ export const CompletedGoals = ({
     setCompletedGoalsMetadata,
     setCompletedGoals,
     setTableGoals,
-    setAlerta
+    setAlert
 }) => {
     const { dark } = useDark();
     const { auth } = useAuth();
@@ -42,12 +42,12 @@ export const CompletedGoals = ({
                     ...goalLoading,
                     [goalId]: false
                 });
-                setAlerta({
+                setAlert({
                     msg: texts.ON_WITHDRAWN_GOAL,
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                 }, 1500);
                 setTimeout(async () => {
                     setCompletedGoals(completedGoals => completedGoals.map((goal) => {
@@ -92,7 +92,7 @@ export const CompletedGoals = ({
             <h3 className={(dark === "light" ?
                 "text-xl font-semibold text-violet-600 antialiased"
                 : "text-xl font-semibold text-violet-400 antialiased"
-            )}>Metas Completadas</h3>
+            )}>Completed Goals</h3>
             {
                 !!loading ?
                     <div className="flex justify-center items-center h-full">
@@ -146,13 +146,13 @@ export const CompletedGoals = ({
                                                         <h5
                                                             className="text-lg font-semibold text-center text-green-500 font-mono"
                                                         >
-                                                            Completada
+                                                            Completed
                                                         </h5>
                                                     </div>
                                                     <i
                                                         className="fa-solid fa-arrow-up-from-bracket"
                                                         data-tooltip-id="my-tooltip"
-                                                        data-tooltip-content="Retirar"
+                                                        data-tooltip-content="Withdraw"
                                                         onClick={() => handleGoalWithdrawal(goal.id)}
                                                     ></i>
                                                 </div>

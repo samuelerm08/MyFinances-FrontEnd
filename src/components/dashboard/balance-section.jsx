@@ -2,7 +2,7 @@ import { useState } from "react";
 import { getCategories } from "../../services/myfinances-api/category";
 import { useEffect } from "react";
 import { PulseLoader } from "react-spinners";
-import { getDollarExchangeRate } from "../../services/dolar/cotizacion-api";
+import { getDollarExchangeRate } from "../../services/dollar/dollar-api";
 import { currency, texts } from "../../constants/myfinances-constants";
 import useDark from "../../context/useDark";
 import TransactionPopUp from "../pop-ups/TransactionPopUp";

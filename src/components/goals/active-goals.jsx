@@ -18,27 +18,27 @@ export const ActiveGoals = ({
     setActiveGoalsMetadata
 }) => {
     const activeGoals = goals?.filter(({ completed }) => !completed);
-    const [animarModal, setAnimarModal] = useState(false);
+    const [animate, setAnimate] = useState(false);
     const [goalId, setGoalId] = useState(0);
-    const [modifyModal, setModifyModal] = useState(false);
-    const [deleteModal, setDeleteModal] = useState(false);
-    const [toModifyGoal, setGoal] = useState({});
+    const [modifyModal, setModifyPopUp] = useState(false);
+    const [deleteModal, setDeletePopUp] = useState(false);
+    const [goalToModify, setGoal] = useState({});
     const { dark } = useDark();
 
     const handleGoalModifying = (goalId, goal) => {
-        setModifyModal(true);
+        setModifyPopUp(true);
         setGoalId(goalId);
         setGoal(goal)
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
 
     const handleGoalDeleting = goalId => {
-        setDeleteModal(true);
+        setDeletePopUp(true);
         setGoalId(goalId);
         setTimeout(() => {
-            setAnimarModal(true);
+            setAnimate(true);
         }, 400);
     };
 
@@ -47,7 +47,7 @@ export const ActiveGoals = ({
             <h3 className={(dark === "light" ?
                 "text-xl font-semibold text-violet-600 antialiased"
                 : "text-xl font-semibold text-violet-400 antialiased"
-            )}>Metas Activas</h3>
+            )}>Active Goals</h3>
 
             {
                 !!loading ?
@@ -112,11 +112,11 @@ export const ActiveGoals = ({
                                             </button>
                                             {modifyModal &&
                                                 <ModifyGoal
-                                                    setModal={setModifyModal}
-                                                    animarModal={animarModal}
-                                                    setAnimarModal={setAnimarModal}
+                                                    setPopUp={setModifyPopUp}
+                                                    animate={animate}
+                                                    setAnimate={setAnimate}
                                                     goalId={goalId}
-                                                    goal={toModifyGoal}
+                                                    goal={goalToModify}
                                                     auth={auth}
                                                     setActiveGoals={setActiveGoals}
                                                     lastGoalIndex={index}
@@ -131,15 +131,15 @@ export const ActiveGoals = ({
                                             <button>
                                                 <i className="fa-solid fa-trash"
                                                     data-tooltip-id="my-tooltip"
-                                                    data-tooltip-content="Eliminar"
+                                                    data-tooltip-content="Delete"
                                                     onClick={() => handleGoalDeleting(goal.id)}>
                                                 </i>
                                             </button>
                                             {deleteModal &&
                                                 <DeleteGoal
-                                                    setModal={setDeleteModal}
-                                                    animarModal={animarModal}
-                                                    setAnimarModal={setAnimarModal}
+                                                    setPopUp={setDeletePopUp}
+                                                    animate={animate}
+                                                    setAnimate={setAnimate}
                                                     goalId={goalId}
                                                     auth={auth}
                                                     activeGoals={activeGoals}

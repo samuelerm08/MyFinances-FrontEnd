@@ -88,7 +88,7 @@ const CreateGoal = ({
                         const { data: response, status } = await getByState(payload, page, 4, config);
                         if (status === HttpStatusCode.Ok) setActiveGoalsMetadata(response.meta);
                     }
-                    ocultarModal();
+                    hidePopUp();
                 }, 1000);
             }
         } catch (error) {
@@ -116,7 +116,7 @@ const CreateGoal = ({
                 >
                     <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={hide}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
                     <div className='field'>
@@ -149,7 +149,7 @@ const CreateGoal = ({
 
                     <input
                         type="submit"
-                        value={!loading ? "Submit" : "Loading..."}
+                        value={!loading ? "Create" : "Loading..."}
                         disabled={loading}
                     />
                     {msg && <Alert alert={alert} />}

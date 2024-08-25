@@ -7,12 +7,12 @@ import { getUserToken } from "../../../services/token/tokenService";
 
 export const AmountFilter = ({
     setLoading,
-    setAlerta,
+    setAlert,
     setCurrentPage,
-    setTransacciones,
+    setTransactions,
     setMetadata,
     setPayloadProps,
-    setMonto,
+    setAmount,
     amount,
     payloadProps
 }) => {
@@ -28,41 +28,41 @@ export const AmountFilter = ({
     };
     const handleAmountChange = async (amount) => {
         setLoading(true);
-        setMonto(amount);
+        setAmount(amount);
         setPayloadProps({
             ...payloadProps,
             userId: user.id,
-            montoHasta: amount
+            amountUpTo: amount
         });
         const payload = {
             ...payloadProps,
             userId: user.id,
-            montoHasta: amount
+            amountUpTo: amount
         };
         try {
             const { data: response, status } = await filterTransactions(payload, 1, 10, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
                 setCurrentPage(1);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 setMetadata(response.meta);
             }
         } catch (error) {
             console.log(error);
             setLoading(false);
-            setTransacciones([]);
+            setTransactions([]);
             setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
-                montoHasta: null
+                amountUpTo: null
             });
-            setAlerta({
+            setAlert({
                 msg: error.response.data,
                 error: true
             });
             setTimeout(() => {
-                setAlerta({});
+                setAlert({});
             }, 3000);
         }
     };
@@ -83,7 +83,7 @@ export const AmountFilter = ({
                         "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
                         : "bg-gray-600 rounded-md p-1 font-mono text-white"
                     )}
-                    placeholder="Ingresar amount"
+                    placeholder="Enter amount"
                     value={amount.replace(",", ".")}
                     onChange={e => {
                         if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {

@@ -6,12 +6,12 @@ import { getUserToken } from "../../../services/token/tokenService";
 
 export const TypeFilter = ({
     setLoading,
-    setAlerta,
+    setAlert,
     setCurrentPage,
-    setTransacciones,
+    setTransactions,
     setMetadata,
     setPayloadProps,
-    setTipo,
+    setType,
     transactionType,
     payloadProps
 }) => {
@@ -42,27 +42,27 @@ export const TypeFilter = ({
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
                 setCurrentPage(1);
-                setTransacciones(response.data);
+                setTransactions(response.data);
                 setMetadata(response.meta);
-                setTipo(type);
+                setType(type);
             }
         } catch (error) {
             console.log(error);
             setLoading(false);
-            setTipo("");
-            setTransacciones([]);
+            setType("");
+            setTransactions([]);
             setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
                 transactionType: null
             });
-            setAlerta({
+            setAlert({
                 msg: error.response.data,
                 error: true
             });
             setTimeout(() => {
-                setAlerta({});
+                setAlert({});
             }, 3000);
         }
     };
@@ -84,10 +84,10 @@ export const TypeFilter = ({
                     value={transactionType}
                     onChange={e => handleTypeChange(e.target.value)}
                 >
-                    <option defaultValue={""} value="">Ninguno</option>
-                    <option value="Ingreso">Ingreso</option>
-                    <option value="Egreso">Egreso</option>
-                    <option value="Reserva">Reserva</option>
+                    <option defaultValue={""} value="">None</option>
+                    <option value="Income">Income</option>
+                    <option value="Expenses">Expenses</option>
+                    <option value="Reserve">Reserve</option>
                 </select>
             </div>
         </div>

@@ -5,19 +5,19 @@ import { deleteUser } from "../../services/myfinances-api/user";
 import { useNavigate } from "react-router-dom";
 import { HttpStatusCode } from "axios";
 
-export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, userId }) => {
-    const [alert, setAlerta] = useState({});
+export const DeleteUserData = ({ animate, setAnimate, setPopUp, auth, userId }) => {
+    const [alert, setAlert] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
-    const handleBorrado = async () => {
+    const handleDelete = async () => {
         setLoading(true);
         const config = {
             headers: {
@@ -30,12 +30,12 @@ export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, use
             const { data, status } = await deleteUser(userId, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
-                setAlerta({
+                setAlert({
                     msg: texts.ON_DELETING_ACCOUNT_SUCCESS,
                     error: false
                 });
                 setTimeout(() => {
-                    setAlerta({});
+                    setAlert({});
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
                     navigate("/");
@@ -47,16 +47,15 @@ export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, use
     };
 
     const { msg } = alert;
-
     return (
         <div className="modalDelete">
             <div className="modalDeleteContainer shadow-md p-5">
                 <div
-                    className={`deletePopUp ${animarModal ? "animate" : "close"}`}
+                    className={`deletePopUp ${animate ? "animate" : "close"}`}
                 >
                     <div className="closeDeletePopUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
                     <div className='textDelete text-center pb-10 pr-10 pl-10 pt-10 flex flex-col items-center'>
@@ -74,16 +73,16 @@ export const BorrarUsuario = ({ animarModal, setAnimarModal, setModal, auth, use
                     <div className="deletePopUpButtons flex flex-row justify-around">
                         <input
                             type="submit"
-                            value={"Volver"}
-                            onClick={ocultarModal}
+                            value={"Back"}
+                            onClick={hidePopUp}
                             className="backDeleteButton"
                         />
 
                         <input
                             type="submit"
-                            value={!loading ? "Eliminar" : "Eliminando..."}
+                            value={!loading ? "Delete" : "Deleting..."}
                             disabled={loading}
-                            onClick={handleBorrado}
+                            onClick={handleDelete}
                             className="deleteButton"
                         />
                     </div>

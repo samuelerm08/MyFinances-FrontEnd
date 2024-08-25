@@ -5,7 +5,7 @@ import { newTransaction } from "../../services/myfinances-api/transaction";
 import { amountReGex, errors, type } from "../../constants/myfinances-constants";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import es from "date-fns/locale/es";
+import en from "date-fns/locale/en-US";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { HttpStatusCode } from "axios";
 import Alert from "../Alert";
@@ -53,7 +53,7 @@ const TransactionPopUp = ({
 
         if ([details, amount].length === 0) {
             setAlert({
-                msg: "Todos los campos son obligatorios",
+                msg: "All fields are required!",
                 error: true
             });
         }
@@ -109,7 +109,7 @@ const TransactionPopUp = ({
                                 totalBalance:
                                     !isExpense ?
                                         balance.totalBalance + parseFloat(amount) :
-                                        balance.totalBalance - parseFloat(amount)
+                                        balance.totalBalance - parseFloat(amount) 
                             });
                     }
 
@@ -162,7 +162,7 @@ const TransactionPopUp = ({
                     <div className='field'>
                         <label htmlFor="Date">Date</label>
                         <ReactDatePicker
-                            locale={es}
+                            locale={en}
                             value={date}
                             placeholderText="Date"
                             onChange={(date) => setDate(date.toISOString().split("T")[0])}
@@ -227,7 +227,7 @@ const TransactionPopUp = ({
 
                     <input
                         type="submit"
-                        value={!loading ? "Submit" : "Loading..."}
+                        value={!loading ? "Create" : "Loading..."}
                         disabled={loading}
                     />
 
