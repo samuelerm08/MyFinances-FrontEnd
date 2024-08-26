@@ -6,6 +6,7 @@ import { BalancePagination } from "./balance-pagination";
 import useAuth from "../../context/useAuth";
 import useDark from "../../context/useDark";
 import { HttpStatusCode } from "axios";
+import Alert from "../Alert";
 
 export const BalanceIncomes = ({ user, config }) => {
     const { auth } = useAuth();
