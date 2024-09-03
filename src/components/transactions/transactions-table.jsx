@@ -1,11 +1,11 @@
 import { PulseLoader } from "react-spinners";
 import { type } from "../../constants/myfinances-constants";
-import { DeleteTransaction } from "../pop-ups/ModalBorrarTransaccion";
+import { DeleteTransaction } from "../pop-ups/DeleteTransaction";
 import { useEffect, useState } from "react";
-import { ModificarTransaccion } from "../pop-ups/ModalModificarTransaccion";
 import useAuth from "../../context/useAuth";
 import { getCategories } from "../../services/myfinances-api/category";
 import useDark from "../../context/useDark";
+import { ModifyTransaction } from "../pop-ups/ModifyTransaction";
 
 export const TransactionsTable = ({ loading, transactions, setTransactions, balance }) => {
     const { auth } = useAuth();
@@ -239,9 +239,9 @@ export const TransactionsTable = ({ loading, transactions, setTransactions, bala
                                                 </i>
                                             </button>
                                             {
-                                                modifyModal && <ModificarTransaccion
+                                                modifyModal && <ModifyTransaction
                                                     setAnimate={setAnimate}
-                                                    setModal={setModifyPopUp}
+                                                    setPopUp={setModifyPopUp}
                                                     animate={animate}
                                                     transactionId={transactionId}
                                                     transaction={transactionToModify}
@@ -264,7 +264,7 @@ export const TransactionsTable = ({ loading, transactions, setTransactions, bala
                                             {
                                                 deleteModal && <DeleteTransaction
                                                     setAnimate={setAnimate}
-                                                    setModal={setDeletePopUp}
+                                                    setPopUp={setDeletePopUp}
                                                     animate={animate}
                                                     auth={auth}
                                                     transactionId={transactionId}

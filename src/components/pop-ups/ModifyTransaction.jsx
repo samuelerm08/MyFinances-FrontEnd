@@ -9,26 +9,26 @@ import { getUserToken } from "../../services/token/tokenService";
 import useAuth from "../../context/useAuth";
 import { HttpStatusCode } from "axios";
 
-export const ModificarTransaccion = ({
-    animarModal,
-    setAnimarModal,
-    setModal,
-    transaccionId,
+export const ModifyTransaction = ({
+    animate,
+    setAnimate,
+    setPopUp,
+    transactionId,
     transaction,
-    setTransaccion,
-    setTransacciones,
+    setTransaction,
+    setTransactions,
     balance,
     categories
 }) => {
     const { auth } = useAuth();
-    const [alert, setAlerta] = useState({});
+    const [alert, setAlert] = useState({});
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [date, setFecha] = useState(new Date(transaction.date).toISOString().substring(0,10));
-    const [details, setDetalle] = useState(transaction.details);
-    const [amount, setMonto] = useState(transaction.amount);
-    const [transactionType, setTipoTransaccion] = useState(transaction.transactionType);
-    const [categoriaId, setCategoria] = useState(transaction?.categoria?.id ?? transaction?.cat_Id);
+    const [date, setDate] = useState(new Date(transaction.date).toISOString().substring(0,10));
+    const [details, setDetails] = useState(transaction.details);
+    const [amount, setAmount] = useState(transaction.amount);
+    const [transactionType, setType] = useState(transaction.transactionType);
+    const [categoryId, setCategory] = useState(transaction?.category?.id ?? transaction?.categoryId);
     const user = getUserToken();
     const config = {
         headers: {
@@ -37,10 +37,10 @@ export const ModificarTransaccion = ({
         }
     };
 
-    const ocultarModal = () => {
-        setAnimarModal(false);
+    const hidePopUp = () => {
+        setAnimate(false);
         setTimeout(() => {
-            setModal(false);
+            setPopUp(false);
         }, 200);
     };
 
@@ -49,67 +49,67 @@ export const ModificarTransaccion = ({
         setLoading(true);
 
         if ([details, amount].length === 0) {
-            setAlerta({
-                msg: "Todos los campos son obligatorios",
+            setAlert({
+                msg: "All fields are required",
                 error: true
             });
         }
 
         setTimeout(() => {
-            setAlerta({});
+            setAlert({});
         }, 3000);
 
         const payload = {
-            id: transaccionId,
+            id: transactionId,
             date: date,
             details: details,
             amount: parseFloat(amount),
             transactionType: transactionType,
-            cat_Id: parseInt(categoriaId),
-            balance_Id: parseInt(balance?.id) ?? null,
-            usuarioId: parseInt(user.id),
+            categoryId: parseInt(categoryId),
+            balanceId: parseInt(balance?.id) ?? null,
+            userId: parseInt(user.id),
             isActive: true
         };
 
         try {
-            const { data, status } = await modifyTransaction(transaccionId, payload, config);
+            const { data, status } = await modifyTransaction(transactionId, payload, config);
             if (status === HttpStatusCode.Ok) {
                 setLoading(false);
-                setAlerta({
-                    msg: "Transaccion Modificada!",
+                setAlert({
+                    msg: "Modified!",
                     error: false
                 });
-                setTimeout(() => {
-                    setAlerta({});
-                    setTransaccion(data);
-                    setTransacciones(transactions => transactions.map((transaction) =>
-                        transaction.id === transaccionId ? data : transaction
+                    setTimeout(() => {
+                    setAlert({});
+                    setTransaction(data);
+                    setTransactions(transactions => transactions.map((transaction) =>
+                        transaction.id === transactionId ? data : transaction
                     ));
-                    ocultarModal();
+                    hidePopUp();
                 }, 1500);
             }
         } catch (error) {
             if (!error.errors) {
                 if (error.message === errors.badRequests.BAD_REQUEST) {
-                    setAlerta({
+                    setAlert({
                         msg: errors.badRequests.REQUIRED_FIELDS,
                         error: true
                     });
                     setTimeout(() => {
                         setLoading(false);
-                        setAlerta({});
+                        setAlert({});
                     }, 3000);
                 }
             }
             else {
                 if (error.status === errors.badRequests.BAD_REQUEST_CODE) {
-                    setAlerta({
+                    setAlert({
                         msg: errors.badRequests.REQUIRED_FIELDS,
                         error: true
                     });
                     setTimeout(() => {
                         setLoading(false);
-                        setAlerta({});
+                        setAlert({});
                     }, 3000);
                 }
             }
@@ -122,11 +122,11 @@ export const ModificarTransaccion = ({
             <div className='modalContainer'>
                 <form
                     onSubmit={handleSubmit}
-                    className={`form ${animarModal ? "animate" : "close"}`}
+                    className={`form ${animate ? "animate" : "close"}`}
                 >
                     <div className="close-popUp">
                         <i className="fa-regular fa-circle-xmark"
-                            onClick={ocultarModal}></i>
+                            onClick={hidePopUp}></i>
                     </div>
 
                     <div className='field'>
@@ -136,7 +136,7 @@ export const ModificarTransaccion = ({
                             className="bg-[#E5E7EB] rounded-md p-1"
                             value={date}
                             placeholderText="Date"
-                            onChange={(date) => setFecha(date.toISOString().split("T")[0])}
+                            onChange={(date) => setDate(date.toISOString().split("T")[0])}
                         />
                     </div>
 
@@ -150,7 +150,7 @@ export const ModificarTransaccion = ({
                             value={details}
                             onChange={e => {
                                 if (textsReGex.test(e.target.value) || e.target.value === "") {
-                                    setDetalle(e.target.value);
+                                    setDetails(e.target.value);
                                 }
                             }}
                         />
@@ -160,30 +160,30 @@ export const ModificarTransaccion = ({
                         <input
                             id="amount"
                             type="text"
-                            placeholder="Ingresar amount"
+                            placeholder="Enter amount"
                             value={amount.toString().replace(",", ".")}
                             onChange={e => {
                                 if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
-                                    setMonto(e.target.value);
+                                    setAmount(e.target.value);
                                 }
                             }}
                         />
                     </div>
 
                     <div className='field'>
-                        <label htmlFor="transactionType">Type de Transaction</label>
+                        <label htmlFor="transactionType">Type</label>
                         <select name="transactionType" id="transactionType" value={transactionType}
-                            onChange={e => setTipoTransaccion(e.target.value)}
+                            onChange={e => setType(e.target.value)}
                         >
-                            <option defaultValue={"Ingreso"} value="Ingreso">Ingreso</option>
-                            <option value="Egreso">Egreso</option>
+                            <option defaultValue={"Income"} value="Income">Income</option>
+                            <option value="Expense">Expense</option>
                         </select>
                     </div>
 
                     <div className='field'>
-                        <label htmlFor="categoria">Categoria</label>
-                        <select name="categoria" id="categoria" value={categoriaId}
-                            onChange={e => setCategoria(e.target.value)}
+                        <label htmlFor="category">Category</label>
+                        <select name="category" id="category" value={categoryId}
+                            onChange={e => setCategory(e.target.value)}
                         >
                             {
                                 categories?.map((c, index) => {
@@ -202,7 +202,7 @@ export const ModificarTransaccion = ({
 
                     <input
                         type="submit"
-                        value={!loading ? "Enviar" : "Enviando..."}
+                        value={!loading ? "Submit" : "Loading..."}
                         disabled={loading}
                     />
 
