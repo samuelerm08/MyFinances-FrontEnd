@@ -1,22 +1,22 @@
-import clienteAxios from "../../config/clienteAxios";
+import axiosClient from "../../config/axiosClient";
 
 export async function login(payload) {
-    const data = await clienteAxios.post("/user/login", payload);
+    const data = await axiosClient.post("/user/login", payload);
     return data;
 }
 
 export async function register(payload) {
-    const data = await clienteAxios.post("/user/signup", payload);
+    const data = await axiosClient.post("/user/SignUp", payload);
     return data;
 }
 
 export async function modifyProfile(userId, payload, config) {
-    const data = await clienteAxios.put(`/user/modify/${userId}`, payload, config);
+    const data = await axiosClient.put(`/user/modify/${userId}`, payload, config);
     return data;
 }
 
 export async function deleteUser(userId, config) {
     console.log(userId);
-    const data = await clienteAxios.delete(`user/delete/${userId}`, config);
+    const data = await axiosClient.delete(`user/delete/${userId}`, config);
     return data;
 }

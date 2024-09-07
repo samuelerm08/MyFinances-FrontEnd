@@ -4,11 +4,11 @@ import useAuth from "../../context/useAuth";
 import { BalanceIncomes } from "../../components/balance/incomes-component";
 import { BalanceExpenses } from "../../components/balance/expenses-component";
 import { BalanceComponent } from "../../components/balance/balance-component";
-import { RevenueChart } from "../../components/balance/chart/revenue-chart";
 import { getBalanceByUserId } from "../../services/myfinances-api/balance";
 import { getAll } from "../../services/myfinances-api/transaction";
 import { HttpStatusCode } from "axios";
 import { BalanceReserves } from "../../components/balance/reserve-component";
+import { RevenueChart } from "../../components/balance/chart/RevenueChart";
 
 const Balance = () => {
     const { auth } = useAuth();
@@ -40,9 +40,9 @@ const Balance = () => {
         };
         const fetchTransactions = async () => {
             try {
-                const { data, status } = await getAll({ userId: user.id }, 1, 10, config);
+                const { data: result, status } = await getAll({ userId: user.id }, 1, 10, config);
                 if (status === HttpStatusCode.Ok) {
-                    const filteredTransactions = data.filter(({ isActive }) => isActive);
+                    const filteredTransactions = result.data.filter(({ isActive }) => isActive);
                     setTransactions(filteredTransactions);
                     setLoading(false);
                 }

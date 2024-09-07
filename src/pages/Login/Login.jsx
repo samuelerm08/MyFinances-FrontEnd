@@ -115,7 +115,7 @@ const Login = () => {
                         Don't have an account?
                     </p>
                     <Link
-                        className={styles.link} to="/signup">
+                        className={styles.link} to="/SignUp">
                         Sign up
                     </Link>
                 </nav>

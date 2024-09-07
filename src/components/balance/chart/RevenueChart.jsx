@@ -60,7 +60,7 @@ export const RevenueChart = ({ transactions }) => {
                 Saved
                 <i className="fa-solid fa-circle-question ml-2 text-gray-400"
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="Ahorrado en las últimas 10 transactions">
+                    data-tooltip-content="Saved last 10 transactions">
                 </i>
                 {
                     totalSaved?.toFixed(2) > 0 ?
