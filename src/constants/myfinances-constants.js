@@ -37,7 +37,7 @@ export const texts = {
     WITH_NO_TRANSACTIONS: "Balance information not available. Start creating transactions...",
     WITH_NO_EXPENSES: "Expense information not available. Start creating expenses...",
     WITH_NO_INCOMES: "Income information not available. Start creating income...",
-    WITH_NO_RESERVES: "Reservation information not available. Start booking...",
+    WITH_NO_RESERVES: "Reserves information not available. Start creating reserves...",
     WITH_NO_GOALS: "No goals active. Start creating goals...",
     NO_CHART: "Graphic not available. No expenses are recorded...",
     ON_COMPLETED_GOAL: "Goal completed!",
