@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Alert from "../Alert";
-import useAuth from "../../context/useAuth";
-import { getUserToken, setUserToken } from "../../services/token/tokenService";
+import useAuth from "../../context/UseAuth";
+import { getUserToken, setUserToken } from "../../services/token/TokenService";
 import { modifyProfile } from "../../services/myfinances-api/user";
-import { textsReGex } from "../../constants/myfinances-constants";
+import { textsReGex } from "../../constants/MyFinancesConstants";
 
 const UserPopUp = ({ setPopUp, animate, setAnimate }) => {
     const [alert, setAlert] = useState({});

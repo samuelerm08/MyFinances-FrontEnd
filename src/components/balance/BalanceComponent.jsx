@@ -1,6 +1,6 @@
 import { PulseLoader } from "react-spinners";
-import { texts } from "../../constants/myfinances-constants";
-import useDark from "../../context/useDark";
+import { texts } from "../../constants/MyFinancesConstants";
+import useDark from "../../context/UseDark";
 
 export const BalanceComponent = ({ loading, balance }) => {
     const { dark } = useDark();

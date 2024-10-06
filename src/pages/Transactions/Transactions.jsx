@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import { getUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
-import { getAll } from "../../services/myfinances-api/transaction";
-import { getCategories } from "../../services/myfinances-api/category";
-import { getBalanceByUserId } from "../../services/myfinances-api/balance";
-import { TransactionsTable } from "../../components/transactions/transactions-table";
-import { texts, type } from "../../constants/myfinances-constants";
+import { getUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
+import { getAll } from "../../services/myfinances-api/Transaction";
+import { getCategories } from "../../services/myfinances-api/Category";
+import { getBalanceByUserId } from "../../services/myfinances-api/Balance";
+import { TransactionsTable } from "../../components/transactions/TransactionsTable";
+import { texts, type } from "../../constants/MyFinancesConstants";
 import Alert from "../../components/Alert";
-import { DateFilter } from "../../components/transactions/filters/date-filter";
-import { TypeFilter } from "../../components/transactions/filters/type-filter";
-import { StateFilter } from "../../components/transactions/filters/state-filter";
-import { AmountFilter } from "../../components/transactions/filters/amount-filter";
-import { TransactionsPagination } from "../../components/transactions/transactions-pagination";
-import useDark from "../../context/useDark";
+import { DateFilter } from "../../components/transactions/filters/DateFilter";
+import { TypeFilter } from "../../components/transactions/filters/TypeFilter";
+import { StateFilter } from "../../components/transactions/filters/StateFilter";
+import { AmountFilter } from "../../components/transactions/filters/AmountFilter";
+import { TransactionsPagination } from "../../components/transactions/TransactionsPagination";
+import useDark from "../../context/UseAuth";
 import TransactionPopUp from "../../components/pop-ups/TransactionPopUp";
 
 const Transactions = () => {

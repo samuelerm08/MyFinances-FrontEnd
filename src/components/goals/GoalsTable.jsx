@@ -1,4 +1,4 @@
-import useDark from "../../context/useDark";
+import useDark from "../../context/UseDark";
 import { PulseLoader } from "react-spinners";
 
 export const GoalsTable = ({

@@ -1,10 +1,10 @@
-import useAuth from "../../../context/useAuth";
-import { getUserToken } from "../../../services/token/tokenService";
+import useAuth from "../../../context/UseAuth";
+import { getUserToken } from "../../../services/token/TokenService";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import en from "date-fns/locale/en-US";
-import { filterTransactions } from "../../../services/myfinances-api/transaction";
-import useDark from "../../../context/useDark";
+import { filterTransactions } from "../../../services/myfinances-api/Transaction";
+import useDark from "../../../context/UseDark";
 import { HttpStatusCode } from "axios";
 
 export const DateFilter = ({

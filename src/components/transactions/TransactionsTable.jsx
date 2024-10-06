@@ -1,10 +1,10 @@
 import { PulseLoader } from "react-spinners";
-import { type } from "../../constants/myfinances-constants";
+import { type } from "../../constants/MyFinancesConstants";
 import { DeleteTransaction } from "../pop-ups/DeleteTransaction";
 import { useEffect, useState } from "react";
-import useAuth from "../../context/useAuth";
-import { getCategories } from "../../services/myfinances-api/category";
-import useDark from "../../context/useDark";
+import useAuth from "../../context/UseAuth";
+import { getCategories } from "../../services/myfinances-api/Category";
+import useDark from "../../context/UseDark";
 import { ModifyTransaction } from "../pop-ups/ModifyTransaction";
 
 export const TransactionsTable = ({ loading, transactions, setTransactions, balance }) => {

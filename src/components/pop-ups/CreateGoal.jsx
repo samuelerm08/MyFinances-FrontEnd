@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { create, getByState } from "../../services/myfinances-api/financialGoal";
-import useAuth from "../../context/useAuth";
-import { getUserToken } from "../../services/token/tokenService";
-import { amountReGex, errors } from "../../constants/myfinances-constants";
+import { create, getByState } from "../../services/myfinances-api/FinancialGoal";
+import useAuth from "../../context/UseAuth";
+import { getUserToken } from "../../services/token/TokenService";
+import { amountReGex, errors } from "../../constants/MyFinancesConstants";
 import { HttpStatusCode } from "axios";
 import Alert from "../Alert";
 

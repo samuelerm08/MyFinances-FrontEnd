@@ -1,7 +1,7 @@
 import { PulseLoader } from "react-spinners";
-import { ExpensesChart } from "./expenses-chart";
-import { texts, type } from "../../../constants/myfinances-constants";
-import useDark from "../../../context/useDark";
+import { ExpensesChart } from "./ExpensesChart";
+import { texts, type } from "../../../constants/MyFinancesConstants";
+import useDark from "../../../context/UseDark";
 
 export const ChartSection = ({ loading, transactions }) => {
     const filteredExpenses = transactions?.filter(({ transactionType }) => transactionType === type.EXPENSE);

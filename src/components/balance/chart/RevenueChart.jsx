@@ -8,8 +8,8 @@ import {
     Title
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { texts, type } from "../../../constants/myfinances-constants";
-import useDark from "../../../context/useDark";
+import { texts, type } from "../../../constants/MyFinancesConstants";
+import useDark from "../../../context/UseDark";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 
 export const RevenueChart = ({ transactions }) => {

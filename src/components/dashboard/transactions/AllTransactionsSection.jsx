@@ -1,6 +1,6 @@
 import { PulseLoader } from "react-spinners";
-import { type } from "../../../constants/myfinances-constants";
-import useDark from "../../../context/useDark";
+import { type } from "../../../constants/MyFinancesConstants";
+import useDark from "../../../context/UseDark";
 
 export const AllTransactionsSection = ({ transactions, loading }) => {
     const { dark } = useDark();
@@ -92,16 +92,16 @@ export const AllTransactionsSection = ({ transactions, loading }) => {
                                                                             ${parseFloat(transaction.amount).toFixed(2)}
                                                                         </div>
                                                                     </td> :
-                                                                transaction.details?.includes("Withdraw") || 
-                                                                transaction.details?.includes("Lower amount") ?
-                                                                    <td className="py-2 px-10 text-green-500 font-semibold font-mono">
-                                                                        <div className="w-28 flex justify-center rounded-md bg-green-200">
-                                                                            +${parseFloat(transaction.amount).toFixed(2)}
-                                                                        </div>
-                                                                    </td> :
-                                                                    <td className="py-2 px-10 text-red-500 font-semibold font-mono">
-                                                                        -${parseFloat(transaction.amount).toFixed(2)}
-                                                                    </td>
+                                                                    transaction.details?.includes("Withdraw") ||
+                                                                        transaction.details?.includes("Lower amount") ?
+                                                                        <td className="py-2 px-10 text-green-500 font-semibold font-mono">
+                                                                            <div className="w-28 flex justify-center rounded-md bg-green-200">
+                                                                                +${parseFloat(transaction.amount).toFixed(2)}
+                                                                            </div>
+                                                                        </td> :
+                                                                        <td className="py-2 px-10 text-red-500 font-semibold font-mono">
+                                                                            -${parseFloat(transaction.amount).toFixed(2)}
+                                                                        </td>
                                                                 : <td></td>
                                                 }
                                                 {

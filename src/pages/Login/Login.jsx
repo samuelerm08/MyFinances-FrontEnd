@@ -3,9 +3,9 @@ import styles from "./Login.module.css";
 import Alert from "../../components/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-import { setUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
-import { login } from "../../services/myfinances-api/user";
+import { setUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
+import { login } from "../../services/myfinances-api/User";
 import { HttpStatusCode } from "axios";
 
 const Login = () => {

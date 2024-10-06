@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "axios";
-import useAuth from "../../../context/useAuth";
-import useDark from "../../../context/useDark";
-import { filterTransactions } from "../../../services/myfinances-api/transaction";
-import { getUserToken } from "../../../services/token/tokenService";
+import useAuth from "../../../context/UseAuth";
+import useDark from "../../../context/UseDark";
+import { filterTransactions } from "../../../services/myfinances-api/Transaction";
+import { getUserToken } from "../../../services/token/TokenService";
 
 export const StateFilter = ({
     setLoading,

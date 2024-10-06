@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { texts } from "../../constants/myfinances-constants";
+import { texts } from "../../constants/MyFinancesConstants";
 import Alert from "../Alert";
 import { deleteUser } from "../../services/myfinances-api/user";
 import { useNavigate } from "react-router-dom";

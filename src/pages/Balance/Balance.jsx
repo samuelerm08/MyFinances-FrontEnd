@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { getUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
-import { BalanceIncomes } from "../../components/balance/incomes-component";
-import { BalanceExpenses } from "../../components/balance/expenses-component";
-import { BalanceComponent } from "../../components/balance/balance-component";
-import { getBalanceByUserId } from "../../services/myfinances-api/balance";
-import { getAll } from "../../services/myfinances-api/transaction";
+import { getUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
+import { BalanceIncomes } from "../../components/balance/IncomesComponent";
+import { BalanceExpenses } from "../../components/balance/ExpensesComponent";
+import { BalanceComponent } from "../../components/balance/BalanceComponent";
+import { getBalanceByUserId } from "../../services/myfinances-api/Balance";
+import { getAll } from "../../services/myfinances-api/Transaction";
 import { HttpStatusCode } from "axios";
-import { BalanceReserves } from "../../components/balance/reserve-component";
+import { BalanceReserves } from "../../components/balance/ReserveComponent";
 import { RevenueChart } from "../../components/balance/chart/RevenueChart";
 
 const Balance = () => {

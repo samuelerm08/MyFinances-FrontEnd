@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import styles from "../styles/ProtectedPath.module.css";
 import Header from "../components/header/Header";
-import useAuth from "../context/useAuth";
+import useAuth from "../context/UseAuth";
 import { Footer } from "../components/footer/Footer";
 
 

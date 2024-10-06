@@ -1,12 +1,12 @@
 import { useState } from "react";
-import useAuth from "../../context/useAuth";
-import { getUserToken } from "../../services/token/tokenService";
-import { newTransaction } from "../../services/myfinances-api/transaction";
-import { amountReGex, errors, type } from "../../constants/myfinances-constants";
+import useAuth from "../../context/UseAuth";
+import { getUserToken } from "../../services/token/TokenService";
+import { newTransaction } from "../../services/myfinances-api/Transaction";
+import { amountReGex, errors, type } from "../../constants/MyFinancesConstants";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import en from "date-fns/locale/en-US";
-import { getBalanceByUserId } from "../../services/myfinances-api/balance";
+import { getBalanceByUserId } from "../../services/myfinances-api/Balance";
 import { HttpStatusCode } from "axios";
 import Alert from "../Alert";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PulseLoader } from "react-spinners";
-import useDark from "../../context/useDark";
+import useDark from "../../context/UseDark";
 import { ModifyGoal } from "../pop-ups/ModifyGoal";
 import { DeleteGoal } from "../pop-ups/DeleteGoal";
 

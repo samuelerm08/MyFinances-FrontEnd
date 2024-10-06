@@ -1,6 +1,6 @@
 import { ArcElement, BarElement, CategoryScale, Tooltip, Legend, Chart as ChartJS, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import useDark from "../../../context/useDark";
+import useDark from "../../../context/UseDark";
 
 ChartJS.register(CategoryScale, ArcElement, BarElement, Tooltip, Legend, Title);
 

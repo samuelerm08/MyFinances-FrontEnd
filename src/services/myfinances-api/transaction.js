@@ -1,4 +1,4 @@
-import axiosClient from "../../config/axiosClient";
+import axiosClient from "../../config/AxiosClient";
 
 export async function getAll(payload, page, pageSize, config) {
     const data = await axiosClient.post(`/transaction/getallbyuserid?page=${page}&pageSize=${pageSize}`, payload, config);

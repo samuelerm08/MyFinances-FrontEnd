@@ -1,4 +1,4 @@
-import axiosClient from "../../config/axiosClient";
+import axiosClient from "../../config/AxiosClient";
 
 export async function login(payload) {
     const data = await axiosClient.post("/user/login", payload);

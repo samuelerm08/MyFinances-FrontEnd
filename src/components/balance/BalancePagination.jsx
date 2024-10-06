@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { getUserToken } from "../../services/token/tokenService";
-import { filterByType } from "../../services/myfinances-api/transaction";
+import { getUserToken } from "../../services/token/TokenService";
+import { filterByType } from "../../services/myfinances-api/Transaction";
 
 export const BalancePagination = ({
     setTransactions,

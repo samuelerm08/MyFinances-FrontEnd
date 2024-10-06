@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { texts } from "../../constants/myfinances-constants";
+import { texts } from "../../constants/MyFinancesConstants";
 import Alert from "../Alert";
-import { deleteTransaction } from "../../services/myfinances-api/transaction";
+import { deleteTransaction } from "../../services/myfinances-api/Transaction";
 import { HttpStatusCode } from "axios";
 
 export const DeleteTransaction = ({ animate, setAnimate, setPopUp, transactionId, auth, transactions, setTransactions }) => {

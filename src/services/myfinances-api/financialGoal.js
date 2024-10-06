@@ -1,4 +1,4 @@
-import axiosClient from "../../config/axiosClient";
+import axiosClient from "../../config/AxiosClient";
 
 export async function create(payload, config) {
     const data = await axiosClient.post("/financialgoal/create", payload, config);

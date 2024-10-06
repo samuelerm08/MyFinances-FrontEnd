@@ -1,18 +1,19 @@
 import { HttpStatusCode } from "axios";
-import useAuth from "../../../context/useAuth";
-import useDark from "../../../context/useDark";
-import { filterTransactions } from "../../../services/myfinances-api/transaction";
-import { getUserToken } from "../../../services/token/tokenService";
+import { amountReGex } from "../../../constants/MyFinancesConstants";
+import useAuth from "../../../context/UseAuth";
+import useDark from "../../../context/UseDark";
+import { filterTransactions } from "../../../services/myfinances-api/Transaction";
+import { getUserToken } from "../../../services/token/TokenService";
 
-export const TypeFilter = ({
+export const AmountFilter = ({
     setLoading,
     setAlert,
     setCurrentPage,
     setTransactions,
     setMetadata,
     setPayloadProps,
-    setType,
-    transactionType,
+    setAmount,
+    amount,
     payloadProps
 }) => {
     const { auth } = useAuth();
@@ -25,17 +26,18 @@ export const TypeFilter = ({
             Authorization: `Bearer ${auth}`
         }
     };
-    const handleTypeChange = async (type) => {
+    const handleAmountChange = async (amount) => {
         setLoading(true);
+        setAmount(amount);
         setPayloadProps({
             ...payloadProps,
             userId: user.id,
-            transactionType: type
+            amountUpTo: amount
         });
         const payload = {
             ...payloadProps,
             userId: user.id,
-            transactionType: type
+            amountUpTo: amount
         };
         try {
             const { data: response, status } = await filterTransactions(payload, 1, 10, config);
@@ -44,18 +46,16 @@ export const TypeFilter = ({
                 setCurrentPage(1);
                 setTransactions(response.data);
                 setMetadata(response.meta);
-                setType(type);
             }
         } catch (error) {
             console.log(error);
             setLoading(false);
-            setType("");
             setTransactions([]);
             setMetadata({});
             setPayloadProps({
                 ...payloadProps,
                 userId: user.id,
-                transactionType: null
+                amountUpTo: null
             });
             setAlert({
                 msg: error.response.data,
@@ -66,6 +66,8 @@ export const TypeFilter = ({
             }, 3000);
         }
     };
+
+
     return (
         <div className='flex flex-col mx-2'>
             <div className="field flex flex-col font-mono font-sm text-left p-2">
@@ -73,22 +75,22 @@ export const TypeFilter = ({
                     "font-semibold text-violet-600"
                     : "font-semibold text-violet-400"
                 )}
-                >Type</label>
-                <select
-                    name="transactionType"
-                    id="transactionType"
+                >Amount Up To</label>
+                <input
+                    id="amount"
+                    type="text"
                     className={(dark === "light" ?
                         "bg-[#E5E7EB] rounded-md p-1 font-mono text-black"
-                        : "bg-gray-600 text-gray-400 font-semibold rounded-md p-1 font-mono text-white"
+                        : "bg-gray-600 rounded-md p-1 font-mono text-white"
                     )}
-                    value={transactionType}
-                    onChange={e => handleTypeChange(e.target.value)}
-                >
-                    <option defaultValue={""} value="">None</option>
-                    <option value="Income">Income</option>
-                    <option value="Expenses">Expenses</option>
-                    <option value="Reserve">Reserve</option>
-                </select>
+                    placeholder="Enter amount"
+                    value={amount.replace(",", ".")}
+                    onChange={e => {
+                        if (e.target.value === "" || amountReGex.test(e.target.value.replace(",", "."))) {
+                            handleAmountChange(e.target.value);
+                        }
+                    }}
+                />
             </div>
         </div>
     );

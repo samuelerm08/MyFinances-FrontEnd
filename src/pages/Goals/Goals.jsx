@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { ActiveGoals } from "../../components/goals/active-goals";
-import { CompletedGoals } from "../../components/goals/completed-goals";
+import { ActiveGoals } from "../../components/goals/ActiveGoals";
+import { CompletedGoals } from "../../components/goals/CompletedGoals";
 import { useEffect } from "react";
-import { getAll, getByState } from "../../services/myfinances-api/financialGoal";
-import { getUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
+import { getAll, getByState } from "../../services/myfinances-api/FinancialGoal";
+import { getUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
 import Alert from "../../components/Alert";
-import { texts } from "../../constants/myfinances-constants";
-import { GoalsTable } from "../../components/goals/goals-table";
-import useDark from "../../context/useDark";
+import { texts } from "../../constants/MyFinancesConstants";
+import { GoalsTable } from "../../components/goals/GoalsTable";
+import useDark from "../../context/UseDark";
 import { HttpStatusCode } from "axios";
-import { GoalsPagination } from "../../components/goals/goals-pagination";
+import { GoalsPagination } from "../../components/goals/GoalsPagination";
 import CreateGoal from "../../components/pop-ups/CreateGoal";
 
 const Goals = () => {

@@ -1,6 +1,6 @@
 import { PulseLoader } from "react-spinners";
-import { texts, type } from "../../../constants/myfinances-constants";
-import useDark from "../../../context/useDark";
+import { texts, type } from "../../../constants/MyFinancesConstants";
+import useDark from "../../../context/UseDark";
 
 export const ExpensesSection = ({ loading, transactions }) => {
     const egresos = transactions?.filter(({ transactionType }) => transactionType === type.EXPENSE);

@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
-import useAuth from "../../context/useAuth";
-import { getAll } from "../../services/myfinances-api/transaction";
-import { getAll as getAllGoals } from "../../services/myfinances-api/financialGoal";
-import { getUserToken } from "../../services/token/tokenService";
-import { ChartSection } from "../../components/dashboard/chart/chart-section";
-import { BalanceSection } from "../../components/dashboard/balance-section";
-import { AllTransactionsSection } from "../../components/dashboard/transactions/all-transactions-section";
-import { IncomesSection } from "../../components/dashboard/transactions/incomes-section";
-import { ExpensesSection } from "../../components/dashboard/transactions/expenses-section";
-import { LastGoal } from "../../components/dashboard/last-goals-section";
+import useAuth from "../../context/UseAuth";
+import { getAll } from "../../services/myfinances-api/Transaction";
+import { getAll as getAllGoals } from "../../services/myfinances-api/FinancialGoal";
+import { getUserToken } from "../../services/token/TokenService";
+import { ChartSection } from "../../components/dashboard/chart/ChartSection";
+import { BalanceSection } from "../../components/dashboard/BalanceSection";
+import { AllTransactionsSection } from "../../components/dashboard/transactions/AllTransactionsSection";
+import { IncomesSection } from "../../components/dashboard/transactions/IncomesSection";
+import { ExpensesSection } from "../../components/dashboard/transactions/ExpensesSection";
+import { LastGoal } from "../../components/dashboard/LastGoalSection";
 import Alert from "../../components/Alert";
-import { texts } from "../../constants/myfinances-constants";
-import useDark from "../../context/useDark";
-import { getBalanceByUserId } from "../../services/myfinances-api/balance";
+import { texts } from "../../constants/MyFinancesConstants";
+import useDark from "../../context/UseDark";
+import { getBalanceByUserId } from "../../services/myfinances-api/Balance";
 import { HttpStatusCode } from "axios";
-import { ReservesSection } from "../../components/dashboard/transactions/reserves-section";
+import { ReservesSection } from "../../components/dashboard/transactions/ReservesSection";
 
 
 const Dashboard = () => {

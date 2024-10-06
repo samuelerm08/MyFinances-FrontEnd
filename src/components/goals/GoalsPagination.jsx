@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { getAll, getByState } from "../../services/myfinances-api/financialGoal";
-import { getUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
+import { getAll, getByState } from "../../services/myfinances-api/FinancialGoal";
+import { getUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
 import { HttpStatusCode } from "axios";
 
 export const GoalsPagination = ({

@@ -3,7 +3,7 @@ import styles from "./SignUp.module.css";
 import { useState } from "react";
 import Alert from "../../components/Alert";
 import { register } from "../../services/myfinances-api/user";
-import { textsReGex } from "../../constants/myfinances-constants";
+import { textsReGex } from "../../constants/MyFinancesConstants";
 import { HttpStatusCode } from "axios";
 
 const SignUp = () => {

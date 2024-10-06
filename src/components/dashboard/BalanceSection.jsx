@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { getCategories } from "../../services/myfinances-api/category";
+
 import { useEffect } from "react";
 import { PulseLoader } from "react-spinners";
-import { getDollarExchangeRate } from "../../services/dollar/dollar-api";
-import { currency, texts } from "../../constants/myfinances-constants";
-import useDark from "../../context/useDark";
+import { getDollarExchangeRate } from "../../services/dollar/DollarAPI";
+import { currency, texts } from "../../constants/MyFinancesConstants";
+import useDark from "../../context/UseDark";
 import TransactionPopUp from "../pop-ups/TransactionPopUp";
+import { getCategories } from "../../services/myfinances-api/Category";
 
 export const BalanceSection = ({ auth, setTransactions, balance, setBalance }) => {
     const [loading, setLoading] = useState(true);

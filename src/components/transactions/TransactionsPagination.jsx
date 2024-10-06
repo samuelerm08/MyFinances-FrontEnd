@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { filterTransactions, getAll } from "../../services/myfinances-api/transaction";
-import { getUserToken } from "../../services/token/tokenService";
-import useAuth from "../../context/useAuth";
+import { filterTransactions, getAll } from "../../services/myfinances-api/Transaction";
+import { getUserToken } from "../../services/token/TokenService";
+import useAuth from "../../context/UseAuth";
 
 export const TransactionsPagination = ({
     setTransactions,

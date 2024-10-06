@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "axios";
-import { amountReGex, textsReGex, type } from "../../constants/myfinances-constants";
-import { getByState, modifyGoal } from "../../services/myfinances-api/financialGoal";
+import { amountReGex, textsReGex, type } from "../../constants/MyFinancesConstants";
+import { getByState, modifyGoal } from "../../services/myfinances-api/FinancialGoal";
 import { useState } from "react";
-import { getUserToken } from "../../services/token/tokenService";
+import { getUserToken } from "../../services/token/TokenService";
 import Alert from "../Alert";
 
 export const ModifyGoal = ({

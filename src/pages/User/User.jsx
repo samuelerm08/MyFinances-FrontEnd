@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { getUserToken } from "../../services/token/tokenService";
-import useDark from "../../context/useDark";
+import { getUserToken } from "../../services/token/TokenService";
+import useDark from "../../context/UseDark";
 import { DeleteUserData } from "../../components/pop-ups/DeleteUserData";
-import useAuth from "../../context/useAuth";
+import useAuth from "../../context/UseAuth";
 import UserPopUp from "../../components/pop-ups/UserPopUp";
 
 const User = () => {

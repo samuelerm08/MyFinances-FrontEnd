@@ -1,11 +1,11 @@
 import { PulseLoader } from "react-spinners";
-import useDark from "../../context/useDark";
-import useAuth from "../../context/useAuth";
-import { getByState, withdrawGoal } from "../../services/myfinances-api/financialGoal";
-import { texts } from "../../constants/myfinances-constants";
+import useDark from "../../context/UseDark";
+import useAuth from "../../context/UseAuth";
+import { getByState, withdrawGoal } from "../../services/myfinances-api/FinancialGoal";
+import { texts } from "../../constants/MyFinancesConstants";
 import { useState } from "react";
 import { HttpStatusCode } from "axios";
-import { getUserToken } from "../../services/token/tokenService";
+import { getUserToken } from "../../services/token/TokenService";
 
 export const CompletedGoals = ({
     goals,

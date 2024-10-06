@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { deleteGoal } from "../../services/myfinances-api/financialGoal";
+import { deleteGoal } from "../../services/myfinances-api/FinancialGoal";
 import { HttpStatusCode } from "axios";
-import { texts } from "../../constants/myfinances-constants";
+import { texts } from "../../constants/MyFinancesConstants";
 import Alert from "../Alert";
 
 export const DeleteGoal = ({

@@ -1,10 +1,10 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import { getUserToken } from "../../services/token/tokenService";
+import { getUserToken } from "../../services/token/TokenService";
 import { useState } from "react";
 import { PulseLoader } from "react-spinners";
-import useDark from "../../context/useDark";
+import useDark from "../../context/UseDark";
 
 const Header = () => {
     const user = getUserToken();

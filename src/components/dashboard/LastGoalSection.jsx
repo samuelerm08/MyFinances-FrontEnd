@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { texts } from "../../constants/myfinances-constants";
-import useDark from "../../context/useDark";
+import { texts } from "../../constants/MyFinancesConstants";
+import useDark from "../../context/UseDark";
 import { ModifyGoal } from "../pop-ups/ModifyGoal";
 import { DeleteGoal } from "../pop-ups/DeleteGoal";
 import CreateGoal from "../pop-ups/CreateGoal";
