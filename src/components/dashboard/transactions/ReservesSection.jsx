@@ -18,7 +18,7 @@ export const ReservesSection = ({ loading, transactions }) => {
                     "p-1 text-center font-semibold text-violet-600"
                     : "p-1 text-center font-semibold text-violet-400"
                 )}
-                >Last Reservas</h2>
+                >Last Reserves</h2>
                 <div className="bg-inherit rounded-lg">
                     {loading ?
                         <div className="flex justify-center">

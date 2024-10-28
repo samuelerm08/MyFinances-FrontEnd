@@ -17,7 +17,7 @@ export const ExpensesSection = ({ loading, transactions }) => {
                     "font-bold text-center p-1 text-violet-600"
                     :
                     "font-bold text-center p-1 text-violet-400"
-                )}>Last Gastos</h2>
+                )}>Last Expenses</h2>
                 <div className="bg-inherit rounded-lg mb-5">
                     {loading ?
                         <div className="flex justify-center">

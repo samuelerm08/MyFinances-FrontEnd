@@ -86,23 +86,6 @@ const Header = () => {
                                 <p>Goals</p>
                             </div>
                         </NavLink>
-
-
-                        <NavLink
-                            to="balance"
-                            className={({ isActive, isPending }) =>
-                                isPending ? "text-violet-600 hover:text-violet-800 font-bold"
-                                    :
-                                    isActive ? (dark === "dark" ? "bg-gray-700 hover:text-violet-300 text-violet-400  " : "bg-gray-100 hover:text-violet-800 text-violet-600  ") + "rounded-md p-4 text-md font-bold"
-                                        :
-                                        "p-4 text-md text-violet-600 hover:text-violet-800 font-bold"
-                            }
-                        >
-                            <div className="transition ease-in-out delay-50 hover:-translate-y-1 duration-100">
-                                <i className="fa-solid fa-scale-unbalanced"></i>
-                                <p>Balance</p>
-                            </div>
-                        </NavLink>
                     </div>
 
                     <div className="flex">

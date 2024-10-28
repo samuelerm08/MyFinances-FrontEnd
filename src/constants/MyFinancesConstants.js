@@ -15,14 +15,14 @@ export const errors = {
         HIGHER_THAN_FINAL_AMOUNT_MSG: "Con el amount ingresado se sobrepasa la meta. Por favor ingrese un amount menor o igual"
     },
     badRequests: {
-        BAD_REQUEST: "Request failed with status code 400",
-        BAD_REQUEST_CODE: 400,
-        REQUIRED_FIELDS: "Todos los campos son obligatorios"
+        "BAD_REQUEST": "Request failed with status code 400",
+        "BAD_REQUEST_CODE": 400,
+        "REQUIRED_FIELDS": "All fields are required"
     },
     notFounds: {
-        NOT_FOUND: "Request failed with status code 404",
-        NOT_FOUND_CODE: 404,
-        WITH_NO_INCOMES_EXPENSES: "No existen ingresos/egresos. Comience a crear transactions..."
+        "NOT_FOUND": "Request failed with status code 404",
+        "NOT_FOUND_CODE": 404,
+        "WITH_NO_INCOMES_EXPENSES": "No incomes/expenses exist. Start creating transactions..."
     }
 };
 export const texts = {

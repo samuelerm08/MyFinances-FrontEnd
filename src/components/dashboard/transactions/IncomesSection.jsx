@@ -3,7 +3,7 @@ import { texts, type } from "../../../constants/MyFinancesConstants";
 import useDark from "../../../context/UseDark";
 
 export const IncomesSection = ({ loading, transactions }) => {
-    const ingresos = transactions?.filter(({ transactionType }) => transactionType === type.INCOME);
+    const Ingresos = transactions?.filter(({ transactionType }) => transactionType === type.INCOME);
     const { dark } = useDark();
 
     return (
@@ -16,13 +16,13 @@ export const IncomesSection = ({ loading, transactions }) => {
                     "font-bold text-center p-1 text-violet-600"
                     :
                     "font-bold text-center p-1 text-violet-400"
-                )}>Last Ingresos</h2>
+                )}>Last Incomes</h2>
                 <div className="bg-inherit rounded-lg pb-5">
                     {loading ?
                         <div className="flex justify-center">
                             <PulseLoader loading={loading} color="rgb(113, 50, 255)" size={10} />
                         </div> :
-                        !!ingresos?.length
+                        !!Ingresos?.length
                             ?
                             <div className="w-full flex justify-center">
                                 <table>
@@ -41,7 +41,7 @@ export const IncomesSection = ({ loading, transactions }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {ingresos?.slice(0, 5).map((transaction, index) => {
+                                        {Ingresos?.slice(0, 5).map((transaction, index) => {
                                             return (
                                                 <tr className="border-gray-200" key={index}>
                                                     <td className={(dark === "light" ?

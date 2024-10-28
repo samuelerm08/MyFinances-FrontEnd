@@ -5,7 +5,6 @@ import ProtectedPath from "./layouts/ProtectedPath";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { AuthProvider } from "./context/AuthProvider";
 import { DarkProvider } from "./context/DarkProvider";
-import Balance from "./pages/Balance/Balance";
 import Goals from "./pages/Goals/Goals";
 import Transactions from "./pages/Transactions/Transactions";
 import SignUp from "./pages/SignUP/SignUp";
@@ -25,7 +24,6 @@ function App() {
                             <Route path="index" element={<Dashboard />} />
                             <Route path="goals" element={<Goals />} />
                             <Route path="transactions" element={< Transactions />} />
-                            <Route path="balance" element={<Balance />} />
                             <Route path="user" element={<User />} />
                         </Route>
                     </Routes>
