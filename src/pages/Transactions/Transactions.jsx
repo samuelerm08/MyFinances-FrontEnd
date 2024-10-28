@@ -12,7 +12,7 @@ import { TypeFilter } from "../../components/transactions/filters/TypeFilter";
 import { StateFilter } from "../../components/transactions/filters/StateFilter";
 import { AmountFilter } from "../../components/transactions/filters/AmountFilter";
 import { TransactionsPagination } from "../../components/transactions/TransactionsPagination";
-import useDark from "../../context/UseAuth";
+import useDark from "../../context/UseDark";
 import TransactionPopUp from "../../components/pop-ups/TransactionPopUp";
 
 const Transactions = () => {
