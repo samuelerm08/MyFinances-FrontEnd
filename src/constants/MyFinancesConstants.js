@@ -47,4 +47,4 @@ export const texts = {
 };
 
 export const amountReGex = /^\d{1,8}?(\.\d{0,2})?$/;
-export const textsReGex = /^[A-Za-z\s]+$/;
+export const textsReGex = /^[A-Za-z\u00f1\u00d1\s]+$/;
