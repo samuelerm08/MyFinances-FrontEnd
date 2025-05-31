@@ -58,7 +58,7 @@ export const DeleteGoal = ({
                             totalBalance: balance.totalBalance + data.currentAmount
                         });
                     }
-                    ocultarModal();
+                    hidePopUp();
                 }, 2000);
             }
         } catch (error) {
